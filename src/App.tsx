@@ -16,7 +16,9 @@ import { CodeBlock } from "./components/CodeBlock";
 import { PathsPage } from "./components/PathsPage";
 import { QuizPanel } from "./components/QuizPanel";
 import { Stage } from "./components/Stage";
+import { PrereqPanel } from "./components/PrereqPanel";
 import { TopicMeta } from "./components/TopicNav";
+import { TopicPager } from "./components/TopicPager";
 import { ThemeToggle } from "./components/ThemeToggle";
 import { deriveChapters } from "./engine/chapters";
 import { prefersReducedMotion } from "./engine/reducedMotion";
@@ -223,13 +225,15 @@ function TopicView({
           <div className="topic-head-main">
             <div className="topic-category">{topic.category}</div>
             <h1 className="topic-title">{topic.title}</h1>
-            <TopicMeta topic={topic} onSelect={onSelect} />
+            <TopicMeta topic={topic} />
           </div>
           <div className="topic-head-actions">
             <ThemeToggle />
           </div>
         </header>
       )}
+
+      {!focusMode && <TopicPager topic={topic} onSelect={onSelect} />}
 
       {shareNote && (
         <div className="toast" role="status">
@@ -265,6 +269,8 @@ function TopicView({
       {!focusMode && (
         <>
           <ChapterPanel chapters={chapters} index={player.index} onSeek={player.seek} />
+
+          <PrereqPanel topic={topic} onSelect={onSelect} />
 
           <section className="info">
             <div className="panel">
