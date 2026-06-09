@@ -75,7 +75,7 @@ const W = 520, H = 260, PAD = 30;
 export const heap: Topic = {
   id: "heap",
   title: "Heap / Priority Queue",
-  category: "Data Structures",
+  category: "Trees",
   blurb: "A tree where the root is always the min (or max).",
   create: () =>
     defineViz<Step>({

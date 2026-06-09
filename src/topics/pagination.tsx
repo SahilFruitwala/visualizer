@@ -87,7 +87,7 @@ do {
 export const pagination: Topic = {
   id: "pagination",
   title: "Pagination",
-  category: "API",
+  category: "Operations",
   blurb: "Offset pages vs cursor-based paging.",
   create: () =>
     defineViz<Step>({

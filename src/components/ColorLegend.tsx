@@ -10,13 +10,16 @@ const ITEMS = [
 
 export function ColorLegend() {
   return (
-    <div className="color-legend" aria-label="Visualization color key">
-      {ITEMS.map((item) => (
-        <span key={item.label} className="legend-item">
-          <span className="legend-swatch" style={{ background: item.color }} />
-          {item.label}
-        </span>
-      ))}
-    </div>
+    <details className="color-legend-panel">
+      <summary className="color-legend-summary">Color key</summary>
+      <div className="color-legend" aria-label="Visualization color key">
+        {ITEMS.map((item) => (
+          <span key={item.label} className="legend-item">
+            <span className="legend-swatch" style={{ background: item.color }} />
+            {item.label}
+          </span>
+        ))}
+      </div>
+    </details>
   );
 }

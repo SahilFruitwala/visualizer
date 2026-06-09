@@ -82,7 +82,7 @@ await fetch("/users/1", { method: "DELETE" });     // DELETE`;
 export const restCrud: Topic = {
   id: "rest-crud",
   title: "REST & HTTP Verbs",
-  category: "API",
+  category: "REST & Design",
   blurb: "GET, POST, PUT, PATCH, DELETE on a resource.",
   create: () =>
     defineViz<Step>({

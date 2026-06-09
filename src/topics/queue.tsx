@@ -52,7 +52,7 @@ const CODE = `class Queue {
 export const queue: Topic = {
   id: "queue",
   title: "Queue (FIFO)",
-  category: "Data Structures",
+  category: "Linear",
   blurb: "First-in, first-out. Enqueue back, dequeue front.",
   useWhen: "Fair ordering matters — BFS, task queues, buffers.",
   badges: ["O(1) enqueue"],

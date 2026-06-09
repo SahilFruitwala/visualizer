@@ -127,7 +127,7 @@ app.post("/hooks/payment", (req, res) => {
 export const webhooks: Topic = {
   id: "webhooks",
   title: "Webhooks",
-  category: "API",
+  category: "Operations",
   blurb: "Server-to-server event delivery, signatures, and retries.",
   create: () =>
     defineViz<Step>({

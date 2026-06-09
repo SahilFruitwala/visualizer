@@ -119,7 +119,7 @@ const res = await fetch("https://api.example.com/users");
 export const tlsHandshake: Topic = {
   id: "tls-handshake",
   title: "TLS Handshake",
-  category: "API",
+  category: "Protocol",
   blurb: "Certificate exchange, verification, and encrypted HTTPS.",
   create: () =>
     defineViz<Step>({

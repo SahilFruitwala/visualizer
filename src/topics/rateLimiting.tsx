@@ -76,7 +76,7 @@ class RateLimiter {
 export const rateLimiting: Topic = {
   id: "rate-limiting",
   title: "Rate Limiting",
-  category: "API",
+  category: "Operations",
   blurb: "Token bucket: burst allowance + steady refill.",
   create: () =>
     defineViz<Step>({

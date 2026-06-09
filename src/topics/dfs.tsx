@@ -53,7 +53,7 @@ const CODE = `function dfs(node, adj, seen = new Set(), order = []) {
 export const dfs: Topic = {
   id: "dfs",
   title: "Depth-First Search",
-  category: "Trees & Graphs",
+  category: "Graph Algorithms",
   blurb: "Dive deep, then backtrack — uses a stack.",
   create: () =>
     defineViz<Step>({

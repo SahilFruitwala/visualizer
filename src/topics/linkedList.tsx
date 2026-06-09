@@ -44,7 +44,7 @@ function traverse(head) {
 export const linkedList: Topic = {
   id: "linked-list",
   title: "Linked List",
-  category: "Data Structures",
+  category: "Linear",
   blurb: "Nodes chained by next-pointers.",
   create: () =>
     defineViz<Step>({

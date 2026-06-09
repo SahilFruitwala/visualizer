@@ -52,7 +52,7 @@ const CODE = `class Stack {
 export const stack: Topic = {
   id: "stack",
   title: "Stack (LIFO)",
-  category: "Data Structures",
+  category: "Linear",
   blurb: "Last-in, first-out. Push/pop at one end.",
   useWhen: "You need undo, parsing, or depth-first traversal.",
   badges: ["O(1) push/pop"],

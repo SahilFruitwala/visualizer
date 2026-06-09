@@ -97,7 +97,7 @@ const CODE = `function aStar(start, goal) {
 export const aStar: Topic = {
   id: "a-star",
   title: "A* Pathfinding",
-  category: "Trees & Graphs",
+  category: "Graph Algorithms",
   blurb: "Heuristic-guided shortest path on a grid.",
   create: () =>
     defineViz<Step>({

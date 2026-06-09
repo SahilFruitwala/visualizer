@@ -57,7 +57,7 @@ const CODE = `function topoSort(nodes, edges) {
 export const topologicalSort: Topic = {
   id: "topological-sort",
   title: "Topological Sort",
-  category: "Trees & Graphs",
+  category: "Graph Algorithms",
   blurb: "Order a DAG so every edge points forward.",
   create: () =>
     defineViz<Step>({

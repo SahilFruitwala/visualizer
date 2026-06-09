@@ -53,7 +53,7 @@ const CODE = `function kruskal(nodes, edges) {
 export const kruskal: Topic = {
   id: "kruskal",
   title: "Kruskal's MST",
-  category: "Trees & Graphs",
+  category: "Graph Algorithms",
   blurb: "Greedily add the lightest non-cycle edge.",
   create: () =>
     defineViz<Step>({

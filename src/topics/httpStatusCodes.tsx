@@ -93,7 +93,7 @@ if (res.status === 429) { /* back off and retry */ }`;
 export const httpStatusCodes: Topic = {
   id: "http-status-codes",
   title: "HTTP Status Codes",
-  category: "API",
+  category: "REST & Design",
   blurb: "2xx success, 4xx client errors, 5xx server errors.",
   create: () =>
     defineViz<Step>({

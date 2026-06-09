@@ -92,7 +92,7 @@ const W = 560, H = 320, PAD = 34;
 export const avlTree: Topic = {
   id: "avl-tree",
   title: "AVL Tree (Rotations)",
-  category: "Data Structures",
+  category: "Trees",
   blurb: "Self-balancing BST via rotations.",
   create: () => {
     const steps = build();

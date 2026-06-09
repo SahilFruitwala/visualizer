@@ -139,7 +139,7 @@ const COLUMN_KEYS = ["rest", "graphql", "grpc", "soap", "jsonrpc", "trpc"] as co
 export const apiTypes: Topic = {
   id: "api-types",
   title: "API Types",
-  category: "API",
+  category: "REST & Design",
   blurb: "REST, GraphQL, gRPC, SOAP, JSON-RPC, and tRPC.",
   create: () =>
     defineViz<Step>({

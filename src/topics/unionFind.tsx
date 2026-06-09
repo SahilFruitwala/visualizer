@@ -60,7 +60,7 @@ const CODE = `class DSU {
 export const unionFind: Topic = {
   id: "union-find",
   title: "Union-Find (DSU)",
-  category: "Data Structures",
+  category: "Advanced",
   blurb: "Merge sets and query connectivity, near O(1).",
   create: () =>
     defineViz<Step>({

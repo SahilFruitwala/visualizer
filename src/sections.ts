@@ -11,13 +11,14 @@ export interface Section {
   categories: readonly Category[];
 }
 
+/** Display order and grouping for sidebar navigation. */
 export const SECTIONS: Section[] = [
   {
     id: "ds",
     label: "Data Structures",
     shortLabel: "DS",
     path: "/ds",
-    categories: ["Data Structures"],
+    categories: ["Linear", "Hashing", "Trees", "Advanced"],
   },
   {
     id: "algo",
@@ -27,7 +28,8 @@ export const SECTIONS: Section[] = [
     categories: [
       "Sorting",
       "Searching",
-      "Trees & Graphs",
+      "Tree Algorithms",
+      "Graph Algorithms",
       "Dynamic Programming",
       "Backtracking",
       "Techniques",
@@ -39,16 +41,27 @@ export const SECTIONS: Section[] = [
     label: "API",
     shortLabel: "API",
     path: "/api",
-    categories: ["API"],
+    categories: ["Protocol", "REST & Design", "Auth & Security", "Operations"],
   },
 ];
+
+const CATEGORY_SECTION = new Map<Category, SectionId>(
+  SECTIONS.flatMap((s) => s.categories.map((c) => [c, s.id] as const)),
+);
+
+export function sectionForCategory(category: Category): SectionId {
+  return CATEGORY_SECTION.get(category) ?? "algo";
+}
 
 export function sectionById(id: string): Section | undefined {
   return SECTIONS.find((s) => s.id === id);
 }
 
 export function topicsForSection(section: Section): Topic[] {
-  return TOPICS.filter((t) => (section.categories as readonly string[]).includes(t.category));
+  const order = new Map(section.categories.map((c, i) => [c, i]));
+  return TOPICS.filter((t) => order.has(t.category)).sort(
+    (a, b) => (order.get(a.category) ?? 0) - (order.get(b.category) ?? 0),
+  );
 }
 
 export function topicsByCategoryForSection(section: Section) {
@@ -71,4 +84,11 @@ export function defaultTopicId(section: Section): string {
 
 export function rememberTopic(sectionId: SectionId, topicId: string) {
   sessionStorage.setItem(`devviz:${sectionId}`, topicId);
+}
+
+/** Resolve which section owns a topic (for cross-section prereq links). */
+export function sectionForTopic(topicId: string): Section | undefined {
+  const topic = TOPICS.find((t) => t.id === topicId);
+  if (!topic) return undefined;
+  return SECTIONS.find((s) => s.categories.includes(topic.category));
 }

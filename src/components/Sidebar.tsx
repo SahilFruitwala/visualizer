@@ -1,7 +1,69 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { isTopicComplete } from "../engine/progress";
-import { topicsByCategoryForSection, topicsForSection, type Section, SECTIONS } from "../sections";
+import {
+  topicsByCategoryForSection,
+  topicsForSection,
+  type Section,
+  SECTIONS,
+} from "../sections";
 import { FONT_MONO, FONT_SANS } from "../theme";
+
+function NavGroup({
+  category,
+  topics,
+  activeId,
+  onSelect,
+  query,
+  defaultOpen,
+}: {
+  category: string;
+  topics: { id: string; title: string; blurb: string }[];
+  activeId: string;
+  onSelect: (id: string) => void;
+  query: string;
+  defaultOpen: boolean;
+}) {
+  const hasActive = topics.some((t) => t.id === activeId);
+  const [open, setOpen] = useState(defaultOpen || hasActive);
+
+  useEffect(() => {
+    if (hasActive) setOpen(true);
+  }, [hasActive]);
+
+  return (
+    <div className="nav-group" data-open={open}>
+      <button
+        type="button"
+        className="nav-group-head"
+        onClick={() => setOpen((v) => !v)}
+        aria-expanded={open}
+      >
+        <span className="nav-group-label">{category}</span>
+        <span className="nav-group-meta">
+          <span className="nav-group-count">{topics.length}</span>
+          <span className="nav-group-chevron" aria-hidden />
+        </span>
+      </button>
+      {open && (
+        <div className="nav-group-items">
+          {topics.map((t) => (
+            <button
+              key={t.id}
+              className="nav-item"
+              data-active={t.id === activeId}
+              data-done={isTopicComplete(t.id)}
+              onClick={() => onSelect(t.id)}
+              title={t.blurb}
+            >
+              <span className="nav-item-title">{t.title}</span>
+              {query.trim() && <span className="nav-item-blurb">{t.blurb}</span>}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
 
 export function Sidebar({
   section,
@@ -34,15 +96,8 @@ export function Sidebar({
       .filter((g) => g.topics.length > 0);
   }, [groups, query]);
 
-  const globalMatches = useMemo(() => {
-    const q = query.trim().toLowerCase();
-    if (!q) return [];
-    return allTopics.filter(
-      (t) =>
-        t.title.toLowerCase().includes(q) ||
-        t.blurb.toLowerCase().includes(q),
-    );
-  }, [allTopics, query]);
+  const totalInSection = allTopics.length;
+  const searching = query.trim().length > 0;
 
   return (
     <aside className="sidebar">
@@ -51,12 +106,12 @@ export function Sidebar({
           Dev<span style={{ color: "var(--accent)" }}>·</span>Visualizer
         </div>
         <div style={{ fontFamily: FONT_MONO, fontSize: 12, color: "var(--muted)", marginTop: 4 }}>
-          DSA & APIs — learn by watching
+          {section.label} · {totalInSection} topics
         </div>
         <input
           type="search"
           className="sidebar-search"
-          placeholder="Search topics…"
+          placeholder={`Search ${section.shortLabel}…`}
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           aria-label="Search topics"
@@ -80,37 +135,19 @@ export function Sidebar({
       </div>
 
       <nav style={{ overflowY: "auto", flex: 1, paddingBottom: 24 }}>
-        {query.trim() && globalMatches.length === 0 && (
+        {searching && filteredGroups.length === 0 && (
           <p className="search-empty">No topics match “{query.trim()}”.</p>
         )}
         {filteredGroups.map((g) => (
-          <div key={g.category} style={{ marginBottom: 6 }}>
-            <div
-              style={{
-                fontFamily: FONT_MONO,
-                fontSize: 11,
-                letterSpacing: 1.5,
-                textTransform: "uppercase",
-                color: "var(--muted)",
-                padding: "12px 20px 6px",
-              }}
-            >
-              {g.category}
-            </div>
-            {g.topics.map((t) => (
-              <button
-                key={t.id}
-                className="nav-item"
-                data-active={t.id === activeId}
-                data-done={isTopicComplete(t.id)}
-                onClick={() => onSelect(t.id)}
-                title={t.blurb}
-              >
-                <span className="nav-item-title">{t.title}</span>
-                {query.trim() && <span className="nav-item-blurb">{t.blurb}</span>}
-              </button>
-            ))}
-          </div>
+          <NavGroup
+            key={g.category}
+            category={g.category}
+            topics={g.topics}
+            activeId={activeId}
+            onSelect={onSelect}
+            query={query}
+            defaultOpen={searching || filteredGroups.length <= 4}
+          />
         ))}
       </nav>
     </aside>

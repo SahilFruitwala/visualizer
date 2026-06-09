@@ -56,7 +56,7 @@ const CODE = `function dijkstra(start, adj) {
 export const dijkstra: Topic = {
   id: "dijkstra",
   title: "Dijkstra's Shortest Path",
-  category: "Trees & Graphs",
+  category: "Graph Algorithms",
   blurb: "Greedy shortest paths on a weighted graph.",
   create: () =>
     defineViz<Step>({

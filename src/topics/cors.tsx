@@ -171,7 +171,7 @@ const CORS_STEPS = withCodeLines(build(), (s) => {
 export const cors: Topic = {
   id: "cors",
   title: "CORS",
-  category: "API",
+  category: "Auth & Security",
   blurb: "Cross-origin requests, preflight OPTIONS, and Allow-Origin.",
   useWhen: "A browser app calls an API on a different domain.",
   badges: ["browser security"],

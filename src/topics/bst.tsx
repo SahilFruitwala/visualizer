@@ -103,7 +103,7 @@ const W = 560, H = 320, PAD = 34;
 export const bst: Topic = {
   id: "bst",
   title: "Binary Search Tree",
-  category: "Data Structures",
+  category: "Trees",
   blurb: "Ordered tree: left < node < right.",
   create: () => {
     const steps = build();

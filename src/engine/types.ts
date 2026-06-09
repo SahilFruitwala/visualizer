@@ -33,15 +33,25 @@ export interface Viz<S extends StepBase = StepBase> {
 }
 
 export type Category =
+  // Data Structures section
+  | "Linear"
+  | "Hashing"
+  | "Trees"
+  | "Advanced"
+  // Algorithms section
   | "Sorting"
   | "Searching"
-  | "Data Structures"
-  | "Trees & Graphs"
+  | "Tree Algorithms"
+  | "Graph Algorithms"
   | "Dynamic Programming"
   | "Backtracking"
   | "Techniques"
   | "Strings"
-  | "API";
+  // API section
+  | "Protocol"
+  | "REST & Design"
+  | "Auth & Security"
+  | "Operations";
 
 export interface Topic {
   id: string;

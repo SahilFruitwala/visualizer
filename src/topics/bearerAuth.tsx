@@ -105,7 +105,7 @@ const profile = await fetch("/profile", {
 export const bearerAuth: Topic = {
   id: "bearer-auth",
   title: "Bearer Token Auth",
-  category: "API",
+  category: "Auth & Security",
   blurb: "Login, store a JWT, attach Authorization header.",
   create: () =>
     defineViz<Step>({

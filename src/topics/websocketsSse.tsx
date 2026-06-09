@@ -79,7 +79,7 @@ ws.onmessage = (e) => console.log(JSON.parse(e.data));`;
 export const websocketsSse: Topic = {
   id: "websockets-sse",
   title: "WebSockets & SSE",
-  category: "API",
+  category: "Operations",
   blurb: "Polling vs server-sent events vs bidirectional WebSockets.",
   create: () =>
     defineViz<Step>({

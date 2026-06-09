@@ -23,6 +23,7 @@ import { trie } from "./trie";
 import { segmentTree } from "./segmentTree";
 import { fenwick } from "./fenwick";
 import { unionFind } from "./unionFind";
+import { lruCache } from "./lruCache";
 import { treeTraversal } from "./treeTraversal";
 import { bfs } from "./bfs";
 import { dfs } from "./dfs";
@@ -32,6 +33,7 @@ import { topologicalSort } from "./topologicalSort";
 import { kruskal } from "./kruskal";
 import { prim } from "./prim";
 import { aStar } from "./aStar";
+import { floydWarshall } from "./floydWarshall";
 import { kmp } from "./kmp";
 import { rabinKarp } from "./rabinKarp";
 import { fibonacci } from "./fibonacci";
@@ -47,10 +49,13 @@ import { permutations } from "./permutations";
 import { twoPointers } from "./twoPointers";
 import { slidingWindow } from "./slidingWindow";
 import { prefixSum } from "./prefixSum";
+import { monotonicStack } from "./monotonicStack";
+import { binarySearchOnAnswer } from "./binarySearchOnAnswer";
 import { httpLifecycle } from "./httpLifecycle";
 import { restCrud } from "./restCrud";
 import { httpStatusCodes } from "./httpStatusCodes";
 import { bearerAuth } from "./bearerAuth";
+import { oauth2 } from "./oauth2";
 import { pagination } from "./pagination";
 import { rateLimiting } from "./rateLimiting";
 import { cors } from "./cors";
@@ -60,8 +65,25 @@ import { tlsHandshake } from "./tlsHandshake";
 import { websocketsSse } from "./websocketsSse";
 import { apiTypes } from "./apiTypes";
 
-// The full catalogue. Add new topics here — order within a category is preserved.
+// The full catalogue. Order within a category is preserved in the sidebar.
 export const TOPICS: Topic[] = [
+  // Linear
+  stack,
+  queue,
+  deque,
+  linkedList,
+  // Hashing
+  hashTable,
+  lruCache,
+  // Trees
+  bst,
+  avlTree,
+  trie,
+  heap,
+  // Advanced
+  segmentTree,
+  fenwick,
+  unionFind,
   // Sorting
   bubbleSort,
   selectionSort,
@@ -75,21 +97,9 @@ export const TOPICS: Topic[] = [
   // Searching
   linearSearch,
   binarySearch,
-  // Data Structures
-  stack,
-  queue,
-  deque,
-  linkedList,
-  hashTable,
-  heap,
-  bst,
-  avlTree,
-  trie,
-  segmentTree,
-  fenwick,
-  unionFind,
-  // Trees & Graphs
+  // Tree Algorithms
   treeTraversal,
+  // Graph Algorithms
   bfs,
   dfs,
   dijkstra,
@@ -98,6 +108,7 @@ export const TOPICS: Topic[] = [
   kruskal,
   prim,
   aStar,
+  floydWarshall,
   // Dynamic Programming
   fibonacci,
   climbingStairs,
@@ -114,34 +125,47 @@ export const TOPICS: Topic[] = [
   twoPointers,
   slidingWindow,
   prefixSum,
+  monotonicStack,
+  binarySearchOnAnswer,
   // Strings
   kmp,
   rabinKarp,
-  // API
+  // Protocol
   httpLifecycle,
   tlsHandshake,
+  // REST & Design
   restCrud,
   httpStatusCodes,
+  apiTypes,
+  apiVersioning,
+  // Auth & Security
   cors,
   bearerAuth,
+  oauth2,
+  // Operations
   pagination,
   rateLimiting,
-  apiVersioning,
   webhooks,
   websocketsSse,
-  apiTypes,
 ];
 
 export const CATEGORIES = [
+  "Linear",
+  "Hashing",
+  "Trees",
+  "Advanced",
   "Sorting",
   "Searching",
-  "Data Structures",
-  "Trees & Graphs",
+  "Tree Algorithms",
+  "Graph Algorithms",
   "Dynamic Programming",
   "Backtracking",
   "Techniques",
   "Strings",
-  "API",
+  "Protocol",
+  "REST & Design",
+  "Auth & Security",
+  "Operations",
 ] as const;
 
 export function topicsByCategory() {

@@ -70,7 +70,7 @@ const CODE = `function bfs(start, adj) {
 export const bfs: Topic = {
   id: "bfs",
   title: "Breadth-First Search",
-  category: "Trees & Graphs",
+  category: "Graph Algorithms",
   blurb: "Explore neighbours level by level with a queue.",
   useWhen: "Shortest path in an unweighted graph or level-order traversal.",
   badges: ["O(V + E)"],

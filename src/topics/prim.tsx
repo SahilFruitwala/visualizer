@@ -55,7 +55,7 @@ const CODE = `function prim(start, adj) {
 export const prim: Topic = {
   id: "prim",
   title: "Prim's MST",
-  category: "Trees & Graphs",
+  category: "Graph Algorithms",
   blurb: "Grow a spanning tree by cheapest frontier edge.",
   create: () =>
     defineViz<Step>({

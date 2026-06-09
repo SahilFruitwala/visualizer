@@ -65,7 +65,7 @@ const CODE = `function bellmanFord(start, nodes, edges) {
 export const bellmanFord: Topic = {
   id: "bellman-ford",
   title: "Bellman-Ford",
-  category: "Trees & Graphs",
+  category: "Graph Algorithms",
   blurb: "Shortest paths that tolerate negative edges.",
   create: () =>
     defineViz<Step>({

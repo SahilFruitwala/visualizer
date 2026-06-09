@@ -2,6 +2,7 @@ import { TOPICS } from "../topics";
 import { pathForTopic, nextInPath, prevInPath } from "../engine/paths";
 import { isTopicComplete } from "../engine/progress";
 import type { Topic } from "../engine/types";
+import { sectionForTopic } from "../sections";
 import { FONT_MONO } from "../theme";
 
 export function TopicMeta({
@@ -64,11 +65,15 @@ export function TopicMeta({
       {prereqTopics.length > 0 && (
         <div className="topic-links">
           <span className="link-label">Prerequisites:</span>
-          {prereqTopics.map((t) => (
-            <button key={t.id} type="button" className="text-link" onClick={() => onSelect(t.id)}>
-              {t.title}
-            </button>
-          ))}
+          {prereqTopics.map((t) => {
+            const cross = sectionForTopic(t.id)?.id !== sectionForTopic(topic.id)?.id;
+            return (
+              <button key={t.id} type="button" className="text-link" onClick={() => onSelect(t.id)}>
+                {t.title}
+                {cross && <span className="link-section"> · {sectionForTopic(t.id)?.shortLabel}</span>}
+              </button>
+            );
+          })}
         </div>
       )}
 

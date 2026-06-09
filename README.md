@@ -15,19 +15,28 @@ npm run dev      # open the printed localhost URL
 npm run build    # type-check + production build into dist/
 ```
 
-## Topics (58)
+## Topics (65)
 
-| Category                | Topics                                                                          |
-| ----------------------- | ------------------------------------------------------------------------------- |
-| **Sorting**             | Bubble · Selection · Insertion · Shell · Merge · Quick · Heap · Counting · Radix |
-| **Searching**           | Linear · Binary                                                                 |
-| **Data Structures**     | Stack · Queue · Deque · Linked List · Hash Table · Heap/Priority Queue · BST · AVL Tree · Trie · Segment Tree · Fenwick Tree · Union-Find |
-| **Trees & Graphs**      | Tree Traversal (DFS) · BFS · DFS · Dijkstra · Bellman-Ford · Topological Sort · Kruskal's MST · Prim's MST · A\* Pathfinding |
-| **Dynamic Programming** | Fibonacci · Climbing Stairs · Kadane's · Coin Change · 0/1 Knapsack · LCS · Edit Distance |
-| **Backtracking**        | N-Queens · Subsets · Permutations                                               |
-| **Techniques**          | Two Pointers · Sliding Window · Prefix Sums                                      |
-| **Strings**             | KMP · Rabin-Karp                                                                 |
-| **API**                 | HTTP Lifecycle · TLS Handshake · REST & HTTP Verbs · Status Codes · CORS · Bearer Auth · Pagination · Rate Limiting · API Versioning · Webhooks · WebSockets & SSE · API Types (REST, GraphQL, gRPC…) |
+Navigation is split into three sections — **DS**, **Algo**, **API** — each with its own subcategories.
+
+| Section | Category | Topics |
+| ------- | -------- | ------ |
+| **DS** | Linear | Stack · Queue · Deque · Linked List |
+| | Hashing | Hash Table · LRU Cache |
+| | Trees | BST · AVL · Trie · Heap / Priority Queue |
+| | Advanced | Segment Tree · Fenwick Tree · Union-Find |
+| **Algo** | Sorting | Bubble · Selection · Insertion · Shell · Merge · Quick · Heap · Counting · Radix |
+| | Searching | Linear · Binary |
+| | Tree Algorithms | Tree Traversal (DFS) |
+| | Graph Algorithms | BFS · DFS · Dijkstra · Bellman-Ford · Topological Sort · Kruskal · Prim · A\* · Floyd-Warshall |
+| | Dynamic Programming | Fibonacci · Climbing Stairs · Kadane · Coin Change · Knapsack · LCS · Edit Distance |
+| | Backtracking | N-Queens · Subsets · Permutations |
+| | Techniques | Two Pointers · Sliding Window · Prefix Sums · Monotonic Stack · Binary Search on Answer |
+| | Strings | KMP · Rabin-Karp |
+| **API** | Protocol | HTTP Lifecycle · TLS Handshake |
+| | REST & Design | REST & HTTP Verbs · Status Codes · API Types · Versioning |
+| | Auth & Security | CORS · Bearer Auth · OAuth 2.0 (PKCE) |
+| | Operations | Pagination · Rate Limiting · Webhooks · WebSockets & SSE |
 
 ## Shared visual language
 

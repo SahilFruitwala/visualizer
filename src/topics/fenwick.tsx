@@ -54,7 +54,7 @@ const CODE = `class Fenwick {
 export const fenwick: Topic = {
   id: "fenwick-tree",
   title: "Fenwick Tree (BIT)",
-  category: "Data Structures",
+  category: "Advanced",
   blurb: "Prefix sums with O(log n) update & query.",
   create: () =>
     defineViz<Step>({

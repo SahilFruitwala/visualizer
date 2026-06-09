@@ -130,7 +130,7 @@ const W = 520, H = 320, PAD = 36;
 export const trie: Topic = {
   id: "trie",
   title: "Trie (Prefix Tree)",
-  category: "Data Structures",
+  category: "Trees",
   blurb: "Store strings by shared character prefixes.",
   create: () => {
     const steps = build();

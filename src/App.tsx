@@ -13,16 +13,25 @@ import { tagTopicChapters } from "./engine/topicChapters";
 import { usePlayerKeyboard } from "./engine/useKeyboard";
 import { usePlayer } from "./engine/usePlayer";
 import type { Topic } from "./engine/types";
+import { TOPICS } from "./topics";
 import {
   defaultTopicId,
   rememberTopic,
   sectionById,
+  sectionForTopic,
   SECTIONS,
-  topicsByCategoryForSection,
   topicsForSection,
   type SectionId,
 } from "./sections";
-import { FONT_MONO, FONT_SANS, setActiveTheme, type Theme } from "./theme";
+import { setActiveTheme, type Theme } from "./theme";
+
+function MenuIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden>
+      <path d="M4 6h16M4 12h16M4 18h16" />
+    </svg>
+  );
+}
 
 function useTheme(): [Theme, () => void] {
   const [theme, setTheme] = useState<Theme>(
@@ -62,29 +71,65 @@ function SectionPage({ sectionId }: { sectionId: SectionId }) {
   const { topicId } = useParams();
   const navigate = useNavigate();
   const [theme, toggleTheme] = useTheme();
+  const [navOpen, setNavOpen] = useState(false);
   const topics = topicsForSection(section);
   const topic = topics.find((t) => t.id === topicId);
-  const groups = topicsByCategoryForSection(section);
 
   useEffect(() => {
+    document.body.style.overflow = navOpen ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [navOpen]);
+
+  useEffect(() => {
+    const anywhere = TOPICS.find((t) => t.id === topicId);
+    if (anywhere && !topic) {
+      const owner = sectionForTopic(topicId!);
+      if (owner) {
+        navigate(`${owner.path}/${topicId}`, { replace: true });
+        return;
+      }
+    }
     if (!topic) {
       navigate(`${section.path}/${defaultTopicId(section)}`, { replace: true });
       return;
     }
     rememberTopic(sectionId, topic.id);
-  }, [topic, section, sectionId, navigate]);
+  }, [topic, topicId, section, sectionId, navigate]);
 
   if (!topic) return null;
 
   const selectTopic = (id: string) => {
-    rememberTopic(sectionId, id);
-    navigate(`${section.path}/${id}`);
+    const owner = sectionForTopic(id);
+    if (!owner) return;
+    rememberTopic(owner.id, id);
+    setNavOpen(false);
+    navigate(`${owner.path}/${id}`);
   };
 
   const selectSection = (id: SectionId) => {
     const next = sectionById(id)!;
     navigate(`${next.path}/${defaultTopicId(next)}`);
   };
+
+  const sectionTabs = (
+    <div className="section-tabs mobile-section-tabs" role="tablist" aria-label="Sections">
+      {SECTIONS.map((s) => (
+        <button
+          key={s.id}
+          type="button"
+          role="tab"
+          aria-selected={s.id === section.id}
+          className="section-tab"
+          data-active={s.id === section.id}
+          onClick={() => selectSection(s.id)}
+        >
+          {s.shortLabel}
+        </button>
+      ))}
+    </div>
+  );
 
   return (
     <div className="app">
@@ -94,31 +139,37 @@ function SectionPage({ sectionId }: { sectionId: SectionId }) {
         onSelect={selectTopic}
         onSectionChange={selectSection}
       />
+
+      {navOpen && (
+        <div
+          className="nav-overlay"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Browse topics"
+          onClick={() => setNavOpen(false)}
+        >
+          <aside className="nav-drawer" onClick={(e) => e.stopPropagation()}>
+            <Sidebar
+              section={section}
+              activeId={topic.id}
+              onSelect={selectTopic}
+              onSectionChange={(id) => {
+                setNavOpen(false);
+                selectSection(id);
+              }}
+            />
+          </aside>
+        </div>
+      )}
+
       <TopicView
         key={topic.id}
         topic={topic}
         theme={theme}
         onToggleTheme={toggleTheme}
-        activeId={topic.id}
         onSelect={selectTopic}
-        groups={groups}
-        sectionTabs={
-          <div className="section-tabs mobile-section-tabs" role="tablist" aria-label="Sections">
-            {SECTIONS.map((s) => (
-              <button
-                key={s.id}
-                type="button"
-                role="tab"
-                aria-selected={s.id === section.id}
-                className="section-tab"
-                data-active={s.id === section.id}
-                onClick={() => selectSection(s.id)}
-              >
-                {s.shortLabel}
-              </button>
-            ))}
-          </div>
-        }
+        onOpenNav={() => setNavOpen(true)}
+        sectionTabs={sectionTabs}
       />
     </div>
   );
@@ -145,17 +196,15 @@ function TopicView({
   topic,
   theme,
   onToggleTheme,
-  activeId,
   onSelect,
-  groups,
+  onOpenNav,
   sectionTabs,
 }: {
   topic: Topic;
   theme: Theme;
   onToggleTheme: () => void;
-  activeId: string;
   onSelect: (id: string) => void;
-  groups: { category: string; topics: Topic[] }[];
+  onOpenNav: () => void;
   sectionTabs?: ReactNode;
 }) {
   const [nonce, setNonce] = useState(0);
@@ -172,35 +221,17 @@ function TopicView({
   return (
     <main className="stage-wrap">
       <header className="topic-head">
-        <div className="topic-head-main">
-          {sectionTabs}
-          <div style={{ fontFamily: FONT_MONO, fontSize: 12, letterSpacing: 2, color: "var(--accent)", textTransform: "uppercase" }}>
-            {topic.category}
-          </div>
-          <h1 style={{ fontFamily: FONT_SANS, fontSize: 34, fontWeight: 800, color: "var(--text)", margin: "4px 0 0" }}>
-            {topic.title}
-          </h1>
-          <TopicMeta topic={topic} onSelect={onSelect} />
-        </div>
-
-        <div className="head-actions">
-          <select
-            className="mobile-nav"
-            value={activeId}
-            onChange={(e) => onSelect(e.target.value)}
-            aria-label="Choose topic"
+        <div className="mobile-toolbar">
+          <button
+            type="button"
+            className="mobile-menu-btn"
+            onClick={onOpenNav}
+            aria-label="Browse topics"
           >
-            {groups.map((g) => (
-              <optgroup key={g.category} label={g.category}>
-                {g.topics.map((t) => (
-                  <option key={t.id} value={t.id}>
-                    {t.title}
-                  </option>
-                ))}
-              </optgroup>
-            ))}
-          </select>
-
+            <MenuIcon />
+            <span>Topics</span>
+          </button>
+          {sectionTabs}
           <button
             className="theme-toggle"
             onClick={onToggleTheme}
@@ -209,6 +240,12 @@ function TopicView({
           >
             <ThemeIcon theme={theme} />
           </button>
+        </div>
+
+        <div className="topic-head-main">
+          <div className="topic-category">{topic.category}</div>
+          <h1 className="topic-title">{topic.title}</h1>
+          <TopicMeta topic={topic} onSelect={onSelect} />
         </div>
       </header>
 

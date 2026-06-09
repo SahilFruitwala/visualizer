@@ -98,7 +98,7 @@ Link: </v2/users/1>; rel="successor-version"`;
 export const apiVersioning: Topic = {
   id: "api-versioning",
   title: "API Versioning",
-  category: "API",
+  category: "REST & Design",
   blurb: "URL paths, version headers, defaults, and deprecation.",
   create: () =>
     defineViz<Step>({

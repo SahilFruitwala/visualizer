@@ -117,7 +117,7 @@ const STEPS = withCodeLines(build(), (s) => {
 export const httpLifecycle: Topic = {
   id: "http-lifecycle",
   title: "HTTP Request Lifecycle",
-  category: "API",
+  category: "Protocol",
   blurb: "From building a request to parsing the JSON response.",
   useWhen: "Debugging slow requests, timeouts, or connection errors.",
   badges: ["client ↔ server"],

@@ -1,7 +1,6 @@
 import type { Chapter } from "../engine/chapters";
 import { chapterAt } from "../engine/chapters";
 import type { Player } from "../engine/usePlayer";
-import { C, FONT_MONO } from "../theme";
 
 const SPEEDS = [0.5, 1, 2, 4, 8];
 
@@ -22,7 +21,7 @@ export function Controls({
   const nextChapter = chaps && chIdx >= 0 && chIdx < chaps.length - 1 ? chaps[chIdx + 1] : null;
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+    <div className="controls-root">
       <div className="scrubber-wrap">
         {chaps && current && chIdx >= 0 && (
           <div className="chapter-now">
@@ -60,86 +59,78 @@ export function Controls({
           onChange={(e) => player.seek(Number(e.target.value))}
           className="scrubber"
           aria-label="Scrub timeline"
-          style={{ width: "100%" }}
         />
       </div>
 
-      <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
-        <Btn onClick={player.reset} title="Restart (R)">
-          ⏮
-        </Btn>
-        <Btn onClick={player.prev} title="Step back (←)">
-          ◀
-        </Btn>
-        <Btn
-          onClick={player.toggle}
-          primary
-          title={
-            learnMode
-              ? "Next step (Space)"
-              : playing
-                ? "Pause (Space)"
-                : "Play (Space)"
-          }
-        >
-          {learnMode ? "▶|" : playing ? "❚❚" : "▶"}
-        </Btn>
-        <Btn onClick={player.next} title="Step forward (→)">
-          ▶
-        </Btn>
+      <div className="controls-toolbar">
+        <div className="controls-playback">
+          <Btn onClick={player.reset} title="Restart (R)">
+            ⏮
+          </Btn>
+          <Btn onClick={player.prev} title="Step back (←)">
+            ◀
+          </Btn>
+          <Btn
+            onClick={player.toggle}
+            primary
+            title={
+              learnMode
+                ? "Next step (Space)"
+                : playing
+                  ? "Pause (Space)"
+                  : "Play (Space)"
+            }
+          >
+            {learnMode ? "▶|" : playing ? "❚❚" : "▶"}
+          </Btn>
+          <Btn onClick={player.next} title="Step forward (→)">
+            ▶
+          </Btn>
+        </div>
 
-        <div
-          style={{
-            marginLeft: 8,
-            fontFamily: FONT_MONO,
-            fontSize: 13,
-            color: C.textMuted,
-            minWidth: 86,
-          }}
-        >
+        <div className="controls-step">
           step {index + 1} / {length}
         </div>
 
-        <div style={{ flex: 1 }} />
-
-        <button
-          type="button"
-          onClick={() => player.setLearnMode(!learnMode)}
-          className="chip"
-          data-active={learnMode}
-          title="Learn mode: advance one step at a time"
-        >
-          learn {learnMode ? "on" : "off"}
-        </button>
-
-        {!learnMode && (
-          <>
-            <span style={{ fontFamily: FONT_MONO, fontSize: 13, color: C.textMuted }}>speed</span>
-            {SPEEDS.map((s) => (
-              <button
-                key={s}
-                type="button"
-                onClick={() => player.setSpeed(s)}
-                className="chip"
-                data-active={player.speed === s}
-              >
-                {s}×
-              </button>
-            ))}
-          </>
-        )}
-
-        {onShuffle && (
+        <div className="controls-extra">
           <button
             type="button"
-            onClick={onShuffle}
+            onClick={() => player.setLearnMode(!learnMode)}
             className="chip"
-            style={{ marginLeft: 8 }}
-            title="New random input"
+            data-active={learnMode}
+            title="Learn mode: advance one step at a time"
           >
-            ⟳ shuffle
+            learn {learnMode ? "on" : "off"}
           </button>
-        )}
+
+          {!learnMode && (
+            <div className="controls-speed">
+              <span className="controls-speed-label">speed</span>
+              {SPEEDS.map((s) => (
+                <button
+                  key={s}
+                  type="button"
+                  onClick={() => player.setSpeed(s)}
+                  className="chip"
+                  data-active={player.speed === s}
+                >
+                  {s}×
+                </button>
+              ))}
+            </div>
+          )}
+
+          {onShuffle && (
+            <button
+              type="button"
+              onClick={onShuffle}
+              className="chip"
+              title="New random input"
+            >
+              ⟳ shuffle
+            </button>
+          )}
+        </div>
       </div>
 
       <div className="kbd-hints" aria-hidden>

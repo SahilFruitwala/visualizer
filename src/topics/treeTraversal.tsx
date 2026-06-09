@@ -64,7 +64,7 @@ const CODE = `function inorder(node, out = []) {
 export const treeTraversal: Topic = {
   id: "tree-traversal",
   title: "Tree Traversal (DFS)",
-  category: "Trees & Graphs",
+  category: "Tree Algorithms",
   blurb: "In-order depth-first walk of a binary tree.",
   create: () =>
     defineViz<Step>({

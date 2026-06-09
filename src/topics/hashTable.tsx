@@ -40,7 +40,7 @@ const CODE = `class HashMap {
 export const hashTable: Topic = {
   id: "hash-table",
   title: "Hash Table",
-  category: "Data Structures",
+  category: "Hashing",
   blurb: "Map keys to buckets via a hash; chain collisions.",
   create: () =>
     defineViz<Step>({

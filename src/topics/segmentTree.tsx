@@ -73,7 +73,7 @@ const W = 620, H = 300, PAD = 30;
 export const segmentTree: Topic = {
   id: "segment-tree",
   title: "Segment Tree",
-  category: "Data Structures",
+  category: "Advanced",
   blurb: "Range queries & updates in O(log n).",
   create: () =>
     defineViz<Step>({

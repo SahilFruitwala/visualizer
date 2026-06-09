@@ -18,7 +18,17 @@ export const LEARNING_PATHS: LearningPath[] = [
   {
     id: "graphs",
     title: "Graph traversal",
-    topicIds: ["bfs", "dfs", "dijkstra"],
+    topicIds: ["bfs", "dfs", "dijkstra", "floyd-warshall"],
+  },
+  {
+    id: "cache-patterns",
+    title: "Cache & eviction",
+    topicIds: ["hash-table", "linked-list", "lru-cache"],
+  },
+  {
+    id: "technique-patterns",
+    title: "Problem-solving patterns",
+    topicIds: ["binary-search", "binary-search-on-answer", "monotonic-stack"],
   },
   {
     id: "api-basics",
@@ -30,6 +40,7 @@ export const LEARNING_PATHS: LearningPath[] = [
       "http-status-codes",
       "cors",
       "bearer-auth",
+      "oauth2",
     ],
   },
   {

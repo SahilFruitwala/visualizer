@@ -42,7 +42,7 @@ const CODE = `class Deque {            // double-ended queue
 export const deque: Topic = {
   id: "deque",
   title: "Deque",
-  category: "Data Structures",
+  category: "Linear",
   blurb: "Double-ended queue: add/remove at either end.",
   create: () =>
     defineViz<Step>({
