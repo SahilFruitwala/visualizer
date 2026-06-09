@@ -1,6 +1,6 @@
-# Dev Visualizer — Learn DSA & APIs
+# Dev Visualizer — Learn DSA, Backend & Frontend
 
-An interactive web app that **animates** classic data structures, algorithms, and API concepts.
+An interactive web app that **animates** classic data structures, algorithms, backend, and frontend concepts.
 Pick a topic, hit play, scrub the timeline, step through each operation, change
 speed, and reshuffle the input — with the algorithm's code and complexity shown
 alongside.
@@ -15,32 +15,35 @@ npm run dev      # open the printed localhost URL
 npm run build    # type-check + production build into dist/
 ```
 
-## Topics (70)
+## Topics (89)
 
-Navigation is split into four sections — **DS**, **Algo**, **API**, **FE** — each with its own subcategories.
+Navigation is split into four sections — **DS**, **Algo**, **BE**, **FE** — each with its own subcategories.
 
 | Section | Category | Topics |
 | ------- | -------- | ------ |
 | **DS** | Linear | Stack · Queue · Deque · Linked List |
-| | Hashing | Hash Table · LRU Cache |
+| | Hashing | Hash Table · Bloom Filter · LRU Cache |
 | | Trees | BST · AVL · Trie · Heap / Priority Queue |
-| | Advanced | Segment Tree · Fenwick Tree · Union-Find |
+| | Advanced | Segment Tree · Fenwick Tree · Union-Find · Skip List |
 | **Algo** | Sorting | Bubble · Selection · Insertion · Shell · Merge · Quick · Heap · Counting · Radix |
 | | Searching | Linear · Binary |
-| | Tree Algorithms | Tree Traversal (DFS) |
-| | Graph Algorithms | BFS · DFS · Dijkstra · Bellman-Ford · Topological Sort · Kruskal · Prim · A\* · Floyd-Warshall |
-| | Dynamic Programming | Fibonacci · Climbing Stairs · Kadane · Coin Change · Knapsack · LCS · Edit Distance |
+| | Tree Algorithms | Tree Traversal (DFS) · Pre/In/Post-order |
+| | Graph Algorithms | BFS · DFS · Dijkstra · Bellman-Ford · Topological Sort · Kruskal · Prim · A\* · Floyd-Warshall · Tarjan's SCC |
+| | Dynamic Programming | Fibonacci · Climbing Stairs · Kadane · Coin Change · Knapsack · LCS · Edit Distance · Bitmask DP |
 | | Backtracking | N-Queens · Subsets · Permutations |
-| | Techniques | Two Pointers · Sliding Window · Prefix Sums · Monotonic Stack · Binary Search on Answer |
-| | Strings | KMP · Rabin-Karp |
-| **API** | Protocol | HTTP Lifecycle · TLS Handshake |
-| | REST & Design | REST & HTTP Verbs · Status Codes · API Types · Versioning |
-| | Auth & Security | CORS · Bearer Auth · OAuth 2.0 (PKCE) |
-| | Operations | Pagination · Rate Limiting · Webhooks · WebSockets & SSE |
-| **FE** | Runtime | Critical Rendering Path · JavaScript Event Loop |
-| | Rendering | Virtual DOM Reconciliation |
+| | Techniques | Two Pointers · Sliding Window · Prefix Sums · Monotonic Stack · Binary Search on Answer · Meet in the Middle |
+| | Strings | KMP · Rabin-Karp · Z-Algorithm |
+| **BE** | Protocol | HTTP Lifecycle · HTTP Caching · TLS Handshake |
+| | REST & Design | REST & HTTP Verbs · Status Codes · API Types · Versioning · GraphQL vs REST · gRPC & Protobuf |
+| | Auth & Security | CORS · Bearer Auth · JWT Structure · OAuth 2.0 (PKCE) |
+| | Operations | Pagination · Rate Limiting · Webhooks · WebSockets & SSE · Idempotency & Retries |
+| **FE** | Runtime | Critical Rendering Path · JavaScript Event Loop · SSR Hydration |
+| | Rendering | Virtual DOM · Component Re-renders · Memoization |
 | | Navigation | Client-Side Routing |
-| | Performance | List Virtualization |
+| | Layout & CSS | Box Model & Flexbox |
+| | Performance | Debounce & Throttle · List Virtualization · Client Data Fetching · Optimistic UI |
+
+Legacy `/api` URLs redirect to `/backend`.
 
 ## Shared visual language
 
@@ -72,11 +75,13 @@ src/
     GraphView.tsx          # unweighted graph renderer (BFS/DFS)
     WeightedGraphView.tsx  # weighted/directed graph (Dijkstra/MST/topo)
     ApiFlow.tsx            # HTTP message panels, status badges, client/server flow
+    FrontendView.tsx       # event loop, routing, flexbox, debounce viz
+    BackendView.tsx        # caching layers, JWT, protobuf, bloom filter
     Controls.tsx           # transport bar
     Sidebar.tsx            # categorized topic nav
   topics/
     index.ts               # the catalogue (register new topics here)
-    bubbleSort.tsx ... slidingWindow.tsx
+    bubbleSort.tsx ... listVirtualization.tsx
   App.tsx                  # stage + code/explanation panels
 ```
 

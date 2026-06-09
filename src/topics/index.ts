@@ -69,6 +69,25 @@ import { criticalRenderingPath } from "./criticalRenderingPath";
 import { virtualDom } from "./virtualDom";
 import { clientRouting } from "./clientRouting";
 import { listVirtualization } from "./listVirtualization";
+import { debounceThrottle } from "./debounceThrottle";
+import { componentRerenders } from "./componentRerenders";
+import { hydration } from "./hydration";
+import { clientDataFetching } from "./clientDataFetching";
+import { memoization } from "./memoization";
+import { flexboxBoxModel } from "./flexboxBoxModel";
+import { optimisticUI } from "./optimisticUI";
+import { httpCaching } from "./httpCaching";
+import { idempotencyRetries } from "./idempotencyRetries";
+import { graphqlVsRest } from "./graphqlVsRest";
+import { grpcProtobuf } from "./grpcProtobuf";
+import { jwtStructure } from "./jwtStructure";
+import { bloomFilter } from "./bloomFilter";
+import { skipList } from "./skipList";
+import { tarjanScc } from "./tarjanScc";
+import { meetInMiddle } from "./meetInMiddle";
+import { bitmaskDp } from "./bitmaskDp";
+import { zAlgorithm } from "./zAlgorithm";
+import { treeTraversalOrders } from "./treeTraversalOrders";
 
 // The full catalogue. Order within a category is preserved in the sidebar.
 export const TOPICS: Topic[] = [
@@ -79,6 +98,7 @@ export const TOPICS: Topic[] = [
   linkedList,
   // Hashing
   hashTable,
+  bloomFilter,
   lruCache,
   // Trees
   bst,
@@ -89,6 +109,7 @@ export const TOPICS: Topic[] = [
   segmentTree,
   fenwick,
   unionFind,
+  skipList,
   // Sorting
   bubbleSort,
   selectionSort,
@@ -104,6 +125,7 @@ export const TOPICS: Topic[] = [
   binarySearch,
   // Tree Algorithms
   treeTraversal,
+  treeTraversalOrders,
   // Graph Algorithms
   bfs,
   dfs,
@@ -114,6 +136,7 @@ export const TOPICS: Topic[] = [
   prim,
   aStar,
   floydWarshall,
+  tarjanScc,
   // Dynamic Programming
   fibonacci,
   climbingStairs,
@@ -122,6 +145,7 @@ export const TOPICS: Topic[] = [
   knapsack,
   lcs,
   editDistance,
+  bitmaskDp,
   // Backtracking
   nQueens,
   subsets,
@@ -132,35 +156,50 @@ export const TOPICS: Topic[] = [
   prefixSum,
   monotonicStack,
   binarySearchOnAnswer,
+  meetInMiddle,
   // Strings
   kmp,
   rabinKarp,
+  zAlgorithm,
   // Protocol
   httpLifecycle,
+  httpCaching,
   tlsHandshake,
   // REST & Design
   restCrud,
   httpStatusCodes,
   apiTypes,
   apiVersioning,
+  graphqlVsRest,
+  grpcProtobuf,
   // Auth & Security
   cors,
   bearerAuth,
   oauth2,
+  jwtStructure,
   // Operations
   pagination,
   rateLimiting,
   webhooks,
   websocketsSse,
+  idempotencyRetries,
   // Runtime
   criticalRenderingPath,
   eventLoop,
+  hydration,
   // Rendering
   virtualDom,
+  componentRerenders,
+  memoization,
   // Navigation
   clientRouting,
+  // Layout & CSS
+  flexboxBoxModel,
   // Performance
+  debounceThrottle,
   listVirtualization,
+  clientDataFetching,
+  optimisticUI,
 ];
 
 export const CATEGORIES = [

@@ -31,32 +31,49 @@ export const LEARNING_PATHS: LearningPath[] = [
     topicIds: ["binary-search", "binary-search-on-answer", "monotonic-stack"],
   },
   {
-    id: "api-basics",
-    title: "API essentials",
+    id: "backend-basics",
+    title: "Backend essentials",
     topicIds: [
       "http-lifecycle",
+      "http-caching",
       "tls-handshake",
       "rest-crud",
       "http-status-codes",
       "cors",
       "bearer-auth",
+      "jwt-structure",
       "oauth2",
     ],
   },
   {
-    id: "api-realtime",
+    id: "backend-realtime",
     title: "Real-time & events",
-    topicIds: ["pagination", "rate-limiting", "webhooks", "websockets-sse"],
+    topicIds: ["pagination", "rate-limiting", "webhooks", "websockets-sse", "idempotency-retries"],
   },
   {
     id: "frontend-runtime",
     title: "Browser runtime",
-    topicIds: ["critical-rendering-path", "event-loop"],
+    topicIds: ["critical-rendering-path", "event-loop", "hydration"],
   },
   {
     id: "frontend-react",
     title: "React mental model",
-    topicIds: ["virtual-dom", "client-routing", "list-virtualization"],
+    topicIds: ["virtual-dom", "component-rerenders", "memoization", "client-routing", "list-virtualization"],
+  },
+  {
+    id: "full-stack-request",
+    title: "Full-stack request journey",
+    topicIds: ["http-lifecycle", "cors", "event-loop", "critical-rendering-path"],
+  },
+  {
+    id: "cache-everywhere",
+    title: "Cache everywhere",
+    topicIds: ["hash-table", "lru-cache", "http-caching", "client-data-fetching", "pagination", "list-virtualization"],
+  },
+  {
+    id: "async-mental-model",
+    title: "Async mental model",
+    topicIds: ["queue", "event-loop", "websockets-sse", "webhooks", "debounce-throttle"],
   },
 ];
 

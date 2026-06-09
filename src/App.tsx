@@ -141,8 +141,10 @@ export default function App() {
         <Route path="/ds/:topicId" element={<TopicRoute sectionId="ds" />} />
         <Route path="/algo" element={<SectionRedirect sectionId="algo" />} />
         <Route path="/algo/:topicId" element={<TopicRoute sectionId="algo" />} />
-        <Route path="/api" element={<SectionRedirect sectionId="api" />} />
-        <Route path="/api/:topicId" element={<TopicRoute sectionId="api" />} />
+        <Route path="/api" element={<SectionRedirect sectionId="backend" />} />
+        <Route path="/api/:topicId" element={<TopicRoute sectionId="backend" />} />
+        <Route path="/backend" element={<SectionRedirect sectionId="backend" />} />
+        <Route path="/backend/:topicId" element={<TopicRoute sectionId="backend" />} />
         <Route path="/frontend" element={<SectionRedirect sectionId="frontend" />} />
         <Route path="/frontend/:topicId" element={<TopicRoute sectionId="frontend" />} />
         <Route path="/paths" element={<PathsRoute />} />

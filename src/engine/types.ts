@@ -47,7 +47,7 @@ export type Category =
   | "Backtracking"
   | "Techniques"
   | "Strings"
-  // API section
+  // Backend section
   | "Protocol"
   | "REST & Design"
   | "Auth & Security"
@@ -56,6 +56,7 @@ export type Category =
   | "Runtime"
   | "Rendering"
   | "Navigation"
+  | "Layout & CSS"
   | "Performance";
 
 export interface Topic {

@@ -607,3 +607,130 @@ export function DomSnippet({
     </div>
   );
 }
+
+export function DebounceTimeline({
+  events,
+  fired,
+  mode,
+  phase,
+}: {
+  events: { t: number; label: string; dropped?: boolean }[];
+  fired: boolean;
+  mode: "debounce" | "throttle";
+  phase?: string;
+}) {
+  return (
+    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 16, width: "100%" }}>
+      {phase && (
+        <div style={{ fontFamily: FONT_MONO, fontSize: 12, letterSpacing: 1.5, textTransform: "uppercase", color: C.active, fontWeight: 700 }}>{phase}</div>
+      )}
+      <div style={{ display: "flex", gap: 8, flexWrap: "wrap", justifyContent: "center", maxWidth: 520 }}>
+        {events.map((e, i) => (
+          <div
+            key={i}
+            style={{
+              padding: "8px 12px",
+              borderRadius: 8,
+              background: e.dropped ? C.rejected : `${C.pointer}22`,
+              border: `2px solid ${e.dropped ? C.compareBorder : C.pointerBorder}`,
+              fontFamily: FONT_MONO,
+              fontSize: 12,
+              opacity: e.dropped ? 0.6 : 1,
+              textDecoration: e.dropped ? "line-through" : "none",
+            }}
+          >
+            t={e.t} {e.label}
+          </div>
+        ))}
+      </div>
+      <div
+        style={{
+          padding: "12px 20px",
+          borderRadius: 10,
+          background: fired ? `${C.sorted}22` : C.cellMuted,
+          border: `2px solid ${fired ? C.sortedBorder : C.cellMutedBorder}`,
+          fontFamily: FONT_MONO,
+          fontWeight: 700,
+          color: C.text,
+        }}
+      >
+        {mode === "debounce" ? "handler()" : "throttled()"} {fired ? "→ FIRED ✓" : "→ waiting…"}
+      </div>
+    </div>
+  );
+}
+
+export function RerenderTree({
+  nodes,
+  phase,
+}: {
+  nodes: { id: string; label: string; state: "skip" | "render" | "changed" | "default" }[];
+  phase?: string;
+}) {
+  const colors = { skip: C.highlight, render: C.active, changed: C.compare, default: C.default };
+  const borders = { skip: C.highlightBorder, render: C.activeBorder, changed: C.compareBorder, default: C.defaultBorder };
+  return (
+    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 14 }}>
+      {phase && (
+        <div style={{ fontFamily: FONT_MONO, fontSize: 12, letterSpacing: 1.5, textTransform: "uppercase", color: C.active, fontWeight: 700 }}>{phase}</div>
+      )}
+      <div style={{ display: "flex", flexDirection: "column", gap: 8, alignItems: "center" }}>
+        {nodes.map((n) => (
+          <div
+            key={n.id}
+            style={{
+              padding: "10px 16px",
+              borderRadius: 10,
+              background: `${colors[n.state]}33`,
+              border: `2px solid ${borders[n.state]}`,
+              fontFamily: FONT_MONO,
+              fontSize: 13,
+              fontWeight: 700,
+              color: n.state === "default" ? C.text : C.ink,
+              minWidth: 200,
+              textAlign: "center",
+            }}
+          >
+            {n.label} {n.state === "skip" && <span style={{ fontSize: 11 }}>(bail out)</span>}
+            {n.state === "render" && <span style={{ fontSize: 11 }}>(re-render)</span>}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+export function BoxModelDiagram({
+  content,
+  padding,
+  border,
+  margin,
+  phase,
+}: {
+  content: string;
+  padding: number;
+  border: number;
+  margin: number;
+  phase?: string;
+}) {
+  const layer = (label: string, size: number, color: string, borderColor: string, child: ReactNode) => (
+    <div style={{ background: color, border: `2px solid ${borderColor}`, padding: size, borderRadius: 8 }}>
+      <div style={{ fontFamily: FONT_SANS, fontSize: 10, color: C.textMuted, marginBottom: 4, fontWeight: 700 }}>{label}</div>
+      {child}
+    </div>
+  );
+  return (
+    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 12 }}>
+      {phase && (
+        <div style={{ fontFamily: FONT_MONO, fontSize: 12, letterSpacing: 1.5, textTransform: "uppercase", color: C.active, fontWeight: 700 }}>{phase}</div>
+      )}
+      {layer("margin", margin, `${C.highlight}18`, C.highlightBorder,
+        layer("border", border, `${C.active}18`, C.activeBorder,
+          layer("padding", padding, `${C.pointer}18`, C.pointerBorder,
+            <div style={{ padding: 16, background: C.sorted, borderRadius: 4, fontFamily: FONT_MONO, fontWeight: 700, color: C.ink, textAlign: "center" }}>{content}</div>
+          )
+        )
+      )}
+    </div>
+  );
+}

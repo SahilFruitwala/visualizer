@@ -1,7 +1,7 @@
 import type { Category, Topic } from "./engine/types";
 import { TOPICS } from "./topics";
 
-export type SectionId = "ds" | "algo" | "api" | "frontend";
+export type SectionId = "ds" | "algo" | "backend" | "frontend";
 
 export interface Section {
   id: SectionId;
@@ -37,10 +37,10 @@ export const SECTIONS: Section[] = [
     ],
   },
   {
-    id: "api",
-    label: "API",
-    shortLabel: "API",
-    path: "/api",
+    id: "backend",
+    label: "Backend",
+    shortLabel: "BE",
+    path: "/backend",
     categories: ["Protocol", "REST & Design", "Auth & Security", "Operations"],
   },
   {
@@ -48,7 +48,7 @@ export const SECTIONS: Section[] = [
     label: "Frontend",
     shortLabel: "FE",
     path: "/frontend",
-    categories: ["Runtime", "Rendering", "Navigation", "Performance"],
+    categories: ["Runtime", "Rendering", "Navigation", "Layout & CSS", "Performance"],
   },
 ];
 
@@ -96,7 +96,8 @@ export function rememberTopic(sectionId: SectionId, topicId: string) {
 
 export function lastSectionId(): SectionId {
   const stored = sessionStorage.getItem("devviz:last-section");
-  if (stored === "ds" || stored === "algo" || stored === "api" || stored === "frontend") return stored;
+  if (stored === "api") return "backend";
+  if (stored === "ds" || stored === "algo" || stored === "backend" || stored === "frontend") return stored;
   return "ds";
 }
 
