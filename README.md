@@ -15,7 +15,7 @@ npm run dev      # open the printed localhost URL
 npm run build    # type-check + production build into dist/
 ```
 
-## Topics (52)
+## Topics (58)
 
 | Category                | Topics                                                                          |
 | ----------------------- | ------------------------------------------------------------------------------- |
@@ -27,7 +27,7 @@ npm run build    # type-check + production build into dist/
 | **Backtracking**        | N-Queens · Subsets · Permutations                                               |
 | **Techniques**          | Two Pointers · Sliding Window · Prefix Sums                                      |
 | **Strings**             | KMP · Rabin-Karp                                                                 |
-| **API**                 | HTTP Lifecycle · REST & HTTP Verbs · Status Codes · Bearer Auth · Pagination · Rate Limiting |
+| **API**                 | HTTP Lifecycle · TLS Handshake · REST & HTTP Verbs · Status Codes · CORS · Bearer Auth · Pagination · Rate Limiting · API Versioning · Webhooks · WebSockets & SSE · API Types (REST, GraphQL, gRPC…) |
 
 ## Shared visual language
 

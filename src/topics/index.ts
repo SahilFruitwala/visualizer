@@ -53,6 +53,12 @@ import { httpStatusCodes } from "./httpStatusCodes";
 import { bearerAuth } from "./bearerAuth";
 import { pagination } from "./pagination";
 import { rateLimiting } from "./rateLimiting";
+import { cors } from "./cors";
+import { apiVersioning } from "./apiVersioning";
+import { webhooks } from "./webhooks";
+import { tlsHandshake } from "./tlsHandshake";
+import { websocketsSse } from "./websocketsSse";
+import { apiTypes } from "./apiTypes";
 
 // The full catalogue. Add new topics here — order within a category is preserved.
 export const TOPICS: Topic[] = [
@@ -113,11 +119,17 @@ export const TOPICS: Topic[] = [
   rabinKarp,
   // API
   httpLifecycle,
+  tlsHandshake,
   restCrud,
   httpStatusCodes,
+  cors,
   bearerAuth,
   pagination,
   rateLimiting,
+  apiVersioning,
+  webhooks,
+  websocketsSse,
+  apiTypes,
 ];
 
 export const CATEGORIES = [

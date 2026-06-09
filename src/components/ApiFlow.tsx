@@ -162,11 +162,15 @@ export function ApiFlow({
   phase,
   activeSide,
   direction = "right",
+  clientLabel = "Client",
+  serverLabel = "Server",
   children,
 }: {
   phase?: string;
   activeSide?: "client" | "server" | "both" | "none";
   direction?: "right" | "left" | "both";
+  clientLabel?: string;
+  serverLabel?: string;
   children?: ReactNode;
 }) {
   const clientActive = activeSide === "client" || activeSide === "both";
@@ -179,10 +183,12 @@ export function ApiFlow({
     border: `2px solid ${active ? C.pointerBorder : C.surfaceBorder}`,
     fontFamily: FONT_SANS,
     fontWeight: 700,
-    fontSize: 16,
+    fontSize: clientLabel.length > 12 || serverLabel.length > 12 ? 13 : 16,
     color: active ? C.text : C.textMuted,
     minWidth: 90,
+    maxWidth: 160,
     textAlign: "center" as const,
+    lineHeight: 1.3,
     transition: "background 220ms, border-color 220ms, color 220ms",
   });
 
@@ -206,7 +212,7 @@ export function ApiFlow({
         </div>
       )}
       <div style={{ display: "flex", alignItems: "center", gap: 20, flexWrap: "wrap", justifyContent: "center" }}>
-        <div style={boxStyle(clientActive)}>Client</div>
+        <div style={boxStyle(clientActive)}>{clientLabel}</div>
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 4 }}>
           {direction !== "left" && (
             <div style={{ display: "flex", alignItems: "center", gap: 0 }}>
@@ -251,7 +257,7 @@ export function ApiFlow({
             </div>
           )}
         </div>
-        <div style={boxStyle(serverActive)}>Server</div>
+        <div style={boxStyle(serverActive)}>{serverLabel}</div>
       </div>
       {children}
     </div>
@@ -328,6 +334,205 @@ export function TokenChip({ token, highlight }: { token: string; highlight?: boo
       }}
     >
       {token}
+    </div>
+  );
+}
+
+export function ConnectionLine({
+  mode,
+  label,
+}: {
+  mode: "closed" | "polling" | "sse" | "websocket";
+  label?: string;
+}) {
+  const styles: Record<typeof mode, { color: string; dash?: string; icon: string }> = {
+    closed: { color: C.cellMutedBorder, icon: "○" },
+    polling: { color: C.active, dash: "6 4", icon: "↻" },
+    sse: { color: C.sorted, icon: "→" },
+    websocket: { color: C.highlight, icon: "⇄" },
+  };
+  const s = styles[mode];
+  return (
+    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 6 }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 8, width: 200 }}>
+        <div
+          style={{
+            flex: 1,
+            height: 3,
+            borderRadius: 2,
+            background:
+              mode === "closed"
+                ? C.cellMuted
+                : `repeating-linear-gradient(90deg, ${s.color} 0, ${s.color} 8px, transparent 8px, transparent 14px)`,
+          }}
+        />
+        <span style={{ fontFamily: FONT_MONO, fontSize: 16, color: s.color }}>{s.icon}</span>
+        <div
+          style={{
+            flex: 1,
+            height: 3,
+            borderRadius: 2,
+            background: mode === "closed" ? C.cellMuted : s.color,
+          }}
+        />
+      </div>
+      {label && (
+        <div style={{ fontFamily: FONT_MONO, fontSize: 12, color: C.textMuted }}>{label}</div>
+      )}
+    </div>
+  );
+}
+
+export function ParadigmCard({
+  name,
+  tagline,
+  request,
+  response,
+  active,
+  highlight,
+}: {
+  name: string;
+  tagline: string;
+  request: string;
+  response: string;
+  active?: boolean;
+  highlight?: string[];
+}) {
+  const hl = (field: string) => highlight?.includes(field) ?? false;
+  return (
+    <div
+      style={{
+        background: active ? `${C.pointer}12` : C.surface,
+        border: `2px solid ${active ? C.pointerBorder : C.surfaceBorder}`,
+        borderRadius: 12,
+        padding: "14px 16px",
+        minWidth: 260,
+        maxWidth: 340,
+        transition: "background 220ms, border-color 220ms",
+      }}
+    >
+      <div style={{ fontFamily: FONT_SANS, fontWeight: 700, fontSize: 16, color: C.text, marginBottom: 4 }}>
+        {name}
+      </div>
+      <div style={{ fontFamily: FONT_SANS, fontSize: 12, color: C.textMuted, marginBottom: 12 }}>{tagline}</div>
+      <div
+        style={{
+          fontFamily: FONT_MONO,
+          fontSize: 11,
+          letterSpacing: 1,
+          textTransform: "uppercase",
+          color: C.pointer,
+          marginBottom: 6,
+        }}
+      >
+        Request
+      </div>
+      <pre
+        style={{
+          margin: "0 0 10px",
+          padding: "8px 10px",
+          borderRadius: 6,
+          background: hl("request") ? `${C.pointer}18` : C.cellMuted,
+          border: `1px solid ${hl("request") ? C.pointerBorder : C.cellMutedBorder}`,
+          fontSize: 12,
+          color: C.text,
+          lineHeight: 1.5,
+          whiteSpace: "pre-wrap",
+        }}
+      >
+        {request}
+      </pre>
+      <div
+        style={{
+          fontFamily: FONT_MONO,
+          fontSize: 11,
+          letterSpacing: 1,
+          textTransform: "uppercase",
+          color: C.sorted,
+          marginBottom: 6,
+        }}
+      >
+        Response
+      </div>
+      <pre
+        style={{
+          margin: 0,
+          padding: "8px 10px",
+          borderRadius: 6,
+          background: hl("response") ? `${C.sorted}18` : C.cellMuted,
+          border: `1px solid ${hl("response") ? C.sortedBorder : C.cellMutedBorder}`,
+          fontSize: 12,
+          color: C.text,
+          lineHeight: 1.5,
+          whiteSpace: "pre-wrap",
+        }}
+      >
+        {response}
+      </pre>
+    </div>
+  );
+}
+
+export function TlsMessage({
+  direction,
+  label,
+  detail,
+  highlight,
+}: {
+  direction: "client" | "server";
+  label: string;
+  detail: string;
+  highlight?: boolean;
+}) {
+  const isClient = direction === "client";
+  return (
+    <div
+      style={{
+        background: highlight ? `${C.pointer}18` : C.surface,
+        border: `1px solid ${highlight ? C.pointerBorder : C.surfaceBorder}`,
+        borderRadius: 10,
+        padding: "10px 14px",
+        minWidth: 240,
+        maxWidth: 320,
+      }}
+    >
+      <div
+        style={{
+          fontFamily: FONT_SANS,
+          fontSize: 11,
+          letterSpacing: 1.2,
+          textTransform: "uppercase",
+          color: isClient ? C.pointer : C.sorted,
+          fontWeight: 700,
+          marginBottom: 6,
+        }}
+      >
+        {isClient ? "Client →" : "Server →"}
+      </div>
+      <div style={{ fontFamily: FONT_MONO, fontSize: 14, fontWeight: 700, color: C.text, marginBottom: 4 }}>
+        {label}
+      </div>
+      <div style={{ fontFamily: FONT_MONO, fontSize: 12, color: C.textMuted, lineHeight: 1.5 }}>{detail}</div>
+    </div>
+  );
+}
+
+export function EventBadge({ event, highlight }: { event: string; highlight?: boolean }) {
+  return (
+    <div
+      style={{
+        display: "inline-flex",
+        padding: "8px 16px",
+        borderRadius: 8,
+        background: highlight ? `${C.active}22` : C.cellMuted,
+        border: `2px solid ${highlight ? C.activeBorder : C.cellMutedBorder}`,
+        fontFamily: FONT_MONO,
+        fontSize: 14,
+        fontWeight: 700,
+        color: C.text,
+      }}
+    >
+      {event}
     </div>
   );
 }
