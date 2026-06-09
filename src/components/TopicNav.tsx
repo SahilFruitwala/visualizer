@@ -1,6 +1,5 @@
 import { TOPICS } from "../topics";
 import { pathForTopic, nextInPath, prevInPath } from "../engine/paths";
-import { isTopicComplete } from "../engine/progress";
 import type { Topic } from "../engine/types";
 import { sectionForTopic } from "../sections";
 import { FONT_MONO } from "../theme";
@@ -18,7 +17,6 @@ export function TopicMeta({
   const prereqTopics = (topic.prerequisites ?? [])
     .map((id) => TOPICS.find((t) => t.id === id))
     .filter((t): t is Topic => t != null);
-  const done = isTopicComplete(topic.id);
 
   return (
     <div className="topic-meta">
@@ -50,7 +48,6 @@ export function TopicMeta({
                   type="button"
                   className="path-dot"
                   data-active={id === topic.id}
-                  data-done={isTopicComplete(id)}
                   title={t.title}
                   onClick={() => onSelect(id)}
                 >
@@ -89,12 +86,6 @@ export function TopicMeta({
           </button>
         )}
       </div>
-
-      {done && (
-        <p className="topic-done" style={{ fontFamily: FONT_MONO, fontSize: 12, color: "var(--accent)", margin: "8px 0 0" }}>
-          ✓ Completed
-        </p>
-      )}
     </div>
   );
 }

@@ -1,14 +1,26 @@
-import { useEffect, useMemo, useState, type ReactNode } from "react";
-import { BrowserRouter, Navigate, Route, Routes, useNavigate, useParams } from "react-router-dom";
+import { useEffect, useMemo, useState } from "react";
+import {
+  BrowserRouter,
+  Navigate,
+  Route,
+  Routes,
+  useNavigate,
+  useParams,
+  useSearchParams,
+} from "react-router-dom";
+import { AppShell, resolveSectionId, useAppNav } from "./components/AppShell";
 import { ChapterPanel } from "./components/ChapterPanel";
 import { ColorLegend } from "./components/ColorLegend";
-import { Sidebar } from "./components/Sidebar";
 import { Controls } from "./components/Controls";
 import { CodeBlock } from "./components/CodeBlock";
+import { PathsPage } from "./components/PathsPage";
 import { QuizPanel } from "./components/QuizPanel";
 import { Stage } from "./components/Stage";
 import { TopicMeta } from "./components/TopicNav";
+import { ThemeToggle } from "./components/ThemeToggle";
 import { deriveChapters } from "./engine/chapters";
+import { prefersReducedMotion } from "./engine/reducedMotion";
+import { getResumeStep, saveResumeStep } from "./engine/resume";
 import { tagTopicChapters } from "./engine/topicChapters";
 import { usePlayerKeyboard } from "./engine/useKeyboard";
 import { usePlayer } from "./engine/usePlayer";
@@ -23,64 +35,19 @@ import {
   topicsForSection,
   type SectionId,
 } from "./sections";
-import { setActiveTheme, type Theme } from "./theme";
-
-function MenuIcon() {
-  return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden>
-      <path d="M4 6h16M4 12h16M4 18h16" />
-    </svg>
-  );
-}
-
-function useTheme(): [Theme, () => void] {
-  const [theme, setTheme] = useState<Theme>(
-    () => (localStorage.getItem("dsa-theme") as Theme) || "dark",
-  );
-  useEffect(() => {
-    document.documentElement.dataset.theme = theme;
-    setActiveTheme(theme);
-    localStorage.setItem("dsa-theme", theme);
-  }, [theme]);
-  return [theme, () => setTheme((t) => (t === "dark" ? "light" : "dark"))];
-}
-
-function ThemeIcon({ theme }: { theme: Theme }) {
-  if (theme === "dark") {
-    return (
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-        <circle cx="12" cy="12" r="4" />
-        <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" />
-      </svg>
-    );
-  }
-  return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-      <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
-    </svg>
-  );
-}
 
 function SectionRedirect({ sectionId }: { sectionId: SectionId }) {
   const section = sectionById(sectionId)!;
   return <Navigate to={`${section.path}/${defaultTopicId(section)}`} replace />;
 }
 
-function SectionPage({ sectionId }: { sectionId: SectionId }) {
+function TopicRoute({ sectionId }: { sectionId: SectionId }) {
   const section = sectionById(sectionId)!;
   const { topicId } = useParams();
   const navigate = useNavigate();
-  const [theme, toggleTheme] = useTheme();
-  const [navOpen, setNavOpen] = useState(false);
   const topics = topicsForSection(section);
   const topic = topics.find((t) => t.id === topicId);
-
-  useEffect(() => {
-    document.body.style.overflow = navOpen ? "hidden" : "";
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [navOpen]);
+  const { selectTopic, selectSection } = useAppNav();
 
   useEffect(() => {
     const anywhere = TOPICS.find((t) => t.id === topicId);
@@ -100,19 +67,6 @@ function SectionPage({ sectionId }: { sectionId: SectionId }) {
 
   if (!topic) return null;
 
-  const selectTopic = (id: string) => {
-    const owner = sectionForTopic(id);
-    if (!owner) return;
-    rememberTopic(owner.id, id);
-    setNavOpen(false);
-    navigate(`${owner.path}/${id}`);
-  };
-
-  const selectSection = (id: SectionId) => {
-    const next = sectionById(id)!;
-    navigate(`${next.path}/${defaultTopicId(next)}`);
-  };
-
   const sectionTabs = (
     <div className="section-tabs mobile-section-tabs" role="tablist" aria-label="Sections">
       {SECTIONS.map((s) => (
@@ -131,47 +85,48 @@ function SectionPage({ sectionId }: { sectionId: SectionId }) {
     </div>
   );
 
+  const mobileToolbar = (
+    <div className="mobile-toolbar mobile-toolbar-topic">
+      <button
+        type="button"
+        className="mobile-menu-btn"
+        onClick={() => document.dispatchEvent(new CustomEvent("devviz:open-drawer"))}
+        aria-label="Browse topics"
+      >
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden>
+          <path d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+        <span>Menu</span>
+      </button>
+      {sectionTabs}
+      <button
+        type="button"
+        className="mobile-search-btn"
+        onClick={() => document.dispatchEvent(new CustomEvent("devviz:open-search"))}
+        aria-label="Search topics"
+      >
+        ⌕
+      </button>
+    </div>
+  );
+
   return (
-    <div className="app">
-      <Sidebar
-        section={section}
-        activeId={topic.id}
-        onSelect={selectTopic}
-        onSectionChange={selectSection}
-      />
-
-      {navOpen && (
-        <div
-          className="nav-overlay"
-          role="dialog"
-          aria-modal="true"
-          aria-label="Browse topics"
-          onClick={() => setNavOpen(false)}
-        >
-          <aside className="nav-drawer" onClick={(e) => e.stopPropagation()}>
-            <Sidebar
-              section={section}
-              activeId={topic.id}
-              onSelect={selectTopic}
-              onSectionChange={(id) => {
-                setNavOpen(false);
-                selectSection(id);
-              }}
-            />
-          </aside>
-        </div>
-      )}
-
+    <AppShell sectionId={sectionId} activeTopicId={topic.id} view="topics" mobileToolbar={mobileToolbar}>
       <TopicView
         key={topic.id}
         topic={topic}
-        theme={theme}
-        onToggleTheme={toggleTheme}
         onSelect={selectTopic}
-        onOpenNav={() => setNavOpen(true)}
-        sectionTabs={sectionTabs}
       />
-    </div>
+    </AppShell>
+  );
+}
+
+function PathsRoute() {
+  const { selectTopic } = useAppNav();
+  return (
+    <AppShell sectionId={resolveSectionId("/paths")} view="paths">
+      <PathsPage onSelect={selectTopic} />
+    </AppShell>
   );
 }
 
@@ -181,11 +136,12 @@ export default function App() {
       <Routes>
         <Route path="/" element={<SectionRedirect sectionId="ds" />} />
         <Route path="/ds" element={<SectionRedirect sectionId="ds" />} />
-        <Route path="/ds/:topicId" element={<SectionPage sectionId="ds" />} />
+        <Route path="/ds/:topicId" element={<TopicRoute sectionId="ds" />} />
         <Route path="/algo" element={<SectionRedirect sectionId="algo" />} />
-        <Route path="/algo/:topicId" element={<SectionPage sectionId="algo" />} />
+        <Route path="/algo/:topicId" element={<TopicRoute sectionId="algo" />} />
         <Route path="/api" element={<SectionRedirect sectionId="api" />} />
-        <Route path="/api/:topicId" element={<SectionPage sectionId="api" />} />
+        <Route path="/api/:topicId" element={<TopicRoute sectionId="api" />} />
+        <Route path="/paths" element={<PathsRoute />} />
         <Route path="*" element={<SectionRedirect sectionId="ds" />} />
       </Routes>
     </BrowserRouter>
@@ -194,62 +150,98 @@ export default function App() {
 
 function TopicView({
   topic,
-  theme,
-  onToggleTheme,
   onSelect,
-  onOpenNav,
-  sectionTabs,
 }: {
   topic: Topic;
-  theme: Theme;
-  onToggleTheme: () => void;
   onSelect: (id: string) => void;
-  onOpenNav: () => void;
-  sectionTabs?: ReactNode;
 }) {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [nonce, setNonce] = useState(0);
+  const [focusMode, setFocusMode] = useState(false);
+  const [shareNote, setShareNote] = useState<string | null>(null);
+  const reducedMotion = prefersReducedMotion();
+
   const viz = useMemo(() => {
     const v = topic.create();
     return { ...v, steps: tagTopicChapters(topic.id, v.steps) };
   }, [topic, nonce]);
+
   const chapters = useMemo(() => deriveChapters(viz.steps), [viz.steps]);
-  const player = usePlayer(viz.steps.length, { initialSpeed: 1, learnMode: true });
+
+  const initialIndex = useMemo(() => {
+    const fromUrl = searchParams.get("step");
+    if (fromUrl != null) {
+      const n = Number.parseInt(fromUrl, 10);
+      if (!Number.isNaN(n)) {
+        return Math.max(0, Math.min(n, viz.steps.length - 1));
+      }
+    }
+    const resumed = getResumeStep(topic.id);
+    if (resumed != null) {
+      return Math.max(0, Math.min(resumed, viz.steps.length - 1));
+    }
+    return 0;
+  }, [topic.id, viz.steps.length, searchParams]);
+
+  const player = usePlayer(viz.steps.length, {
+    initialSpeed: 1,
+    initialIndex,
+    learnMode: reducedMotion ? true : undefined,
+  });
   const step = viz.steps[player.index];
 
-  usePlayerKeyboard(player);
+  usePlayerKeyboard(player, !focusMode);
+
+  useEffect(() => {
+    saveResumeStep(topic.id, player.index);
+    if (searchParams.get("step") === String(player.index)) return;
+    const next = new URLSearchParams(searchParams);
+    next.set("step", String(player.index));
+    setSearchParams(next, { replace: true });
+  }, [player.index, topic.id, searchParams, setSearchParams]);
+
+  useEffect(() => {
+    if (!shareNote) return;
+    const t = window.setTimeout(() => setShareNote(null), 2000);
+    return () => window.clearTimeout(t);
+  }, [shareNote]);
+
+  const shareLink = async () => {
+    const url = `${window.location.origin}${window.location.pathname}?step=${player.index}`;
+    try {
+      await navigator.clipboard.writeText(url);
+      setShareNote("Link copied");
+    } catch {
+      setShareNote("Could not copy");
+    }
+  };
 
   return (
-    <main className="stage-wrap">
-      <header className="topic-head">
-        <div className="mobile-toolbar">
-          <button
-            type="button"
-            className="mobile-menu-btn"
-            onClick={onOpenNav}
-            aria-label="Browse topics"
-          >
-            <MenuIcon />
-            <span>Topics</span>
-          </button>
-          {sectionTabs}
-          <button
-            className="theme-toggle"
-            onClick={onToggleTheme}
-            aria-label={theme === "dark" ? "Switch to light theme" : "Switch to dark theme"}
-            title={theme === "dark" ? "Light mode" : "Dark mode"}
-          >
-            <ThemeIcon theme={theme} />
-          </button>
-        </div>
+    <main className={`stage-wrap${focusMode ? " focus-mode" : ""}`}>
+      {!focusMode && (
+        <header className="topic-head">
+          <div className="topic-head-main">
+            <div className="topic-category">{topic.category}</div>
+            <h1 className="topic-title">{topic.title}</h1>
+            <TopicMeta topic={topic} onSelect={onSelect} />
+          </div>
+          <div className="topic-head-actions">
+            <ThemeToggle />
+          </div>
+        </header>
+      )}
 
-        <div className="topic-head-main">
-          <div className="topic-category">{topic.category}</div>
-          <h1 className="topic-title">{topic.title}</h1>
-          <TopicMeta topic={topic} onSelect={onSelect} />
+      {shareNote && (
+        <div className="toast" role="status">
+          {shareNote}
         </div>
-      </header>
+      )}
 
-      <ColorLegend />
+      <div className="sr-only" aria-live="polite" aria-atomic="true">
+        Step {player.index + 1}: {step.caption}
+      </div>
+
+      {!focusMode && <ColorLegend />}
 
       <Stage
         steps={viz.steps}
@@ -264,28 +256,31 @@ function TopicView({
           player={player}
           chapters={chapters}
           onShuffle={topic.shufflable ? () => setNonce((n) => n + 1) : undefined}
+          onShare={shareLink}
+          onFocusToggle={() => setFocusMode((v) => !v)}
+          focusMode={focusMode}
         />
       </section>
 
-      <ChapterPanel
-        chapters={chapters}
-        index={player.index}
-        onSeek={player.seek}
-      />
+      {!focusMode && (
+        <>
+          <ChapterPanel chapters={chapters} index={player.index} onSeek={player.seek} />
 
-      <section className="info">
-        <div className="panel">
-          <div className="panel-title">How it works</div>
-          <p className="explanation">{viz.explanation}</p>
-        </div>
-        <div className="panel code-panel">
-          <div className="panel-title">Code · step {player.index + 1}</div>
-          <CodeBlock code={viz.code} highlightLines={step.codeLines} />
-        </div>
-      </section>
+          <section className="info">
+            <div className="panel">
+              <div className="panel-title">How it works</div>
+              <p className="explanation">{viz.explanation}</p>
+            </div>
+            <div className="panel code-panel">
+              <div className="panel-title">Code · step {player.index + 1}</div>
+              <CodeBlock code={viz.code} highlightLines={step.codeLines} />
+            </div>
+          </section>
 
-      {topic.quiz && topic.quiz.length > 0 && (
-        <QuizPanel topicId={topic.id} questions={topic.quiz} />
+          {topic.quiz && topic.quiz.length > 0 && (
+            <QuizPanel topicId={topic.id} questions={topic.quiz} />
+          )}
+        </>
       )}
     </main>
   );

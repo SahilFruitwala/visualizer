@@ -84,6 +84,13 @@ export function defaultTopicId(section: Section): string {
 
 export function rememberTopic(sectionId: SectionId, topicId: string) {
   sessionStorage.setItem(`devviz:${sectionId}`, topicId);
+  sessionStorage.setItem("devviz:last-section", sectionId);
+}
+
+export function lastSectionId(): SectionId {
+  const stored = sessionStorage.getItem("devviz:last-section");
+  if (stored === "ds" || stored === "algo" || stored === "api") return stored;
+  return "ds";
 }
 
 /** Resolve which section owns a topic (for cross-section prereq links). */

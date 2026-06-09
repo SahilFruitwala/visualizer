@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 
 export interface PlayerOptions {
   initialSpeed?: number;
+  initialIndex?: number;
   /** When true, play advances one step at a time (default learning mode). */
   learnMode?: boolean;
 }
@@ -38,8 +39,10 @@ function readLearnMode(): boolean {
 // Drives a stepped timeline with play/pause, variable speed, and scrubbing.
 // Uses requestAnimationFrame so speed changes feel smooth and we never drift.
 export function usePlayer(length: number, opts: PlayerOptions = {}): Player {
-  const { initialSpeed = 1, learnMode: initialLearn = readLearnMode() } = opts;
-  const [index, setIndex] = useState(0);
+  const { initialSpeed = 1, initialIndex = 0, learnMode: initialLearn = readLearnMode() } = opts;
+  const [index, setIndex] = useState(() =>
+    Math.max(0, Math.min(initialIndex, Math.max(0, length - 1))),
+  );
   const [playing, setPlaying] = useState(false);
   const [speed, setSpeed] = useState(initialSpeed);
   const [learnMode, setLearnModeState] = useState(initialLearn);
@@ -59,10 +62,11 @@ export function usePlayer(length: number, opts: PlayerOptions = {}): Player {
   }, []);
 
   useEffect(() => {
-    setIndex(0);
+    const i = Math.max(0, Math.min(initialIndex, Math.max(0, length - 1)));
+    setIndex(i);
     setPlaying(false);
     acc.current = 0;
-  }, [length]);
+  }, [length, initialIndex]);
 
   useEffect(() => {
     if (!playing || learnMode) {

@@ -1,9 +1,7 @@
 import { useState } from "react";
 import type { QuizQuestion } from "../engine/types";
-import { markTopicComplete } from "../engine/progress";
 
 export function QuizPanel({
-  topicId,
   questions,
 }: {
   topicId: string;
@@ -44,13 +42,8 @@ export function QuizPanel({
                     data-state={state || undefined}
                     disabled={show}
                     onClick={() => {
-                      const next = { ...answers, [qi]: oi };
-                      setAnswers(next);
+                      setAnswers((prev) => ({ ...prev, [qi]: oi }));
                       setRevealed((r) => ({ ...r, [qi]: true }));
-                      const complete = questions.every(
-                        (qq, j) => next[j] === qq.correctIndex,
-                      );
-                      if (complete) markTopicComplete(topicId);
                     }}
                   >
                     {opt}
@@ -69,7 +62,7 @@ export function QuizPanel({
       {allAnswered && (
         <p className={`quiz-summary${allCorrect ? " ok" : ""}`}>
           {allCorrect
-            ? "Nice — you nailed every question. Topic marked complete."
+            ? "Nice — you nailed every question."
             : "Review the animation and try again."}
         </p>
       )}

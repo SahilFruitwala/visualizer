@@ -8,10 +8,16 @@ export function Controls({
   player,
   chapters,
   onShuffle,
+  onShare,
+  onFocusToggle,
+  focusMode,
 }: {
   player: Player;
   chapters?: Chapter[];
   onShuffle?: () => void;
+  onShare?: () => void;
+  onFocusToggle?: () => void;
+  focusMode?: boolean;
 }) {
   const { index, length, playing, learnMode } = player;
   const chaps = chapters && chapters.length > 1 ? chapters : null;
@@ -19,6 +25,7 @@ export function Controls({
   const chIdx = chaps && current ? chaps.findIndex((c) => c.step === current.step) : -1;
   const prevChapter = chaps && chIdx > 0 ? chaps[chIdx - 1] : null;
   const nextChapter = chaps && chIdx >= 0 && chIdx < chaps.length - 1 ? chaps[chIdx + 1] : null;
+  const max = Math.max(0, length - 1);
 
   return (
     <div className="controls-root">
@@ -51,15 +58,36 @@ export function Controls({
             </button>
           </div>
         )}
-        <input
-          type="range"
-          min={0}
-          max={Math.max(0, length - 1)}
-          value={index}
-          onChange={(e) => player.seek(Number(e.target.value))}
-          className="scrubber"
-          aria-label="Scrub timeline"
-        />
+
+        <div className="scrubber-track">
+          {chaps && max > 0 && (
+            <div className="scrubber-markers" aria-hidden>
+              {chaps.map((ch, i) => (
+                <button
+                  key={ch.step}
+                  type="button"
+                  className="scrubber-marker"
+                  style={{ left: `${(ch.step / max) * 100}%` }}
+                  data-active={ch.step === current?.step}
+                  data-past={ch.step < index}
+                  title={`${i + 1}. ${ch.title}`}
+                  onClick={() => player.seek(ch.step)}
+                  tabIndex={-1}
+                />
+              ))}
+            </div>
+          )}
+          <input
+            type="range"
+            min={0}
+            max={max}
+            value={index}
+            onChange={(e) => player.seek(Number(e.target.value))}
+            className="scrubber"
+            aria-label="Scrub timeline"
+            aria-valuetext={`Step ${index + 1} of ${length}`}
+          />
+        </div>
       </div>
 
       <div className="controls-toolbar">
@@ -121,13 +149,26 @@ export function Controls({
           )}
 
           {onShuffle && (
+            <button type="button" onClick={onShuffle} className="chip" title="New random input">
+              ⟳ shuffle
+            </button>
+          )}
+
+          {onShare && (
+            <button type="button" onClick={onShare} className="chip" title="Copy link to this step">
+              ⧉ share
+            </button>
+          )}
+
+          {onFocusToggle && (
             <button
               type="button"
-              onClick={onShuffle}
+              onClick={onFocusToggle}
               className="chip"
-              title="New random input"
+              data-active={focusMode}
+              title="Focus mode: hide panels"
             >
-              ⟳ shuffle
+              {focusMode ? "⊙ exit focus" : "⊙ focus"}
             </button>
           )}
         </div>
@@ -137,6 +178,7 @@ export function Controls({
         <span>← → step</span>
         <span>Space {learnMode ? "next" : "play"}</span>
         <span>R restart</span>
+        <span>⌘K search</span>
       </div>
     </div>
   );

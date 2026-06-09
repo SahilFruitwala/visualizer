@@ -1,12 +1,14 @@
 import { useEffect, useMemo, useState } from "react";
-import { isTopicComplete } from "../engine/progress";
+import type { AppView } from "./AppShell";
 import {
+  defaultTopicId,
   topicsByCategoryForSection,
   topicsForSection,
   type Section,
   SECTIONS,
 } from "../sections";
 import { FONT_MONO, FONT_SANS } from "../theme";
+import { ThemeToggle } from "./ThemeToggle";
 
 function NavGroup({
   category,
@@ -51,7 +53,6 @@ function NavGroup({
               key={t.id}
               className="nav-item"
               data-active={t.id === activeId}
-              data-done={isTopicComplete(t.id)}
               onClick={() => onSelect(t.id)}
               title={t.blurb}
             >
@@ -68,13 +69,19 @@ function NavGroup({
 export function Sidebar({
   section,
   activeId,
+  view,
   onSelect,
   onSectionChange,
+  onNavigate,
+  onOpenSearch,
 }: {
   section: Section;
   activeId: string;
+  view: AppView;
   onSelect: (id: string) => void;
   onSectionChange: (sectionId: Section["id"]) => void;
+  onNavigate: (path: string) => void;
+  onOpenSearch: () => void;
 }) {
   const [query, setQuery] = useState("");
   const allTopics = topicsForSection(section);
@@ -101,20 +108,28 @@ export function Sidebar({
 
   return (
     <aside className="sidebar">
-      <div style={{ padding: "22px 20px 14px" }}>
-        <div style={{ fontFamily: FONT_SANS, fontSize: 22, fontWeight: 800, color: "var(--text)" }}>
-          Dev<span style={{ color: "var(--accent)" }}>·</span>Visualizer
-        </div>
+      <div className="sidebar-head">
+        <button type="button" className="sidebar-brand" onClick={() => onNavigate(`${section.path}/${defaultTopicId(section)}`)}>
+          <span style={{ fontFamily: FONT_SANS, fontSize: 22, fontWeight: 800, color: "var(--text)" }}>
+            Dev<span style={{ color: "var(--accent)" }}>·</span>Visualizer
+          </span>
+        </button>
         <div style={{ fontFamily: FONT_MONO, fontSize: 12, color: "var(--muted)", marginTop: 4 }}>
           {section.label} · {totalInSection} topics
         </div>
+
+        <button type="button" className="sidebar-search-btn" onClick={onOpenSearch}>
+          <span>⌕ Search all topics</span>
+          <kbd>⌘K</kbd>
+        </button>
+
         <input
           type="search"
           className="sidebar-search"
-          placeholder={`Search ${section.shortLabel}…`}
+          placeholder={`Filter ${section.shortLabel}…`}
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          aria-label="Search topics"
+          aria-label={`Filter topics in ${section.label}`}
         />
       </div>
 
@@ -134,7 +149,7 @@ export function Sidebar({
         ))}
       </div>
 
-      <nav style={{ overflowY: "auto", flex: 1, paddingBottom: 24 }}>
+      <nav className="sidebar-nav">
         {searching && filteredGroups.length === 0 && (
           <p className="search-empty">No topics match “{query.trim()}”.</p>
         )}
@@ -150,6 +165,18 @@ export function Sidebar({
           />
         ))}
       </nav>
+
+      <footer className="sidebar-footer">
+        <button
+          type="button"
+          className="sidebar-footer-btn"
+          data-active={view === "paths"}
+          onClick={() => onNavigate("/paths")}
+        >
+          Paths
+        </button>
+        <ThemeToggle className="theme-toggle sidebar-theme-toggle" />
+      </footer>
     </aside>
   );
 }
