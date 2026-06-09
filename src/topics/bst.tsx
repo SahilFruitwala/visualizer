@@ -127,7 +127,7 @@ export const bst: Topic = {
               return (
                 <g key={i}>
                   <circle cx={x(n.x)} cy={y(n.y)} r={20} fill={fnd ? C.sorted : on ? C.active : C.default} stroke={C.surfaceBorder} strokeWidth={2} style={{ transition: "fill 200ms" }} />
-                  <text x={x(n.x)} y={y(n.y) + 5} textAnchor="middle" fontFamily={FONT_MONO} fontWeight={700} fontSize={16} fill={on || fnd ? "#0e1424" : C.text}>{n.val}</text>
+                  <text x={x(n.x)} y={y(n.y) + 5} textAnchor="middle" fontFamily={FONT_MONO} fontWeight={700} fontSize={16} fill={on || fnd ? C.ink : C.text}>{n.val}</text>
                 </g>
               );
             })}

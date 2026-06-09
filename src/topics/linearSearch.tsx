@@ -33,6 +33,7 @@ export const linearSearch: Topic = {
   title: "Linear Search",
   category: "Searching",
   blurb: "Check every element until the target appears.",
+  shufflable: true,
   create: () => {
     const arr = shuffle([4, 15, 8, 23, 16, 42, 11, 7, 19]);
     const target = arr[Math.floor(Math.random() * arr.length)];

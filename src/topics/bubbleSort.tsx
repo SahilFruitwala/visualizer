@@ -44,6 +44,7 @@ export const bubbleSort: Topic = {
   title: "Bubble Sort",
   category: "Sorting",
   blurb: "Repeatedly swap adjacent out-of-order pairs.",
+  shufflable: true,
   create: () => {
     const input = shuffle([5, 2, 8, 1, 9, 3, 7, 4]);
     const steps = build(input);

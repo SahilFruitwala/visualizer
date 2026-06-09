@@ -157,7 +157,7 @@ export const trie: Topic = {
               return (
                 <g key={n.id}>
                   <circle cx={x(n.x)} cy={y(n.y)} r={17} fill={fill} stroke={C.surfaceBorder} strokeWidth={2} style={{ transition: "fill 200ms" }} />
-                  <text x={x(n.x)} y={y(n.y) + 5} textAnchor="middle" fontFamily={FONT_MONO} fontWeight={700} fontSize={15} fill={n.end || on ? "#0e1424" : C.text}>{n.ch}</text>
+                  <text x={x(n.x)} y={y(n.y) + 5} textAnchor="middle" fontFamily={FONT_MONO} fontWeight={700} fontSize={15} fill={n.end || on ? C.ink : C.text}>{n.ch}</text>
                 </g>
               );
             })}

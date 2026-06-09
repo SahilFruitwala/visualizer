@@ -103,7 +103,7 @@ export const segmentTree: Topic = {
               return (
                 <g key={i}>
                   <rect x={x(p.x) - 22} y={y(p.y) - 15} width={44} height={30} rx={7} fill={fill} stroke={C.surfaceBorder} strokeWidth={2} style={{ transition: "fill 200ms" }} />
-                  <text x={x(p.x)} y={y(p.y) + 5} textAnchor="middle" fontFamily={FONT_MONO} fontWeight={700} fontSize={14} fill={fill === C.default ? C.text : "#0e1424"}>{n.sum}</text>
+                  <text x={x(p.x)} y={y(p.y) + 5} textAnchor="middle" fontFamily={FONT_MONO} fontWeight={700} fontSize={14} fill={fill === C.default ? C.text : C.ink}>{n.sum}</text>
                   <text x={x(p.x)} y={y(p.y) + 26} textAnchor="middle" fontFamily={FONT_MONO} fontSize={9} fill={C.textMuted}>[{n.lo}{n.lo !== n.hi ? `..${n.hi}` : ""}]</text>
                 </g>
               );

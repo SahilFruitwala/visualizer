@@ -53,6 +53,7 @@ export const shellSort: Topic = {
   title: "Shell Sort",
   category: "Sorting",
   blurb: "Gapped insertion sort with shrinking gaps.",
+  shufflable: true,
   create: () => {
     const input = shuffle([8, 3, 1, 9, 2, 7, 5, 4, 6]);
     const steps = build(input);

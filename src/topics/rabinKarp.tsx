@@ -71,7 +71,7 @@ export const rabinKarp: Topic = {
               {TEXT.split("").map((ch, i) => {
                 const inWin = i >= s.offset && i < s.offset + PAT.length;
                 return (
-                  <div key={i} style={{ width: 32, height: 36, borderRadius: 6, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: FONT_MONO, fontWeight: 700, fontSize: 16, background: inWin ? color : "#1b2440", color: inWin ? "#0e1424" : C.text, border: `1px solid ${C.surfaceBorder}`, transition: "background 160ms" }}>{ch}</div>
+                  <div key={i} style={{ width: 32, height: 36, borderRadius: 6, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: FONT_MONO, fontWeight: 700, fontSize: 16, background: inWin ? color : C.surface, color: inWin ? C.ink : C.text, border: `1px solid ${C.surfaceBorder}`, transition: "background 160ms" }}>{ch}</div>
                 );
               })}
             </div>

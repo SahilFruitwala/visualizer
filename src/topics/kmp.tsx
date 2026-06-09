@@ -75,7 +75,7 @@ function StrRow({ str, hi, color }: { str: string; hi: number; color: string }) 
   return (
     <div style={{ display: "flex", gap: 3 }}>
       {str.split("").map((ch, i) => (
-        <div key={i} style={{ width: 30, height: 34, borderRadius: 6, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: FONT_MONO, fontWeight: 700, fontSize: 16, background: i === hi ? color : "#1b2440", color: i === hi ? "#0e1424" : C.text, border: `1px solid ${C.surfaceBorder}` }}>{ch}</div>
+        <div key={i} style={{ width: 30, height: 34, borderRadius: 6, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: FONT_MONO, fontWeight: 700, fontSize: 16, background: i === hi ? color : C.surface, color: i === hi ? C.ink : C.text, border: `1px solid ${C.surfaceBorder}` }}>{ch}</div>
       ))}
     </div>
   );
@@ -103,7 +103,7 @@ export const kmp: Topic = {
             <div style={{ display: "flex", gap: 3, marginTop: 6 }}>
               <span style={{ fontFamily: FONT_MONO, fontSize: 12, color: C.textMuted, alignSelf: "center", marginRight: 6 }}>lps:</span>
               {s.lps.map((v, i) => (
-                <div key={i} style={{ width: 30, height: 24, borderRadius: 5, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: FONT_MONO, fontSize: 13, background: "#141c34", color: C.pointer, border: `1px solid ${C.surfaceBorder}` }}>{v}</div>
+                <div key={i} style={{ width: 30, height: 24, borderRadius: 5, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: FONT_MONO, fontSize: 13, background: C.gridDefault, color: C.pointer, border: `1px solid ${C.surfaceBorder}` }}>{v}</div>
               ))}
             </div>
           </div>

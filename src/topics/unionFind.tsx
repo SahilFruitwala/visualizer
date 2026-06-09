@@ -94,7 +94,7 @@ export const unionFind: Topic = {
               return (
                 <g key={i}>
                   <circle cx={cx(i)} cy={120} r={20} fill={fill} stroke={C.surfaceBorder} strokeWidth={2} style={{ transition: "fill 200ms" }} />
-                  <text x={cx(i)} y={125} textAnchor="middle" fontFamily={FONT_MONO} fontWeight={700} fontSize={16} fill={fill === C.default ? C.text : "#0e1424"}>{i}</text>
+                  <text x={cx(i)} y={125} textAnchor="middle" fontFamily={FONT_MONO} fontWeight={700} fontSize={16} fill={fill === C.default ? C.text : C.ink}>{i}</text>
                 </g>
               );
             })}

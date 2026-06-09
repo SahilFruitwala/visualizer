@@ -59,6 +59,7 @@ export const heapSort: Topic = {
   title: "Heap Sort",
   category: "Sorting",
   blurb: "Build a max-heap, then extract the max repeatedly.",
+  shufflable: true,
   create: () => {
     const input = shuffle([5, 2, 8, 1, 9, 3, 7, 6]);
     const steps = build(input);

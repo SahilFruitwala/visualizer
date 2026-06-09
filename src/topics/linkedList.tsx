@@ -70,10 +70,10 @@ export const linkedList: Topic = {
                   </div>
                 )}
                 <div style={{ display: "flex", transition: "transform 200ms" }}>
-                  <div style={{ width: 60, height: 60, borderRadius: "10px 0 0 10px", background: fill, border: `2px solid ${C.surfaceBorder}`, borderRight: "none", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: FONT_MONO, fontWeight: 700, fontSize: 22, color: dark ? C.text : "#0e1424", transition: "background 200ms" }}>
+                  <div style={{ width: 60, height: 60, borderRadius: "10px 0 0 10px", background: fill, border: `2px solid ${C.surfaceBorder}`, borderRight: "none", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: FONT_MONO, fontWeight: 700, fontSize: 22, color: dark ? C.text : C.ink, transition: "background 200ms" }}>
                     {v}
                   </div>
-                  <div style={{ width: 26, height: 60, borderRadius: "0 10px 10px 0", background: `${fill}aa`, border: `2px solid ${C.surfaceBorder}`, display: "flex", alignItems: "center", justifyContent: "center", color: dark ? C.textMuted : "#0e1424" }}>
+                  <div style={{ width: 26, height: 60, borderRadius: "0 10px 10px 0", background: `${fill}aa`, border: `2px solid ${C.surfaceBorder}`, display: "flex", alignItems: "center", justifyContent: "center", color: dark ? C.textMuted : C.ink }}>
                     •
                   </div>
                 </div>

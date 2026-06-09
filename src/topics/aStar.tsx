@@ -114,7 +114,7 @@ export const aStar: Topic = {
               const r = Math.floor(idx / COLS), c = idx % COLS;
               const k = `${r},${c}`;
               const ch = MAP[r][c];
-              let bg = "#141c34";
+              let bg = C.gridDefault;
               if (ch === "#") bg = "#0a0e1a";
               else if (path.has(k)) bg = C.sorted;
               else if (k === s.current) bg = C.active;
@@ -122,7 +122,7 @@ export const aStar: Topic = {
               else if (open.has(k)) bg = C.pointer;
               const label = ch === "S" ? "S" : ch === "G" ? "G" : "";
               return (
-                <div key={idx} style={{ width: size, height: size, borderRadius: 6, background: bg, border: ch === "#" ? "none" : `1px solid ${C.surfaceBorder}`, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: FONT_MONO, fontWeight: 700, fontSize: 14, color: "#0e1424", transition: "background 140ms" }}>
+                <div key={idx} style={{ width: size, height: size, borderRadius: 6, background: bg, border: ch === "#" ? "none" : `1px solid ${C.surfaceBorder}`, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: FONT_MONO, fontWeight: 700, fontSize: 14, color: C.ink, transition: "background 140ms" }}>
                   {label}
                 </div>
               );

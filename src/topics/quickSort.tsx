@@ -67,6 +67,7 @@ export const quickSort: Topic = {
   title: "Quick Sort",
   category: "Sorting",
   blurb: "Partition around a pivot, then recurse.",
+  shufflable: true,
   create: () => {
     const input = shuffle([5, 2, 8, 1, 9, 3, 7, 6]);
     const steps = build(input);

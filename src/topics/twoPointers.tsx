@@ -45,6 +45,7 @@ export const twoPointers: Topic = {
   title: "Two Pointers",
   category: "Techniques",
   blurb: "Converge two indices from both ends.",
+  shufflable: true,
   create: () => {
     const arr = [1, 3, 5, 7, 9, 12, 15, 18];
     const i = 1 + Math.floor(Math.random() * 3);

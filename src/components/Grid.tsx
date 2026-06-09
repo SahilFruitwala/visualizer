@@ -3,14 +3,17 @@ import { C, FONT_MONO } from "../theme";
 
 export type CellMark = "default" | "active" | "compare" | "filled" | "result" | "muted";
 
-const FILL: Record<CellMark, [string, string]> = {
-  default: ["#141c34", C.text],
-  active: [C.active, "#0e1424"],
-  compare: [C.pointer, "#0e1424"],
-  filled: ["#243056", C.text],
-  result: [C.sorted, "#0e1424"],
-  muted: ["#11182e", C.textMuted],
-};
+function fill(mark: CellMark): [string, string] {
+  const map: Record<CellMark, [string, string]> = {
+    default: [C.gridDefault, C.text],
+    active: [C.active, C.ink],
+    compare: [C.pointer, C.ink],
+    filled: [C.gridFilled, C.text],
+    result: [C.sorted, C.ink],
+    muted: [C.gridMuted, C.textMuted],
+  };
+  return map[mark];
+}
 
 // A 2D table used by dynamic-programming visualizations (and anything grid-shaped).
 // `cells[r][c]` holds the display value; `mark(r,c)` returns its colour state.
@@ -48,7 +51,7 @@ export function Grid({
             </div>
           )}
           {Array.from({ length: cols }, (_, c) => {
-            const [bg, fg] = FILL[mark(r, c)];
+            const [bg, fg] = fill(mark(r, c));
             return (
               <div
                 key={c}

@@ -49,6 +49,7 @@ export const insertionSort: Topic = {
   title: "Insertion Sort",
   category: "Sorting",
   blurb: "Insert each element into a growing sorted prefix.",
+  shufflable: true,
   create: () => {
     const input = shuffle([5, 2, 8, 1, 9, 3, 7, 4]);
     const steps = build(input);

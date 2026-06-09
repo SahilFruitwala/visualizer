@@ -79,13 +79,13 @@ export const nQueens: Topic = {
               const hasQueen = s.queens[r] === c;
               const trying = r === s.tryRow && c === s.tryCol;
               const light = (r + c) % 2 === 0;
-              let bg = light ? "#1b2440" : "#141c34";
+              let bg = light ? C.surface : C.gridDefault;
               if (hasQueen) bg = C.sorted;
               else if (trying && s.status === "conflict") bg = C.compare;
               else if (trying) bg = C.active;
               return (
                 <div key={idx} style={{ width: cell, height: cell, background: bg, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 24, transition: "background 160ms" }}>
-                  {hasQueen ? "♛" : trying && s.status !== "place" ? <span style={{ color: "#0e1424", fontFamily: FONT_MONO, fontSize: 14 }}>?</span> : ""}
+                  {hasQueen ? "♛" : trying && s.status !== "place" ? <span style={{ color: C.ink, fontFamily: FONT_MONO, fontSize: 14 }}>?</span> : ""}
                 </div>
               );
             })}

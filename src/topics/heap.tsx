@@ -101,14 +101,14 @@ export const heap: Topic = {
                 return (
                   <g key={i}>
                     <circle cx={x(pos.x)} cy={y(pos.y)} r={22} fill={on ? C.active : i === 0 ? C.sorted : C.default} stroke={C.surfaceBorder} strokeWidth={2} style={{ transition: "fill 200ms" }} />
-                    <text x={x(pos.x)} y={y(pos.y) + 6} textAnchor="middle" fontFamily={FONT_MONO} fontWeight={700} fontSize={17} fill={on || i === 0 ? "#0e1424" : C.text}>{v}</text>
+                    <text x={x(pos.x)} y={y(pos.y) + 6} textAnchor="middle" fontFamily={FONT_MONO} fontWeight={700} fontSize={17} fill={on || i === 0 ? C.ink : C.text}>{v}</text>
                   </g>
                 );
               })}
             </svg>
             <div style={{ display: "flex", gap: 4 }}>
               {s.heap.map((v, i) => (
-                <div key={i} style={{ width: 38, height: 38, borderRadius: 7, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: FONT_MONO, fontWeight: 700, background: i === s.a || i === s.b ? C.active : "#1b2440", color: i === s.a || i === s.b ? "#0e1424" : C.text, border: `1px solid ${C.surfaceBorder}` }}>{v}</div>
+                <div key={i} style={{ width: 38, height: 38, borderRadius: 7, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: FONT_MONO, fontWeight: 700, background: i === s.a || i === s.b ? C.active : C.surface, color: i === s.a || i === s.b ? C.ink : C.text, border: `1px solid ${C.surfaceBorder}` }}>{v}</div>
               ))}
             </div>
           </div>

@@ -68,7 +68,7 @@ export const radixSort: Topic = {
           </div>
           <div style={{ display: "flex", gap: 5 }}>
             {s.buckets.map((b, d) => (
-              <div key={d} style={{ minWidth: 38, minHeight: 30, padding: 4, borderRadius: 7, border: `1px solid ${C.surfaceBorder}`, background: "#11182e", display: "flex", flexDirection: "column", gap: 3, alignItems: "center" }}>
+              <div key={d} style={{ minWidth: 38, minHeight: 30, padding: 4, borderRadius: 7, border: `1px solid ${C.surfaceBorder}`, background: C.gridMuted, display: "flex", flexDirection: "column", gap: 3, alignItems: "center" }}>
                 <div style={{ fontFamily: FONT_MONO, fontSize: 11, color: C.textMuted }}>{d}</div>
                 {b.map((v, j) => (
                   <div key={j} style={{ fontFamily: FONT_MONO, fontSize: 12, color: C.text, background: C.default, borderRadius: 4, padding: "1px 5px" }}>{v}</div>

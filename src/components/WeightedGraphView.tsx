@@ -4,18 +4,25 @@ import { C, FONT_MONO } from "../theme";
 export type NState = "default" | "frontier" | "current" | "done";
 export type EState = "default" | "candidate" | "chosen" | "rejected";
 
-const NFILL: Record<NState, string> = {
-  default: C.default,
-  frontier: C.pointer,
-  current: C.active,
-  done: C.highlight,
-};
-const ECOLOR: Record<EState, string> = {
-  default: C.surfaceBorder,
-  candidate: C.active,
-  chosen: C.sorted,
-  rejected: "#5a2230",
-};
+function nodeFill(st: NState): string {
+  const map: Record<NState, string> = {
+    default: C.default,
+    frontier: C.pointer,
+    current: C.active,
+    done: C.highlight,
+  };
+  return map[st];
+}
+
+function edgeColor(st: EState): string {
+  const map: Record<EState, string> = {
+    default: C.surfaceBorder,
+    candidate: C.active,
+    chosen: C.sorted,
+    rejected: C.rejected,
+  };
+  return map[st];
+}
 
 export function WeightedGraphView({
   nodes,
@@ -61,7 +68,7 @@ export function WeightedGraphView({
           const x2 = b.x - ux * 24, y2 = b.y - uy * 24;
           return (
             <g key={ek(u, v)}>
-              <line x1={a.x} y1={a.y} x2={x2} y2={y2} stroke={ECOLOR[st]} strokeWidth={st === "default" ? 2 : 3.5} markerEnd={directed ? "url(#wgah)" : undefined} style={{ transition: "stroke 220ms" }} />
+              <line x1={a.x} y1={a.y} x2={x2} y2={y2} stroke={edgeColor(st)} strokeWidth={st === "default" ? 2 : 3.5} markerEnd={directed ? "url(#wgah)" : undefined} style={{ transition: "stroke 220ms" }} />
               {w != null && (
                 <text x={(a.x + b.x) / 2} y={(a.y + b.y) / 2 - 6} textAnchor="middle" fontFamily={FONT_MONO} fontSize={14} fontWeight={700} fill={st === "chosen" ? C.sorted : C.textMuted}>{w}</text>
               )}
@@ -73,8 +80,8 @@ export function WeightedGraphView({
           const dark = st === "default";
           return (
             <g key={n}>
-              <circle cx={pos[n].x} cy={pos[n].y} r={22} fill={NFILL[st]} stroke={C.surfaceBorder} strokeWidth={2} style={{ transition: "fill 220ms" }} />
-              <text x={pos[n].x} y={pos[n].y + 5} textAnchor="middle" fontFamily={FONT_MONO} fontWeight={700} fontSize={n.length > 2 ? 10 : 16} fill={dark ? C.text : "#0e1424"}>{n}</text>
+              <circle cx={pos[n].x} cy={pos[n].y} r={22} fill={nodeFill(st)} stroke={C.surfaceBorder} strokeWidth={2} style={{ transition: "fill 220ms" }} />
+              <text x={pos[n].x} y={pos[n].y + 5} textAnchor="middle" fontFamily={FONT_MONO} fontWeight={700} fontSize={n.length > 2 ? 10 : 16} fill={dark ? C.text : C.ink}>{n}</text>
               {nodeLabel && (
                 <text x={pos[n].x} y={pos[n].y + 40} textAnchor="middle" fontFamily={FONT_MONO} fontSize={13} fontWeight={700} fill={C.pointer}>{nodeLabel(n)}</text>
               )}

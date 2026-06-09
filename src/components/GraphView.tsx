@@ -3,12 +3,15 @@ import { C, FONT_MONO } from "../theme";
 
 export type NodeState = "default" | "frontier" | "current" | "visited";
 
-const FILL: Record<NodeState, string> = {
-  default: C.default,
-  frontier: C.pointer, // in the queue/stack, not yet processed
-  current: C.active, // being processed now
-  visited: C.highlight, // fully processed
-};
+function nodeFill(st: NodeState): string {
+  const map: Record<NodeState, string> = {
+    default: C.default,
+    frontier: C.pointer,
+    current: C.active,
+    visited: C.highlight,
+  };
+  return map[st];
+}
 
 // Renders the shared graph, coloring each node by its traversal state, plus a
 // "data structure" strip (the queue or stack) and the visit order output.
@@ -35,8 +38,8 @@ export function GraphView({
           const dark = st === "default";
           return (
             <g key={n}>
-              <circle cx={POS[n].x} cy={POS[n].y} r={24} fill={FILL[st]} stroke={C.surfaceBorder} strokeWidth={2} style={{ transition: "fill 220ms" }} />
-              <text x={POS[n].x} y={POS[n].y + 6} textAnchor="middle" fontFamily={FONT_MONO} fontWeight={700} fontSize={18} fill={dark ? C.text : "#0e1424"}>
+              <circle cx={POS[n].x} cy={POS[n].y} r={24} fill={nodeFill(st)} stroke={C.surfaceBorder} strokeWidth={2} style={{ transition: "fill 220ms" }} />
+              <text x={POS[n].x} y={POS[n].y + 6} textAnchor="middle" fontFamily={FONT_MONO} fontWeight={700} fontSize={18} fill={dark ? C.text : C.ink}>
                 {n}
               </text>
             </g>

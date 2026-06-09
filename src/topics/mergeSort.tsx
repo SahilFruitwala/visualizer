@@ -65,6 +65,7 @@ export const mergeSort: Topic = {
   title: "Merge Sort",
   category: "Sorting",
   blurb: "Divide in half, sort each, merge the runs.",
+  shufflable: true,
   create: () => {
     const input = shuffle([5, 2, 8, 1, 9, 3, 7, 6]);
     const steps = build(input);

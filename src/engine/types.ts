@@ -34,6 +34,8 @@ export interface Topic {
   title: string;
   category: Category;
   blurb: string;
+  /** When true, create() varies its input — show the shuffle control. */
+  shufflable?: boolean;
   /** Builds a fresh visualization (so "shuffle"/replay can regenerate input). */
   create: () => Viz<StepBase>;
 }

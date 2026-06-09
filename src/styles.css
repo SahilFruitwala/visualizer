@@ -9,11 +9,23 @@
   --accent: #60a5fa;
   --accent-ink: #08111f;
   --shadow: rgba(0, 0, 0, 0.35);
-  /* the visualization stage stays dark in both themes (it's a "screen") */
   --stage-top: #131c3a;
   --stage-bottom: #070a14;
+  --stage-border: #243154;
+  --caption-bg: rgba(18, 24, 44, 0.72);
+  --caption-border: #2c3a63;
+  --caption-text: #eef2ff;
   --code-bg: #0b1020;
   --code-fg: #d7e0ff;
+  --code-border: #243154;
+  --syn-keyword: #c792ea;
+  --syn-fn: #82aaff;
+  --syn-string: #c3e88d;
+  --syn-number: #f78c6c;
+  --syn-comment: #546e7a;
+  --syn-built-in: #ffcb6b;
+  --syn-params: #d7e0ff;
+  --syn-punct: #89ddff;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
@@ -27,6 +39,23 @@
   --accent: #2563eb;
   --accent-ink: #ffffff;
   --shadow: rgba(40, 60, 110, 0.14);
+  --stage-top: #e8edf6;
+  --stage-bottom: #d8e0ed;
+  --stage-border: #c5cfe0;
+  --caption-bg: rgba(255, 255, 255, 0.88);
+  --caption-border: #c5cfe0;
+  --caption-text: #161d33;
+  --code-bg: #f4f6fb;
+  --code-fg: #1a2440;
+  --code-border: #d7deec;
+  --syn-keyword: #7c3aed;
+  --syn-fn: #2563eb;
+  --syn-string: #15803d;
+  --syn-number: #c2410c;
+  --syn-comment: #64748b;
+  --syn-built-in: #b45309;
+  --syn-params: #1a2440;
+  --syn-punct: #0e7490;
 }
 
 * { box-sizing: border-box; }
@@ -91,7 +120,7 @@ body { background: var(--bg); color: var(--text); }
 /* ---- the dark visualization stage ---- */
 .stage {
   background: radial-gradient(circle at 50% 28%, var(--stage-top) 0%, var(--stage-bottom) 78%);
-  border: 1px solid #243154;
+  border: 1px solid var(--stage-border);
   border-radius: 18px;
   display: flex;
   flex-direction: column;
@@ -115,9 +144,9 @@ body { background: var(--bg); color: var(--text); }
   font-family: ui-monospace, "SF Mono", Menlo, monospace;
   font-size: 16px;
   line-height: 1.4;
-  color: #eef2ff;                       /* fixed: stage is always dark */
-  background: rgba(18, 24, 44, 0.72);
-  border: 1px solid #2c3a63;
+  color: var(--caption-text);
+  background: var(--caption-bg);
+  border: 1px solid var(--caption-border);
   border-radius: 12px;
   padding: 10px 20px;
   text-align: center;
@@ -191,9 +220,10 @@ body { background: var(--bg); color: var(--text); }
 .theme-toggle {
   display: inline-flex;
   align-items: center;
-  gap: 7px;
+  justify-content: center;
+  width: 40px;
   height: 40px;
-  padding: 0 14px;
+  padding: 0;
   border-radius: 10px;
   border: 1px solid var(--border);
   background: var(--panel);
@@ -243,11 +273,28 @@ body { background: var(--bg); color: var(--text); }
   line-height: 1.55;
   color: var(--code-fg);
   background: var(--code-bg);
-  border: 1px solid #243154;
+  border: 1px solid var(--code-border);
   border-radius: 10px;
   padding: 16px;
   overflow-x: auto;
 }
+.code code {
+  font-family: inherit;
+  font-size: inherit;
+  background: none;
+  padding: 0;
+}
+.code .hljs-keyword { color: var(--syn-keyword); }
+.code .hljs-title.function_ { color: var(--syn-fn); }
+.code .hljs-title.class_ { color: var(--syn-fn); }
+.code .hljs-string { color: var(--syn-string); }
+.code .hljs-number { color: var(--syn-number); }
+.code .hljs-comment { color: var(--syn-comment); font-style: italic; }
+.code .hljs-built_in { color: var(--syn-built-in); }
+.code .hljs-params { color: var(--syn-params); }
+.code .hljs-punctuation { color: var(--syn-punct); }
+.code .hljs-variable { color: var(--code-fg); }
+.code .hljs-property { color: var(--syn-built-in); }
 
 /* ---- responsive ---- */
 @media (max-width: 900px) {

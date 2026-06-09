@@ -10,16 +10,19 @@ export type State =
   | "highlight"
   | "muted";
 
-const FILL: Record<State, [string, string, boolean]> = {
+function fill(state: State): [string, string, boolean] {
   // [background, border, isDark]
-  default: [C.default, C.defaultBorder, true],
-  active: [C.active, C.activeBorder, false],
-  compare: [C.compare, C.compareBorder, false],
-  sorted: [C.sorted, C.sortedBorder, false],
-  pointer: [C.pointer, C.pointerBorder, false],
-  highlight: [C.highlight, C.highlightBorder, false],
-  muted: ["#222a45", "#2c3a63", true],
-};
+  const map: Record<State, [string, string, boolean]> = {
+    default: [C.default, C.defaultBorder, true],
+    active: [C.active, C.activeBorder, false],
+    compare: [C.compare, C.compareBorder, false],
+    sorted: [C.sorted, C.sortedBorder, false],
+    pointer: [C.pointer, C.pointerBorder, false],
+    highlight: [C.highlight, C.highlightBorder, false],
+    muted: [C.cellMuted, C.cellMutedBorder, true],
+  };
+  return map[state];
+}
 
 // A labelled square — the universal "array element / node value" primitive.
 export function Cell({
@@ -33,7 +36,7 @@ export function Cell({
   size?: number;
   sub?: ReactNode; // small label under the cell (e.g. an index)
 }) {
-  const [bg, border, dark] = FILL[state];
+  const [bg, border, dark] = fill(state);
   return (
     <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 8 }}>
       <div
@@ -49,7 +52,7 @@ export function Cell({
           fontFamily: FONT_MONO,
           fontSize: size * 0.34,
           fontWeight: 700,
-          color: dark ? C.text : "#0e1424",
+          color: dark ? C.text : C.ink,
           boxShadow: dark ? "none" : `0 0 22px ${border}55`,
           transition: "background 220ms ease, border-color 220ms ease, box-shadow 220ms ease, transform 220ms ease",
         }}
@@ -77,7 +80,7 @@ export function Bar({
   width?: number;
   maxHeight?: number;
 }) {
-  const [bg, border] = FILL[state];
+  const [bg, border] = fill(state);
   const h = Math.max(24, (value / max) * maxHeight);
   return (
     <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 8 }}>

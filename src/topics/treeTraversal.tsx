@@ -96,7 +96,7 @@ export const treeTraversal: Topic = {
               return (
                 <g key={i} style={{ transition: "all 200ms" }}>
                   <circle cx={px(POS[i].x)} cy={py(POS[i].y)} r={26} fill={fill} stroke={C.surfaceBorder} strokeWidth={2} style={{ transition: "fill 200ms" }} />
-                  <text x={px(POS[i].x)} y={py(POS[i].y) + 6} textAnchor="middle" fontFamily={FONT_MONO} fontWeight={700} fontSize={20} fill={isCur || done ? "#0e1424" : C.text}>
+                  <text x={px(POS[i].x)} y={py(POS[i].y) + 6} textAnchor="middle" fontFamily={FONT_MONO} fontWeight={700} fontSize={20} fill={isCur || done ? C.ink : C.text}>
                     {TREE[i]}
                   </text>
                 </g>

@@ -71,7 +71,7 @@ export const countingSort: Topic = {
           <div style={{ display: "flex", gap: 6 }}>
             {s.count.map((c, v) => (
               <div key={v} style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 4 }}>
-                <div style={{ width: 40, height: 40, borderRadius: 7, background: v === s.countIdx ? C.compare : "#1b2440", color: v === s.countIdx ? "#0e1424" : C.text, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: FONT_MONO, fontWeight: 700, border: `1px solid ${C.surfaceBorder}`, transition: "background 180ms" }}>{c}</div>
+                <div style={{ width: 40, height: 40, borderRadius: 7, background: v === s.countIdx ? C.compare : C.surface, color: v === s.countIdx ? C.ink : C.text, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: FONT_MONO, fontWeight: 700, border: `1px solid ${C.surfaceBorder}`, transition: "background 180ms" }}>{c}</div>
                 <div style={{ fontFamily: FONT_MONO, fontSize: 12, color: C.textMuted }}>{v}</div>
               </div>
             ))}

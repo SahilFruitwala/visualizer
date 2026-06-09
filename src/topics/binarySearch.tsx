@@ -47,6 +47,7 @@ export const binarySearch: Topic = {
   title: "Binary Search",
   category: "Searching",
   blurb: "Halve a sorted range until the target is found.",
+  shufflable: true,
   create: () => {
     const arr = [2, 5, 8, 12, 16, 23, 38, 56, 72, 91];
     const target = arr[2 + Math.floor(Math.random() * (arr.length - 3))];

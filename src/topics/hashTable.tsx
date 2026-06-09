@@ -57,14 +57,14 @@ export const hashTable: Topic = {
           )}
           {s.table.map((bucket, i) => (
             <div key={i} style={{ display: "flex", alignItems: "center", gap: 10 }}>
-              <div style={{ width: 34, height: 34, borderRadius: 7, background: i === s.bucket ? C.active : "#1b2440", color: i === s.bucket ? "#0e1424" : C.textMuted, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: FONT_MONO, fontWeight: 700, border: `1px solid ${C.surfaceBorder}`, transition: "background 200ms" }}>{i}</div>
+              <div style={{ width: 34, height: 34, borderRadius: 7, background: i === s.bucket ? C.active : C.surface, color: i === s.bucket ? C.ink : C.textMuted, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: FONT_MONO, fontWeight: 700, border: `1px solid ${C.surfaceBorder}`, transition: "background 200ms" }}>{i}</div>
               <div style={{ color: C.surfaceBorder }}>→</div>
               <div style={{ display: "flex", gap: 6 }}>
                 {bucket.length === 0 ? (
                   <span style={{ color: C.textMuted, fontFamily: FONT_MONO, fontSize: 14 }}>∅</span>
                 ) : (
                   bucket.map((v, j) => (
-                    <div key={j} style={{ padding: "6px 12px", borderRadius: 7, background: i === s.bucket && j === bucket.length - 1 ? C.sorted : C.default, color: i === s.bucket && j === bucket.length - 1 ? "#0e1424" : C.text, fontFamily: FONT_MONO, fontWeight: 700, border: `1px solid ${C.surfaceBorder}` }}>{v}</div>
+                    <div key={j} style={{ padding: "6px 12px", borderRadius: 7, background: i === s.bucket && j === bucket.length - 1 ? C.sorted : C.default, color: i === s.bucket && j === bucket.length - 1 ? C.ink : C.text, fontFamily: FONT_MONO, fontWeight: 700, border: `1px solid ${C.surfaceBorder}` }}>{v}</div>
                   ))
                 )}
               </div>

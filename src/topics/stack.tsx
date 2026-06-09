@@ -84,7 +84,7 @@ export const stack: Topic = {
                     fontFamily: FONT_MONO,
                     fontWeight: 700,
                     fontSize: 22,
-                    color: isTop ? "#0e1424" : C.text,
+                    color: isTop ? C.ink : C.text,
                     transition: "background 200ms",
                   }}
                 >

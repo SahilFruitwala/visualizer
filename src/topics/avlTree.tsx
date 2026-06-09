@@ -113,7 +113,7 @@ export const avlTree: Topic = {
               return (
                 <g key={i}>
                   <circle cx={x(n.x)} cy={y(n.y)} r={20} fill={on ? C.active : C.default} stroke={C.surfaceBorder} strokeWidth={2} style={{ transition: "fill 200ms" }} />
-                  <text x={x(n.x)} y={y(n.y) + 5} textAnchor="middle" fontFamily={FONT_MONO} fontWeight={700} fontSize={15} fill={on ? "#0e1424" : C.text}>{n.val}</text>
+                  <text x={x(n.x)} y={y(n.y) + 5} textAnchor="middle" fontFamily={FONT_MONO} fontWeight={700} fontSize={15} fill={on ? C.ink : C.text}>{n.val}</text>
                   <text x={x(n.x)} y={y(n.y) - 26} textAnchor="middle" fontFamily={FONT_MONO} fontSize={11} fill={Math.abs(n.bf) > 1 ? C.compare : C.textMuted}>{n.bf > 0 ? `+${n.bf}` : n.bf}</text>
                 </g>
               );

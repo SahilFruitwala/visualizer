@@ -1,12 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
 import { Sidebar } from "./components/Sidebar";
 import { Controls } from "./components/Controls";
+import { CodeBlock } from "./components/CodeBlock";
 import { usePlayer } from "./engine/usePlayer";
 import { TOPICS, topicsByCategory } from "./topics";
 import type { Topic } from "./engine/types";
-import { FONT_MONO, FONT_SANS } from "./theme";
-
-type Theme = "dark" | "light";
+import { FONT_MONO, FONT_SANS, setActiveTheme, type Theme } from "./theme";
 
 function useTheme(): [Theme, () => void] {
   const [theme, setTheme] = useState<Theme>(
@@ -14,9 +13,26 @@ function useTheme(): [Theme, () => void] {
   );
   useEffect(() => {
     document.documentElement.dataset.theme = theme;
+    setActiveTheme(theme);
     localStorage.setItem("dsa-theme", theme);
   }, [theme]);
   return [theme, () => setTheme((t) => (t === "dark" ? "light" : "dark"))];
+}
+
+function ThemeIcon({ theme }: { theme: Theme }) {
+  if (theme === "dark") {
+    return (
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+        <circle cx="12" cy="12" r="4" />
+        <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" />
+      </svg>
+    );
+  }
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+      <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+    </svg>
+  );
 }
 
 export default function App() {
@@ -93,8 +109,13 @@ function TopicView({
             ))}
           </select>
 
-          <button className="theme-toggle" onClick={onToggleTheme} aria-label="Toggle theme">
-            {theme === "dark" ? "☀️ Light" : "🌙 Dark"}
+          <button
+            className="theme-toggle"
+            onClick={onToggleTheme}
+            aria-label={theme === "dark" ? "Switch to light theme" : "Switch to dark theme"}
+            title={theme === "dark" ? "Light mode" : "Dark mode"}
+          >
+            <ThemeIcon theme={theme} />
           </button>
         </div>
       </header>
@@ -105,7 +126,10 @@ function TopicView({
       </section>
 
       <section className="controls-bar">
-        <Controls player={player} onShuffle={() => setNonce((n) => n + 1)} />
+        <Controls
+          player={player}
+          onShuffle={topic.shufflable ? () => setNonce((n) => n + 1) : undefined}
+        />
       </section>
 
       <section className="info">
@@ -115,7 +139,7 @@ function TopicView({
         </div>
         <div className="panel">
           <div className="panel-title">Code</div>
-          <pre className="code">{viz.code}</pre>
+          <CodeBlock code={viz.code} />
         </div>
       </section>
     </main>
