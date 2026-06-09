@@ -1,10 +1,20 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
+import { BrowserRouter, Navigate, Route, Routes, useNavigate, useParams } from "react-router-dom";
 import { Sidebar } from "./components/Sidebar";
 import { Controls } from "./components/Controls";
 import { CodeBlock } from "./components/CodeBlock";
+import { Stage } from "./components/Stage";
 import { usePlayer } from "./engine/usePlayer";
-import { TOPICS, topicsByCategory } from "./topics";
 import type { Topic } from "./engine/types";
+import {
+  defaultTopicId,
+  rememberTopic,
+  sectionById,
+  SECTIONS,
+  topicsByCategoryForSection,
+  topicsForSection,
+  type SectionId,
+} from "./sections";
 import { FONT_MONO, FONT_SANS, setActiveTheme, type Theme } from "./theme";
 
 function useTheme(): [Theme, () => void] {
@@ -35,26 +45,92 @@ function ThemeIcon({ theme }: { theme: Theme }) {
   );
 }
 
-export default function App() {
-  const [activeId, setActiveId] = useState(TOPICS[0].id);
+function SectionRedirect({ sectionId }: { sectionId: SectionId }) {
+  const section = sectionById(sectionId)!;
+  return <Navigate to={`${section.path}/${defaultTopicId(section)}`} replace />;
+}
+
+function SectionPage({ sectionId }: { sectionId: SectionId }) {
+  const section = sectionById(sectionId)!;
+  const { topicId } = useParams();
+  const navigate = useNavigate();
   const [theme, toggleTheme] = useTheme();
-  const topic = TOPICS.find((t) => t.id === activeId) ?? TOPICS[0];
-  const groups = topicsByCategory();
+  const topics = topicsForSection(section);
+  const topic = topics.find((t) => t.id === topicId);
+  const groups = topicsByCategoryForSection(section);
+
+  useEffect(() => {
+    if (!topic) {
+      navigate(`${section.path}/${defaultTopicId(section)}`, { replace: true });
+      return;
+    }
+    rememberTopic(sectionId, topic.id);
+  }, [topic, section, sectionId, navigate]);
+
+  if (!topic) return null;
+
+  const selectTopic = (id: string) => {
+    rememberTopic(sectionId, id);
+    navigate(`${section.path}/${id}`);
+  };
+
+  const selectSection = (id: SectionId) => {
+    const next = sectionById(id)!;
+    navigate(`${next.path}/${defaultTopicId(next)}`);
+  };
 
   return (
     <div className="app">
-      <Sidebar activeId={activeId} onSelect={setActiveId} />
-      {/* key forces a fresh player/viz when switching topics */}
+      <Sidebar
+        section={section}
+        activeId={topic.id}
+        onSelect={selectTopic}
+        onSectionChange={selectSection}
+      />
       <TopicView
         key={topic.id}
         topic={topic}
         theme={theme}
         onToggleTheme={toggleTheme}
-        activeId={activeId}
-        onSelect={setActiveId}
+        activeId={topic.id}
+        onSelect={selectTopic}
         groups={groups}
+        sectionTabs={
+          <div className="section-tabs mobile-section-tabs" role="tablist" aria-label="Sections">
+            {SECTIONS.map((s) => (
+              <button
+                key={s.id}
+                type="button"
+                role="tab"
+                aria-selected={s.id === section.id}
+                className="section-tab"
+                data-active={s.id === section.id}
+                onClick={() => selectSection(s.id)}
+              >
+                {s.shortLabel}
+              </button>
+            ))}
+          </div>
+        }
       />
     </div>
+  );
+}
+
+export default function App() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<SectionRedirect sectionId="ds" />} />
+        <Route path="/ds" element={<SectionRedirect sectionId="ds" />} />
+        <Route path="/ds/:topicId" element={<SectionPage sectionId="ds" />} />
+        <Route path="/algo" element={<SectionRedirect sectionId="algo" />} />
+        <Route path="/algo/:topicId" element={<SectionPage sectionId="algo" />} />
+        <Route path="/api" element={<SectionRedirect sectionId="api" />} />
+        <Route path="/api/:topicId" element={<SectionPage sectionId="api" />} />
+        <Route path="*" element={<SectionRedirect sectionId="ds" />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
@@ -65,6 +141,7 @@ function TopicView({
   activeId,
   onSelect,
   groups,
+  sectionTabs,
 }: {
   topic: Topic;
   theme: Theme;
@@ -72,6 +149,7 @@ function TopicView({
   activeId: string;
   onSelect: (id: string) => void;
   groups: { category: string; topics: Topic[] }[];
+  sectionTabs?: ReactNode;
 }) {
   const [nonce, setNonce] = useState(0);
   const viz = useMemo(() => topic.create(), [topic, nonce]);
@@ -82,6 +160,7 @@ function TopicView({
     <main className="stage-wrap">
       <header className="topic-head">
         <div>
+          {sectionTabs}
           <div style={{ fontFamily: FONT_MONO, fontSize: 12, letterSpacing: 2, color: "var(--accent)", textTransform: "uppercase" }}>
             {topic.category}
           </div>
@@ -91,7 +170,6 @@ function TopicView({
         </div>
 
         <div className="head-actions">
-          {/* topic picker shown only on narrow screens (sidebar is hidden) */}
           <select
             className="mobile-nav"
             value={activeId}
@@ -120,10 +198,12 @@ function TopicView({
         </div>
       </header>
 
-      <section className="stage">
-        <div className="stage-canvas">{viz.renderStep(step, player.index)}</div>
-        <div className="caption">{step.caption}</div>
-      </section>
+      <Stage
+        steps={viz.steps}
+        renderStep={viz.renderStep}
+        index={player.index}
+        caption={step.caption}
+      />
 
       <section className="controls-bar">
         <Controls

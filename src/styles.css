@@ -98,6 +98,41 @@ body { background: var(--bg); color: var(--text); }
   font-weight: 600;
 }
 
+.section-tabs {
+  display: flex;
+  gap: 6px;
+  padding: 0 16px 14px;
+}
+.section-tab {
+  flex: 1;
+  min-width: 0;
+  padding: 8px 6px;
+  border-radius: 9px;
+  border: 1px solid var(--border);
+  background: var(--panel2);
+  color: var(--muted);
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: background 140ms, color 140ms, border-color 140ms;
+}
+.section-tab:hover {
+  color: var(--text);
+  background: color-mix(in srgb, var(--accent) 10%, var(--panel2));
+}
+.section-tab[data-active="true"] {
+  color: var(--accent-ink);
+  background: var(--accent);
+  border-color: var(--accent);
+}
+.mobile-section-tabs {
+  display: none;
+  padding: 0 0 12px;
+  max-width: 320px;
+}
+
 /* ---- stage column ---- */
 .stage-wrap {
   height: 100vh;
@@ -119,25 +154,47 @@ body { background: var(--bg); color: var(--text); }
 
 /* ---- the dark visualization stage ---- */
 .stage {
+  position: relative;
   background: radial-gradient(circle at 50% 28%, var(--stage-top) 0%, var(--stage-bottom) 78%);
   border: 1px solid var(--stage-border);
   border-radius: 18px;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;   /* center small viz; grows to fit large ones */
+  align-items: stretch;
   gap: 20px;
   padding: 28px 22px 22px;
-  min-height: 340px;
+}
+.stage-measure {
+  position: absolute;
+  left: 22px;
+  right: 22px;
+  top: 28px;
+  visibility: hidden;
+  pointer-events: none;
+  z-index: -1;
+  overflow: visible;
+}
+.stage-measure-step {
+  width: 100%;
+  display: flex;
+  justify-content: center;
 }
 .stage-canvas {
   width: 100%;
-  flex-shrink: 0;            /* don't let flexbox squash tall viz (it would clip) */
+  flex-shrink: 0;
+  overflow: auto;
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow-x: auto;          /* wide grids/graphs scroll sideways, never overlap */
   padding: 4px 2px;
+  transition: height 280ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.stage-canvas-inner {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: min-content;
 }
 .caption {
   flex: 0 0 auto;
@@ -301,6 +358,7 @@ body { background: var(--bg); color: var(--text); }
   .app { grid-template-columns: 1fr; }
   .sidebar { display: none; }
   .mobile-nav { display: block; }
+  .mobile-section-tabs { display: flex; }
   .info { grid-template-columns: 1fr; }
   .stage-wrap { padding: 16px 16px 32px; }
 }

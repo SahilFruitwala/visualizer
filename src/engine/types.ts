@@ -27,7 +27,8 @@ export type Category =
   | "Dynamic Programming"
   | "Backtracking"
   | "Techniques"
-  | "Strings";
+  | "Strings"
+  | "API";
 
 export interface Topic {
   id: string;

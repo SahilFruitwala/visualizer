@@ -1,6 +1,6 @@
-# DSA Visualizer — Learn Data Structures & Algorithms
+# Dev Visualizer — Learn DSA & APIs
 
-An interactive web app that **animates** classic data structures and algorithms.
+An interactive web app that **animates** classic data structures, algorithms, and API concepts.
 Pick a topic, hit play, scrub the timeline, step through each operation, change
 speed, and reshuffle the input — with the algorithm's code and complexity shown
 alongside.
@@ -15,7 +15,7 @@ npm run dev      # open the printed localhost URL
 npm run build    # type-check + production build into dist/
 ```
 
-## Topics (46)
+## Topics (52)
 
 | Category                | Topics                                                                          |
 | ----------------------- | ------------------------------------------------------------------------------- |
@@ -27,6 +27,7 @@ npm run build    # type-check + production build into dist/
 | **Backtracking**        | N-Queens · Subsets · Permutations                                               |
 | **Techniques**          | Two Pointers · Sliding Window · Prefix Sums                                      |
 | **Strings**             | KMP · Rabin-Karp                                                                 |
+| **API**                 | HTTP Lifecycle · REST & HTTP Verbs · Status Codes · Bearer Auth · Pagination · Rate Limiting |
 
 ## Shared visual language
 
@@ -57,6 +58,7 @@ src/
     Grid.tsx               # 2D table for DP visualizations
     GraphView.tsx          # unweighted graph renderer (BFS/DFS)
     WeightedGraphView.tsx  # weighted/directed graph (Dijkstra/MST/topo)
+    ApiFlow.tsx            # HTTP message panels, status badges, client/server flow
     Controls.tsx           # transport bar
     Sidebar.tsx            # categorized topic nav
   topics/

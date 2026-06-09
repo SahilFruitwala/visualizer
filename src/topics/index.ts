@@ -47,6 +47,12 @@ import { permutations } from "./permutations";
 import { twoPointers } from "./twoPointers";
 import { slidingWindow } from "./slidingWindow";
 import { prefixSum } from "./prefixSum";
+import { httpLifecycle } from "./httpLifecycle";
+import { restCrud } from "./restCrud";
+import { httpStatusCodes } from "./httpStatusCodes";
+import { bearerAuth } from "./bearerAuth";
+import { pagination } from "./pagination";
+import { rateLimiting } from "./rateLimiting";
 
 // The full catalogue. Add new topics here — order within a category is preserved.
 export const TOPICS: Topic[] = [
@@ -105,6 +111,13 @@ export const TOPICS: Topic[] = [
   // Strings
   kmp,
   rabinKarp,
+  // API
+  httpLifecycle,
+  restCrud,
+  httpStatusCodes,
+  bearerAuth,
+  pagination,
+  rateLimiting,
 ];
 
 export const CATEGORIES = [
@@ -116,6 +129,7 @@ export const CATEGORIES = [
   "Backtracking",
   "Techniques",
   "Strings",
+  "API",
 ] as const;
 
 export function topicsByCategory() {
