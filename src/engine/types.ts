@@ -51,7 +51,12 @@ export type Category =
   | "Protocol"
   | "REST & Design"
   | "Auth & Security"
-  | "Operations";
+  | "Operations"
+  // Frontend section
+  | "Runtime"
+  | "Rendering"
+  | "Navigation"
+  | "Performance";
 
 export interface Topic {
   id: string;

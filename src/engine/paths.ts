@@ -48,6 +48,16 @@ export const LEARNING_PATHS: LearningPath[] = [
     title: "Real-time & events",
     topicIds: ["pagination", "rate-limiting", "webhooks", "websockets-sse"],
   },
+  {
+    id: "frontend-runtime",
+    title: "Browser runtime",
+    topicIds: ["critical-rendering-path", "event-loop"],
+  },
+  {
+    id: "frontend-react",
+    title: "React mental model",
+    topicIds: ["virtual-dom", "client-routing", "list-virtualization"],
+  },
 ];
 
 export function pathForTopic(topicId: string): LearningPath | undefined {

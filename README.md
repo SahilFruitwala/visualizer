@@ -15,9 +15,9 @@ npm run dev      # open the printed localhost URL
 npm run build    # type-check + production build into dist/
 ```
 
-## Topics (65)
+## Topics (70)
 
-Navigation is split into three sections — **DS**, **Algo**, **API** — each with its own subcategories.
+Navigation is split into four sections — **DS**, **Algo**, **API**, **FE** — each with its own subcategories.
 
 | Section | Category | Topics |
 | ------- | -------- | ------ |
@@ -37,6 +37,10 @@ Navigation is split into three sections — **DS**, **Algo**, **API** — each w
 | | REST & Design | REST & HTTP Verbs · Status Codes · API Types · Versioning |
 | | Auth & Security | CORS · Bearer Auth · OAuth 2.0 (PKCE) |
 | | Operations | Pagination · Rate Limiting · Webhooks · WebSockets & SSE |
+| **FE** | Runtime | Critical Rendering Path · JavaScript Event Loop |
+| | Rendering | Virtual DOM Reconciliation |
+| | Navigation | Client-Side Routing |
+| | Performance | List Virtualization |
 
 ## Shared visual language
 

@@ -164,6 +164,7 @@ export function AppShell({
 }
 
 export function resolveSectionId(pathname: string): SectionId {
+  if (pathname.startsWith("/frontend")) return "frontend";
   if (pathname.startsWith("/algo")) return "algo";
   if (pathname.startsWith("/api")) return "api";
   if (pathname.startsWith("/ds")) return "ds";

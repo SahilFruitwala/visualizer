@@ -79,6 +79,9 @@ export function HttpMessage({
         fontSize: 13,
         minWidth: 280,
         maxWidth: 420,
+        width: "100%",
+        boxSizing: "border-box",
+        overflowWrap: "anywhere",
       }}
     >
       <div
@@ -186,9 +189,12 @@ export function ApiFlow({
     fontSize: clientLabel.length > 12 || serverLabel.length > 12 ? 13 : 16,
     color: active ? C.text : C.textMuted,
     minWidth: 90,
-    maxWidth: 160,
+    maxWidth: 180,
     textAlign: "center" as const,
     lineHeight: 1.3,
+    overflowWrap: "anywhere" as const,
+    wordBreak: "break-word" as const,
+    boxSizing: "border-box" as const,
     transition: "background 220ms, border-color 220ms, color 220ms",
   });
 

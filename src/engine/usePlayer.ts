@@ -33,7 +33,7 @@ function readLearnMode(): boolean {
   } catch {
     /* ignore */
   }
-  return true;
+  return false;
 }
 
 // Drives a stepped timeline with play/pause, variable speed, and scrubbing.
@@ -61,12 +61,20 @@ export function usePlayer(length: number, opts: PlayerOptions = {}): Player {
     }
   }, []);
 
+  // Clamp index when step count changes (e.g. shuffle).
   useEffect(() => {
-    const i = Math.max(0, Math.min(initialIndex, Math.max(0, length - 1)));
-    setIndex(i);
     setPlaying(false);
     acc.current = 0;
-  }, [length, initialIndex]);
+    setIndex((i) => Math.max(0, Math.min(i, Math.max(0, length - 1))));
+  }, [length]);
+
+  // Sync URL / resume position — but not while auto-playing (URL echoes each step).
+  useEffect(() => {
+    if (playing) return;
+    const i = Math.max(0, Math.min(initialIndex, Math.max(0, length - 1)));
+    setIndex(i);
+    acc.current = 0;
+  }, [initialIndex, length, playing]);
 
   useEffect(() => {
     if (!playing || learnMode) {

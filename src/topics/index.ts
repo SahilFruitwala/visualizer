@@ -64,6 +64,11 @@ import { webhooks } from "./webhooks";
 import { tlsHandshake } from "./tlsHandshake";
 import { websocketsSse } from "./websocketsSse";
 import { apiTypes } from "./apiTypes";
+import { eventLoop } from "./eventLoop";
+import { criticalRenderingPath } from "./criticalRenderingPath";
+import { virtualDom } from "./virtualDom";
+import { clientRouting } from "./clientRouting";
+import { listVirtualization } from "./listVirtualization";
 
 // The full catalogue. Order within a category is preserved in the sidebar.
 export const TOPICS: Topic[] = [
@@ -147,6 +152,15 @@ export const TOPICS: Topic[] = [
   rateLimiting,
   webhooks,
   websocketsSse,
+  // Runtime
+  criticalRenderingPath,
+  eventLoop,
+  // Rendering
+  virtualDom,
+  // Navigation
+  clientRouting,
+  // Performance
+  listVirtualization,
 ];
 
 export const CATEGORIES = [
@@ -166,6 +180,10 @@ export const CATEGORIES = [
   "REST & Design",
   "Auth & Security",
   "Operations",
+  "Runtime",
+  "Rendering",
+  "Navigation",
+  "Performance",
 ] as const;
 
 export function topicsByCategory() {

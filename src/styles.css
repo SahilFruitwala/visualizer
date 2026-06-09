@@ -336,7 +336,8 @@ body { background: var(--bg); color: var(--text); }
 /* ---- the dark visualization stage ---- */
 .stage {
   position: relative;
-  overflow: hidden;
+  overflow-x: auto;
+  overflow-y: hidden;
   background: radial-gradient(circle at 50% 28%, var(--stage-top) 0%, var(--stage-bottom) 78%);
   border: 1px solid var(--stage-border);
   border-radius: 18px;
@@ -384,7 +385,8 @@ body { background: var(--bg); color: var(--text); }
   align-items: center;
   justify-content: center;
   min-height: min-content;
-  min-width: min-content;
+  padding: 0 4px;
+  box-sizing: border-box;
 }
 .stage-caption-measure {
   position: absolute;
