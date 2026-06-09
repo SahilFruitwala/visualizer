@@ -4,15 +4,42 @@ import javascript from "highlight.js/lib/languages/javascript";
 
 hljs.registerLanguage("javascript", javascript);
 
-export function CodeBlock({ code }: { code: string }) {
-  const html = useMemo(
-    () => hljs.highlight(code, { language: "javascript" }).value,
-    [code],
+export function CodeBlock({
+  code,
+  highlightLines = [],
+}: {
+  code: string;
+  highlightLines?: number[];
+}) {
+  const lines = useMemo(() => code.split("\n"), [code]);
+  const highlighted = useMemo(() => new Set(highlightLines), [highlightLines]);
+
+  const rendered = useMemo(
+    () =>
+      lines.map((line) =>
+        hljs.highlight(line || " ", { language: "javascript" }).value,
+      ),
+    [lines],
   );
 
   return (
     <pre className="code">
-      <code className="hljs language-javascript" dangerouslySetInnerHTML={{ __html: html }} />
+      <code className="hljs language-javascript">
+        {rendered.map((html, i) => (
+          <div
+            key={i}
+            className={`code-line${highlighted.has(i) ? " code-line-active" : ""}`}
+          >
+            <span className="code-ln" aria-hidden>
+              {i + 1}
+            </span>
+            <span
+              className="code-body"
+              dangerouslySetInnerHTML={{ __html: html }}
+            />
+          </div>
+        ))}
+      </code>
     </pre>
   );
 }

@@ -16,17 +16,23 @@ function build(): Step[] {
   let tokens = CAPACITY;
   let req = 0;
 
-  const snap = (caption: string, requestNum: number | null, status: number | null, statusLabel?: string) => {
-    steps.push({ tokens, requestNum, status, statusLabel, caption });
+  const snap = (
+    caption: string,
+    requestNum: number | null,
+    status: number | null,
+    statusLabel?: string,
+    chapter?: string,
+  ) => {
+    steps.push({ tokens, requestNum, status, statusLabel, caption, chapter });
   };
 
-  snap(`Token bucket starts full: ${CAPACITY} tokens (capacity).`, null, null);
+  snap(`Token bucket starts full: ${CAPACITY} tokens (capacity).`, null, null, undefined, "Bucket setup");
 
   // 3 rapid requests — all succeed
   for (let i = 0; i < 3; i++) {
     req++;
     tokens--;
-    snap(`Request #${req} arrives → consume 1 token → 200 OK.`, req, 200, "OK");
+    snap(`Request #${req} arrives → consume 1 token → 200 OK.`, req, 200, "OK", req === 1 ? "Under limit" : undefined);
   }
 
   // 2 more — still succeed
@@ -39,12 +45,12 @@ function build(): Step[] {
   // Bucket empty — 3 requests rejected
   for (let i = 0; i < 3; i++) {
     req++;
-    snap(`Request #${req} but bucket empty → 429 Too Many Requests.`, req, 429, "Too Many Requests");
+    snap(`Request #${req} but bucket empty → 429 Too Many Requests.`, req, 429, "Too Many Requests", req === 6 ? "Rate limit exceeded" : undefined);
   }
 
   // Refill
   tokens = 2;
-  snap("1 second passes → bucket refills +2 tokens (rate = 2/sec).", null, null);
+  snap("1 second passes → bucket refills +2 tokens (rate = 2/sec).", null, null, undefined, "Refill & recovery");
 
   req++;
   tokens--;

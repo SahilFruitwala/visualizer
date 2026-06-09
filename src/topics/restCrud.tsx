@@ -23,6 +23,7 @@ function build(): Step[] {
       statusLabel: "OK",
       resource: user1,
       removed: false,
+      chapter: "GET — read",
       caption: "GET /users/1 → read the current resource (safe, idempotent).",
     },
     {
@@ -33,6 +34,7 @@ function build(): Step[] {
       resource: user2,
       removed: false,
       reqBody: '{\n  "name": "Bob",\n  "email": "bob@example.com"\n}',
+      chapter: "POST — create",
       caption: "POST /users → create a new resource. Server assigns id: 2.",
     },
     {
@@ -43,6 +45,7 @@ function build(): Step[] {
       resource: { id: 1, name: "Alice Smith", email: "alice@example.com" },
       removed: false,
       reqBody: '{\n  "name": "Alice Smith",\n  "email": "alice@example.com"\n}',
+      chapter: "PUT — replace",
       caption: "PUT /users/1 → replace the entire resource (full update).",
     },
     {
@@ -53,6 +56,7 @@ function build(): Step[] {
       resource: { id: 1, name: "Alice Smith", email: "alice.smith@example.com" },
       removed: false,
       reqBody: '{\n  "email": "alice.smith@example.com"\n}',
+      chapter: "PATCH — partial update",
       caption: "PATCH /users/1 → update only the fields you send (partial).",
     },
     {
@@ -62,6 +66,7 @@ function build(): Step[] {
       statusLabel: "No Content",
       resource: null,
       removed: true,
+      chapter: "DELETE — remove",
       caption: "DELETE /users/1 → remove the resource. 204 = success, no body.",
     },
   ];

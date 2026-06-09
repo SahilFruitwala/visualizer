@@ -1,4 +1,5 @@
 import { defineViz, type StepBase, type Topic } from "../engine/types";
+import { withCodeLines } from "../engine/codeLines";
 import { ADJ, NODES } from "./graphData";
 import { GraphView, type NodeState } from "../components/GraphView";
 
@@ -14,10 +15,13 @@ function build(start: string) {
   const queue: string[] = [];
   const output: string[] = [];
   const seen = new Set<string>();
-  const snap = (caption: string) =>
-    steps.push({ state: { ...state }, queue: [...queue], output: [...output], caption });
+  const snap = (caption: string, extra?: Partial<Step>) =>
+    steps.push({ state: { ...state }, queue: [...queue], output: [...output], caption, ...extra });
 
-  snap("BFS explores level by level using a queue (FIFO).");
+  snap("BFS explores level by level using a queue (FIFO).", {
+    chapter: "Introduction",
+    insight: "Blue nodes are waiting in the queue; amber is being processed.",
+  });
   queue.push(start);
   seen.add(start);
   state[start] = "frontier";
@@ -40,7 +44,14 @@ function build(start: string) {
     snap(`${node} fully processed. ✓`);
   }
   snap(`BFS order from ${start}: ${output.join(" → ")} ✓`);
-  return steps;
+  return withCodeLines(steps, (s, i) => {
+    if (i === 0) return [0, 1, 2];
+    if (s.caption.includes("Enqueue start")) return [3, 4, 5];
+    if (s.caption.includes("Dequeue")) return [6, 7];
+    if (s.caption.includes("enqueue")) return [8, 9, 10];
+    if (s.caption.includes("fully processed")) return [7];
+    return [5, 6];
+  });
 }
 
 const CODE = `function bfs(start, adj) {
@@ -61,6 +72,17 @@ export const bfs: Topic = {
   title: "Breadth-First Search",
   category: "Trees & Graphs",
   blurb: "Explore neighbours level by level with a queue.",
+  useWhen: "Shortest path in an unweighted graph or level-order traversal.",
+  badges: ["O(V + E)"],
+  prerequisites: ["queue"],
+  quiz: [
+    {
+      question: "What data structure does BFS use?",
+      options: ["Stack", "Queue", "Heap", "Hash table"],
+      correctIndex: 1,
+      explanation: "BFS is FIFO — first discovered nodes are processed first.",
+    },
+  ],
   create: () =>
     defineViz<Step>({
       steps: build("A"),

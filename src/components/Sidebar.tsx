@@ -1,4 +1,6 @@
-import { topicsByCategoryForSection, type Section, SECTIONS } from "../sections";
+import { useMemo, useState } from "react";
+import { isTopicComplete } from "../engine/progress";
+import { topicsByCategoryForSection, topicsForSection, type Section, SECTIONS } from "../sections";
 import { FONT_MONO, FONT_SANS } from "../theme";
 
 export function Sidebar({
@@ -12,7 +14,35 @@ export function Sidebar({
   onSelect: (id: string) => void;
   onSectionChange: (sectionId: Section["id"]) => void;
 }) {
+  const [query, setQuery] = useState("");
+  const allTopics = topicsForSection(section);
   const groups = topicsByCategoryForSection(section);
+
+  const filteredGroups = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    if (!q) return groups;
+    return groups
+      .map((g) => ({
+        ...g,
+        topics: g.topics.filter(
+          (t) =>
+            t.title.toLowerCase().includes(q) ||
+            t.blurb.toLowerCase().includes(q) ||
+            t.category.toLowerCase().includes(q),
+        ),
+      }))
+      .filter((g) => g.topics.length > 0);
+  }, [groups, query]);
+
+  const globalMatches = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    if (!q) return [];
+    return allTopics.filter(
+      (t) =>
+        t.title.toLowerCase().includes(q) ||
+        t.blurb.toLowerCase().includes(q),
+    );
+  }, [allTopics, query]);
 
   return (
     <aside className="sidebar">
@@ -23,6 +53,14 @@ export function Sidebar({
         <div style={{ fontFamily: FONT_MONO, fontSize: 12, color: "var(--muted)", marginTop: 4 }}>
           DSA & APIs — learn by watching
         </div>
+        <input
+          type="search"
+          className="sidebar-search"
+          placeholder="Search topics…"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          aria-label="Search topics"
+        />
       </div>
 
       <div className="section-tabs" role="tablist" aria-label="Sections">
@@ -42,7 +80,10 @@ export function Sidebar({
       </div>
 
       <nav style={{ overflowY: "auto", flex: 1, paddingBottom: 24 }}>
-        {groups.map((g) => (
+        {query.trim() && globalMatches.length === 0 && (
+          <p className="search-empty">No topics match “{query.trim()}”.</p>
+        )}
+        {filteredGroups.map((g) => (
           <div key={g.category} style={{ marginBottom: 6 }}>
             <div
               style={{
@@ -61,9 +102,12 @@ export function Sidebar({
                 key={t.id}
                 className="nav-item"
                 data-active={t.id === activeId}
+                data-done={isTopicComplete(t.id)}
                 onClick={() => onSelect(t.id)}
+                title={t.blurb}
               >
-                {t.title}
+                <span className="nav-item-title">{t.title}</span>
+                {query.trim() && <span className="nav-item-blurb">{t.blurb}</span>}
               </button>
             ))}
           </div>

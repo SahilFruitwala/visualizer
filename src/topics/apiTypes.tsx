@@ -54,36 +54,43 @@ function build(): Step[] {
   return [
     {
       paradigm: "rest",
+      chapter: "REST",
       highlight: ["request", "response"],
       caption: "REST: nouns in the URL (/users/1), verbs from HTTP (GET, POST, PUT, DELETE).",
     },
     {
       paradigm: "graphql",
+      chapter: "GraphQL",
       highlight: ["request", "response"],
       caption: "GraphQL: always POST /graphql. Query language selects nested fields in one trip.",
     },
     {
       paradigm: "grpc",
+      chapter: "gRPC",
       highlight: ["request", "response"],
       caption: "gRPC: call remote procedures by name. Binary Protobuf on HTTP/2 — fast inside datacenters.",
     },
     {
       paradigm: "soap",
+      chapter: "SOAP",
       highlight: ["request", "response"],
       caption: "SOAP: XML payloads in envelopes, WSDL describes operations — common in legacy enterprise systems.",
     },
     {
       paradigm: "jsonrpc",
+      chapter: "JSON-RPC",
       highlight: ["request", "response"],
       caption: "JSON-RPC: thin RPC wrapper — method + params + id. Used by Ethereum nodes, VS Code extensions, etc.",
     },
     {
       paradigm: "trpc",
+      chapter: "tRPC",
       highlight: ["request", "response"],
       caption: "tRPC: TypeScript procedures shared between client and server — types flow without OpenAPI or .proto files.",
     },
     {
       paradigm: "compare",
+      chapter: "Compare paradigms",
       highlight: [],
       caption: "No single winner — public APIs often use REST or GraphQL; microservices use gRPC; TS full-stack apps use tRPC.",
     },

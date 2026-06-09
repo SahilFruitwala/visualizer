@@ -23,6 +23,7 @@ function build(): Step[] {
     sliceStart: 0,
     sliceEnd: 3,
     meta: "hasMore: true",
+    chapter: "Offset pagination",
     caption: "Offset: page=1, limit=3 → return items 0–2.",
   });
   steps.push({
@@ -49,6 +50,7 @@ function build(): Step[] {
     sliceStart: 0,
     sliceEnd: 3,
     meta: 'nextCursor: "c3"',
+    chapter: "Cursor pagination",
     caption: "Cursor: first request → first 3 items + opaque nextCursor.",
   });
   steps.push({

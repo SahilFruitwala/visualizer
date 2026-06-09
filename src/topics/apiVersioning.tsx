@@ -25,6 +25,7 @@ function build(): Step[] {
       resHeaders: [{ name: "Content-Type", value: "application/json" }],
       resource: V1,
       highlight: ["line"],
+      chapter: "URL path v1",
       caption: "URL path versioning: /v1/... returns the original schema { id, name }.",
     },
     {
@@ -34,6 +35,7 @@ function build(): Step[] {
       resHeaders: [{ name: "Content-Type", value: "application/json" }],
       resource: V2,
       highlight: ["line"],
+      chapter: "URL path v2",
       caption: "/v2/... is a breaking change — renamed name → fullName, added email.",
     },
     {
@@ -46,6 +48,7 @@ function build(): Step[] {
       ],
       resource: V2,
       highlight: ["Accept-Version", "API-Version"],
+      chapter: "Header versioning",
       caption: "Header versioning: same URL, client requests version via Accept-Version.",
     },
     {
@@ -58,6 +61,7 @@ function build(): Step[] {
       ],
       resource: V2,
       highlight: ["API-Version"],
+      chapter: "Default version",
       caption: "No version specified → server uses the current default (v2).",
     },
     {
@@ -72,6 +76,7 @@ function build(): Step[] {
       ],
       resource: V1,
       highlight: ["Deprecation", "Sunset", "Link"],
+      chapter: "Deprecated version",
       caption: "Deprecated v1 still works but returns Sunset + Link to the successor version.",
     },
   ];

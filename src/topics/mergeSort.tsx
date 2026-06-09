@@ -1,4 +1,5 @@
 import { defineViz, type StepBase, type Topic } from "../engine/types";
+import { withCodeLines } from "../engine/codeLines";
 import { shuffle } from "../engine/util";
 import { Bar, Row } from "../components/primitives";
 
@@ -19,7 +20,11 @@ function build(input: number[]) {
   const snap = (e: Partial<Step> & { caption: string }) =>
     steps.push({ arr: [...arr], lo: -1, hi: -1, a: -1, b: -1, write: -1, merged: new Set(merged), ...e });
 
-  snap({ caption: "Merge Sort: split in half, sort each, then merge the two sorted runs." });
+  snap({
+    chapter: "Overview",
+    caption: "Merge Sort: split in half, sort each, then merge the two sorted runs.",
+    insight: "Divide-and-conquer: sort halves independently, then combine.",
+  });
 
   const ms = (lo: number, hi: number) => {
     if (lo >= hi) return;
@@ -44,8 +49,13 @@ function build(input: number[]) {
     snap({ lo, hi, caption: `Run [${lo}..${hi}] is now sorted. ✓` });
   };
   ms(0, arr.length - 1);
-  snap({ caption: "Array fully sorted. ✓" });
-  return steps;
+  snap({ chapter: "Complete", caption: "Array fully sorted. ✓" });
+  return withCodeLines(steps, (s) => {
+    if (s.caption.includes("split") || s.caption.includes("Split")) return [1, 2, 3, 4];
+    if (s.caption.includes("Merge") || s.caption.includes("Write") || s.caption.includes("Copy")) return [5, 6, 7, 8, 9];
+    if (s.caption.includes("fully sorted")) return [10];
+    return [0, 1];
+  });
 }
 
 const CODE = `function mergeSort(a) {
@@ -65,6 +75,17 @@ export const mergeSort: Topic = {
   title: "Merge Sort",
   category: "Sorting",
   blurb: "Divide in half, sort each, merge the runs.",
+  useWhen: "You need guaranteed O(n log n) and stable sorting.",
+  badges: ["O(n log n)", "stable", "O(n) space"],
+  prerequisites: ["bubble-sort", "insertion-sort"],
+  quiz: [
+    {
+      question: "Why is merge sort stable?",
+      options: ["Uses swaps only", "Takes left run element on ties", "Sorts in-place", "Uses a heap"],
+      correctIndex: 1,
+      explanation: "When L[i] == R[j], taking from L preserves the original relative order.",
+    },
+  ],
   shufflable: true,
   create: () => {
     const input = shuffle([5, 2, 8, 1, 9, 3, 7, 6]);

@@ -1,5 +1,6 @@
 import { ApiFlow, HttpMessage } from "../components/ApiFlow";
 import { defineViz, type StepBase, type Topic } from "../engine/types";
+import { withCodeLines } from "../engine/codeLines";
 import { C, FONT_SANS } from "../theme";
 
 type Scenario = "same-origin" | "simple" | "blocked" | "preflight" | "options" | "actual";
@@ -37,6 +38,7 @@ function build(): Step[] {
       resHeaders: [{ name: "Content-Type", value: "application/json" }],
       body: '[{ "id": 1, "name": "Alice" }]',
       highlight: ["line"],
+      chapter: "Same origin",
       caption: "Same origin (app on api.example.com) — no CORS check needed.",
     },
     {
@@ -56,6 +58,7 @@ function build(): Step[] {
       ],
       body: '[{ "id": 1, "name": "Alice" }]',
       highlight: ["Origin", "Access-Control-Allow-Origin"],
+      chapter: "Simple cross-origin GET",
       caption: "Cross-origin GET — server echoes Allow-Origin → browser exposes response to JS.",
     },
     {
@@ -73,6 +76,7 @@ function build(): Step[] {
       body: '[{ "id": 1 }]',
       highlight: ["line"],
       blocked: true,
+      chapter: "Blocked response",
       caption: "Missing Allow-Origin → browser receives 200 but blocks JS from reading it.",
     },
     {
@@ -90,6 +94,7 @@ function build(): Step[] {
       resHeaders: [],
       body: '{ "name": "Bob" }',
       highlight: ["Content-Type", "body"],
+      chapter: "Preflight trigger",
       caption: "JSON POST is not a “simple” request → browser sends OPTIONS preflight first.",
     },
     {
@@ -114,6 +119,7 @@ function build(): Step[] {
         { name: "Access-Control-Max-Age", value: "86400" },
       ],
       highlight: ["Access-Control-Request-Method", "Access-Control-Allow-Methods", "Access-Control-Allow-Headers"],
+      chapter: "OPTIONS preflight",
       caption: "Preflight OPTIONS → server declares allowed origin, methods, and headers.",
     },
     {
@@ -136,6 +142,7 @@ function build(): Step[] {
       ],
       body: '{ "id": 2, "name": "Bob" }',
       highlight: ["body", "Access-Control-Allow-Origin"],
+      chapter: "Actual request",
       caption: "Preflight passed → real POST goes through → JS can read the 201 response.",
     },
   ];
@@ -154,14 +161,32 @@ const res = await fetch("https://api.example.com/users", {
 // Server-side (Express example)
 app.use(cors({ origin: "https://app.example.com" }));`;
 
+const CORS_STEPS = withCodeLines(build(), (s) => {
+  if (s.scenario === "same-origin" || s.scenario === "simple") return [0, 1, 2];
+  if (s.scenario === "preflight" || s.scenario === "options") return [3, 4, 5];
+  if (s.scenario === "blocked") return [0, 1];
+  return [6, 7];
+});
+
 export const cors: Topic = {
   id: "cors",
   title: "CORS",
   category: "API",
   blurb: "Cross-origin requests, preflight OPTIONS, and Allow-Origin.",
+  useWhen: "A browser app calls an API on a different domain.",
+  badges: ["browser security"],
+  prerequisites: ["http-lifecycle", "rest-crud"],
+  quiz: [
+    {
+      question: "Who enforces CORS?",
+      options: ["The API server", "The browser", "DNS", "TLS"],
+      correctIndex: 1,
+      explanation: "Servers respond with headers; the browser blocks JS from reading disallowed cross-origin responses.",
+    },
+  ],
   create: () =>
     defineViz<Step>({
-      steps: build(),
+      steps: CORS_STEPS,
       code: CODE,
       explanation:
         "CORS is a browser security policy — not something curl enforces. When JavaScript on app.example.com calls api.example.com, the browser checks whether the response includes Access-Control-Allow-Origin matching the page's origin.\n\n“Simple” GET requests skip preflight. JSON POSTs, custom headers, and PUT/DELETE trigger an OPTIONS preflight. The server must explicitly allow the origin, methods, and headers or the browser hides the response from your code.",

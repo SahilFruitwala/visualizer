@@ -1,4 +1,5 @@
 import { defineViz, type StepBase, type Topic } from "../engine/types";
+import { withCodeLines } from "../engine/codeLines";
 import { shuffle } from "../engine/util";
 import { Cell, Row, PointerTag } from "../components/primitives";
 
@@ -18,7 +19,11 @@ function build(arr: number[], target: number) {
     steps.push({ i, found: false, caption: `a[${i}]=${arr[i]} ≠ ${target} → keep going.` });
   }
   steps.push({ i: -1, found: false, caption: `${target} not found.` });
-  return steps;
+  return withCodeLines(steps, (s) => {
+    if (s.i < 0 && !s.found) return s.caption.includes("Look") ? [0, 1] : [4];
+    if (s.found) return [1, 2, 3];
+    return [1, 2];
+  });
 }
 
 const CODE = `function linearSearch(a, target) {
@@ -33,6 +38,8 @@ export const linearSearch: Topic = {
   title: "Linear Search",
   category: "Searching",
   blurb: "Check every element until the target appears.",
+  useWhen: "The list is unsorted or very small.",
+  badges: ["O(n)", "works on unsorted data"],
   shufflable: true,
   create: () => {
     const arr = shuffle([4, 15, 8, 23, 16, 42, 11, 7, 19]);

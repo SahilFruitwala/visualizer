@@ -6,11 +6,13 @@ export function Stage({
   renderStep,
   index,
   caption,
+  insight,
 }: {
   steps: StepBase[];
   renderStep: (step: StepBase, index: number) => ReactNode;
   index: number;
   caption: string;
+  insight?: string;
 }) {
   const stageRef = useRef<HTMLElement>(null);
   const measureRef = useRef<HTMLDivElement>(null);
@@ -50,7 +52,10 @@ export function Stage({
       <div className="stage-canvas" style={{ height: canvasHeight }}>
         <div className="stage-canvas-inner">{renderStep(steps[index], index)}</div>
       </div>
-      <div className="caption">{caption}</div>
+      <div className="caption-block">
+        <div className="caption">{caption}</div>
+        {insight && <div className="step-insight">{insight}</div>}
+      </div>
     </section>
   );
 }

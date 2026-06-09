@@ -1,4 +1,5 @@
 import { defineViz, type StepBase, type Topic } from "../engine/types";
+import { withCodeLines } from "../engine/codeLines";
 import { C, FONT_MONO } from "../theme";
 
 interface Step extends StepBase {
@@ -18,7 +19,11 @@ const OPS: { kind: "push" | "pop"; value?: number }[] = [
 
 function build() {
   const s: number[] = [];
-  const steps: Step[] = [{ stack: [], highlight: null, caption: "A stack is LIFO — push/pop happen at the top only." }];
+  const steps: Step[] = [{
+    stack: [], highlight: null, chapter: "Introduction",
+    caption: "A stack is LIFO — push/pop happen at the top only.",
+    insight: "Think: undo history, call stack, DFS.",
+  }];
   for (const op of OPS) {
     if (op.kind === "push") {
       s.push(op.value!);
@@ -28,8 +33,12 @@ function build() {
       steps.push({ stack: [...s], highlight: "pop", caption: `pop() → removes & returns ${v} from the top.` });
     }
   }
-  steps.push({ stack: [...s], highlight: null, caption: "Done. Only the top was ever touched." });
-  return steps;
+  steps.push({ stack: [...s], highlight: null, chapter: "Summary", caption: "Done. Only the top was ever touched." });
+  return withCodeLines(steps, (s) => {
+    if (s.highlight === "push") return [1, 2];
+    if (s.highlight === "pop") return [3, 4];
+    return [0];
+  });
 }
 
 const CODE = `class Stack {
@@ -45,6 +54,16 @@ export const stack: Topic = {
   title: "Stack (LIFO)",
   category: "Data Structures",
   blurb: "Last-in, first-out. Push/pop at one end.",
+  useWhen: "You need undo, parsing, or depth-first traversal.",
+  badges: ["O(1) push/pop"],
+  quiz: [
+    {
+      question: "Which element is removed by pop()?",
+      options: ["Bottom", "Top", "Random", "Middle"],
+      correctIndex: 1,
+      explanation: "Stack is LIFO — last pushed is first popped.",
+    },
+  ],
   create: () =>
     defineViz<Step>({
       steps: build(),

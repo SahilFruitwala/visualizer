@@ -27,6 +27,7 @@ function build(): Step[] {
       showRegister: true,
       showDelivery: false,
       showRetry: false,
+      chapter: "Register endpoint",
       caption: "Your server registers a webhook URL with the provider.",
     },
     {
@@ -36,6 +37,7 @@ function build(): Step[] {
       showRegister: true,
       showDelivery: false,
       showRetry: false,
+      chapter: "Registration confirmed",
       caption: "Provider stores the endpoint → 201 Created with webhook id wh_abc.",
     },
     {
@@ -46,6 +48,7 @@ function build(): Step[] {
       showDelivery: false,
       showRetry: false,
       event: "payment.succeeded",
+      chapter: "Event fires",
       caption: "Later: a payment completes on the provider's platform.",
     },
     {
@@ -58,6 +61,7 @@ function build(): Step[] {
       event: "payment.succeeded",
       deliveryStatus: 200,
       deliveryLabel: "OK",
+      chapter: "Deliver payload",
       caption: "Provider POSTs the event payload to your URL (server → server).",
     },
     {
@@ -70,6 +74,7 @@ function build(): Step[] {
       event: "payment.succeeded",
       deliveryStatus: 200,
       deliveryLabel: "OK",
+      chapter: "Verify & acknowledge",
       caption: "Your server verifies the signature header, processes the event, returns 200.",
     },
     {
@@ -82,6 +87,7 @@ function build(): Step[] {
       deliveryStatus: 500,
       deliveryLabel: "Internal Server Error",
       attempt: 1,
+      chapter: "Retry on failure",
       caption: "If your server returns 5xx, provider retries with exponential backoff.",
     },
     {
@@ -94,6 +100,7 @@ function build(): Step[] {
       deliveryStatus: 200,
       deliveryLabel: "OK",
       attempt: 3,
+      chapter: "Retry succeeds",
       caption: "Attempt #3 succeeds → provider marks the event delivered.",
     },
   ];

@@ -1,11 +1,19 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
+export interface PlayerOptions {
+  initialSpeed?: number;
+  /** When true, play advances one step at a time (default learning mode). */
+  learnMode?: boolean;
+}
+
 export interface Player {
   index: number;
   length: number;
   playing: boolean;
-  speed: number; // steps per second
+  speed: number;
+  learnMode: boolean;
   setSpeed: (s: number) => void;
+  setLearnMode: (v: boolean) => void;
   play: () => void;
   pause: () => void;
   toggle: () => void;
@@ -16,18 +24,40 @@ export interface Player {
   atEnd: boolean;
 }
 
+function readLearnMode(): boolean {
+  try {
+    const v = localStorage.getItem("devviz:learn-mode");
+    if (v === "false") return false;
+    if (v === "true") return true;
+  } catch {
+    /* ignore */
+  }
+  return true;
+}
+
 // Drives a stepped timeline with play/pause, variable speed, and scrubbing.
 // Uses requestAnimationFrame so speed changes feel smooth and we never drift.
-export function usePlayer(length: number, initialSpeed = 2): Player {
+export function usePlayer(length: number, opts: PlayerOptions = {}): Player {
+  const { initialSpeed = 1, learnMode: initialLearn = readLearnMode() } = opts;
   const [index, setIndex] = useState(0);
   const [playing, setPlaying] = useState(false);
   const [speed, setSpeed] = useState(initialSpeed);
+  const [learnMode, setLearnModeState] = useState(initialLearn);
 
   const acc = useRef(0);
   const last = useRef<number | null>(null);
   const raf = useRef<number | null>(null);
 
-  // Reset to start whenever the timeline length changes (new topic / reshuffle).
+  const setLearnMode = useCallback((v: boolean) => {
+    setLearnModeState(v);
+    setPlaying(false);
+    try {
+      localStorage.setItem("devviz:learn-mode", String(v));
+    } catch {
+      /* ignore */
+    }
+  }, []);
+
   useEffect(() => {
     setIndex(0);
     setPlaying(false);
@@ -35,7 +65,7 @@ export function usePlayer(length: number, initialSpeed = 2): Player {
   }, [length]);
 
   useEffect(() => {
-    if (!playing) {
+    if (!playing || learnMode) {
       last.current = null;
       return;
     }
@@ -59,19 +89,32 @@ export function usePlayer(length: number, initialSpeed = 2): Player {
     return () => {
       if (raf.current != null) cancelAnimationFrame(raf.current);
     };
-  }, [playing, speed, length]);
+  }, [playing, speed, length, learnMode]);
 
-  const play = useCallback(() => {
-    setIndex((i) => (i >= length - 1 ? 0 : i)); // replay from start if at end
-    acc.current = 0;
-    setPlaying(true);
-  }, [length]);
-  const pause = useCallback(() => setPlaying(false), []);
-  const toggle = useCallback(() => (playing ? pause() : play()), [playing, play, pause]);
   const next = useCallback(() => {
     setPlaying(false);
     setIndex((i) => Math.min(i + 1, length - 1));
   }, [length]);
+
+  const play = useCallback(() => {
+    if (learnMode) {
+      setPlaying(false);
+      setIndex((i) => {
+        if (i >= length - 1) {
+          acc.current = 0;
+          return 0;
+        }
+        return i + 1;
+      });
+      return;
+    }
+    setIndex((i) => (i >= length - 1 ? 0 : i));
+    acc.current = 0;
+    setPlaying(true);
+  }, [length, learnMode]);
+
+  const pause = useCallback(() => setPlaying(false), []);
+  const toggle = useCallback(() => (playing ? pause() : play()), [playing, play, pause]);
   const prev = useCallback(() => {
     setPlaying(false);
     setIndex((i) => Math.max(i - 1, 0));
@@ -94,7 +137,9 @@ export function usePlayer(length: number, initialSpeed = 2): Player {
     length,
     playing,
     speed,
+    learnMode,
     setSpeed,
+    setLearnMode,
     play,
     pause,
     toggle,

@@ -1,4 +1,5 @@
 import { defineViz, type StepBase, type Topic } from "../engine/types";
+import { withCodeLines } from "../engine/codeLines";
 import { Cell, Row, PointerTag } from "../components/primitives";
 
 interface Step extends StepBase {
@@ -18,7 +19,11 @@ const OPS: { kind: "enqueue" | "dequeue"; value?: number }[] = [
 
 function build() {
   const q: number[] = [];
-  const steps: Step[] = [{ queue: [], highlight: null, caption: "A queue is FIFO — add at the back, remove from the front." }];
+  const steps: Step[] = [{
+    queue: [], highlight: null, chapter: "Introduction",
+    caption: "A queue is FIFO — add at the back, remove from the front.",
+    insight: "BFS and job schedulers rely on queues.",
+  }];
   for (const op of OPS) {
     if (op.kind === "enqueue") {
       q.push(op.value!);
@@ -28,8 +33,12 @@ function build() {
       steps.push({ queue: [...q], highlight: "dequeue", caption: `dequeue() → removes & returns ${v} from the front.` });
     }
   }
-  steps.push({ queue: [...q], highlight: null, caption: "Done. First in was first out." });
-  return steps;
+  steps.push({ queue: [...q], highlight: null, chapter: "Summary", caption: "Done. First in was first out." });
+  return withCodeLines(steps, (s) => {
+    if (s.highlight === "enqueue") return [1, 2];
+    if (s.highlight === "dequeue") return [3, 4];
+    return [0];
+  });
 }
 
 const CODE = `class Queue {
@@ -45,6 +54,9 @@ export const queue: Topic = {
   title: "Queue (FIFO)",
   category: "Data Structures",
   blurb: "First-in, first-out. Enqueue back, dequeue front.",
+  useWhen: "Fair ordering matters — BFS, task queues, buffers.",
+  badges: ["O(1) enqueue"],
+  prerequisites: ["stack"],
   create: () =>
     defineViz<Step>({
       steps: build(),

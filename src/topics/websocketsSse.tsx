@@ -19,6 +19,7 @@ function build(): Step[] {
       mode: "polling",
       activeSide: "client",
       pollCount: 1,
+      chapter: "HTTP polling",
       caption: "HTTP polling: client repeatedly asks “anything new?” every few seconds.",
     },
     {
@@ -36,17 +37,20 @@ function build(): Step[] {
     {
       mode: "sse-open",
       activeSide: "both",
+      chapter: "SSE open stream",
       caption: "SSE: one long-lived GET with Accept: text/event-stream.",
     },
     {
       mode: "sse-push",
       activeSide: "server",
       events: ["data: {\"msg\":\"hello\"}", "data: {\"msg\":\"world\"}"],
+      chapter: "SSE server push",
       caption: "Server pushes text/event-stream lines over the open connection.",
     },
     {
       mode: "ws-upgrade",
       activeSide: "both",
+      chapter: "WebSocket upgrade",
       caption: "WebSocket: HTTP Upgrade handshake → 101 Switching Protocols.",
     },
     {
@@ -54,6 +58,7 @@ function build(): Step[] {
       activeSide: "both",
       wsClientMsg: '{"type":"subscribe","channel":"chat"}',
       wsServerMsg: '{"type":"message","text":"Hi!"}',
+      chapter: "WebSocket bidirectional",
       caption: "Full-duplex: both sides send framed messages anytime — chat, games, live data.",
     },
   ];

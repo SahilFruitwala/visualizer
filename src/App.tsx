@@ -1,9 +1,16 @@
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { BrowserRouter, Navigate, Route, Routes, useNavigate, useParams } from "react-router-dom";
+import { ChapterPanel } from "./components/ChapterPanel";
+import { ColorLegend } from "./components/ColorLegend";
 import { Sidebar } from "./components/Sidebar";
 import { Controls } from "./components/Controls";
 import { CodeBlock } from "./components/CodeBlock";
+import { QuizPanel } from "./components/QuizPanel";
 import { Stage } from "./components/Stage";
+import { TopicMeta } from "./components/TopicNav";
+import { deriveChapters } from "./engine/chapters";
+import { tagTopicChapters } from "./engine/topicChapters";
+import { usePlayerKeyboard } from "./engine/useKeyboard";
 import { usePlayer } from "./engine/usePlayer";
 import type { Topic } from "./engine/types";
 import {
@@ -152,14 +159,20 @@ function TopicView({
   sectionTabs?: ReactNode;
 }) {
   const [nonce, setNonce] = useState(0);
-  const viz = useMemo(() => topic.create(), [topic, nonce]);
-  const player = usePlayer(viz.steps.length);
+  const viz = useMemo(() => {
+    const v = topic.create();
+    return { ...v, steps: tagTopicChapters(topic.id, v.steps) };
+  }, [topic, nonce]);
+  const chapters = useMemo(() => deriveChapters(viz.steps), [viz.steps]);
+  const player = usePlayer(viz.steps.length, { initialSpeed: 1, learnMode: true });
   const step = viz.steps[player.index];
+
+  usePlayerKeyboard(player);
 
   return (
     <main className="stage-wrap">
       <header className="topic-head">
-        <div>
+        <div className="topic-head-main">
           {sectionTabs}
           <div style={{ fontFamily: FONT_MONO, fontSize: 12, letterSpacing: 2, color: "var(--accent)", textTransform: "uppercase" }}>
             {topic.category}
@@ -167,6 +180,7 @@ function TopicView({
           <h1 style={{ fontFamily: FONT_SANS, fontSize: 34, fontWeight: 800, color: "var(--text)", margin: "4px 0 0" }}>
             {topic.title}
           </h1>
+          <TopicMeta topic={topic} onSelect={onSelect} />
         </div>
 
         <div className="head-actions">
@@ -198,30 +212,44 @@ function TopicView({
         </div>
       </header>
 
+      <ColorLegend />
+
       <Stage
         steps={viz.steps}
         renderStep={viz.renderStep}
         index={player.index}
         caption={step.caption}
+        insight={step.insight}
       />
 
       <section className="controls-bar">
         <Controls
           player={player}
+          chapters={chapters}
           onShuffle={topic.shufflable ? () => setNonce((n) => n + 1) : undefined}
         />
       </section>
+
+      <ChapterPanel
+        chapters={chapters}
+        index={player.index}
+        onSeek={player.seek}
+      />
 
       <section className="info">
         <div className="panel">
           <div className="panel-title">How it works</div>
           <p className="explanation">{viz.explanation}</p>
         </div>
-        <div className="panel">
-          <div className="panel-title">Code</div>
-          <CodeBlock code={viz.code} />
+        <div className="panel code-panel">
+          <div className="panel-title">Code · step {player.index + 1}</div>
+          <CodeBlock code={viz.code} highlightLines={step.codeLines} />
         </div>
       </section>
+
+      {topic.quiz && topic.quiz.length > 0 && (
+        <QuizPanel topicId={topic.id} questions={topic.quiz} />
+      )}
     </main>
   );
 }

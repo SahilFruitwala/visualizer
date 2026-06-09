@@ -1,5 +1,6 @@
 import { ApiFlow, HttpMessage } from "../components/ApiFlow";
 import { defineViz, type StepBase, type Topic } from "../engine/types";
+import { withCodeLines } from "../engine/codeLines";
 
 type Phase = "build" | "dns" | "tcp" | "request" | "process" | "response" | "parse";
 
@@ -21,6 +22,7 @@ function build(): Step[] {
       showRequest: true,
       showResponse: false,
       highlight: ["line"],
+      chapter: "Build request",
       caption: "Client builds GET /users/42 with Accept: application/json.",
     },
     {
@@ -30,6 +32,7 @@ function build(): Step[] {
       showRequest: true,
       showResponse: false,
       highlight: [],
+      chapter: "DNS lookup",
       caption: "DNS resolves api.example.com → server IP address.",
     },
     {
@@ -39,6 +42,7 @@ function build(): Step[] {
       showRequest: false,
       showResponse: false,
       highlight: [],
+      chapter: "TCP connect",
       caption: "TCP three-way handshake establishes a connection.",
     },
     {
@@ -48,6 +52,7 @@ function build(): Step[] {
       showRequest: true,
       showResponse: false,
       highlight: ["line", "Host", "Accept"],
+      chapter: "Send request",
       caption: "Request line + headers sent over the connection.",
     },
     {
@@ -57,6 +62,7 @@ function build(): Step[] {
       showRequest: false,
       showResponse: false,
       highlight: [],
+      chapter: "Server processing",
       caption: "Server routes the request, queries the database, builds JSON.",
     },
     {
@@ -66,6 +72,7 @@ function build(): Step[] {
       showRequest: false,
       showResponse: true,
       highlight: ["body"],
+      chapter: "Response",
       caption: "Server returns 200 OK with Content-Type: application/json.",
     },
     {
@@ -75,6 +82,7 @@ function build(): Step[] {
       showRequest: false,
       showResponse: true,
       highlight: ["body"],
+      chapter: "Parse response",
       caption: "Client parses the JSON body → { id: 42, name: \"Alice\" }.",
     },
   ];
@@ -99,14 +107,31 @@ const CODE = `async function fetchUser(id) {
   return res.json(); // { id: 42, name: "Alice" }
 }`;
 
+const STEPS = withCodeLines(build(), (s) => {
+  if (s.phase === "build" || s.phase === "request") return [0, 1, 2];
+  if (s.phase === "parse") return [4, 5, 6];
+  if (s.phase === "response") return [3, 4];
+  return [0, 1];
+});
+
 export const httpLifecycle: Topic = {
   id: "http-lifecycle",
   title: "HTTP Request Lifecycle",
   category: "API",
   blurb: "From building a request to parsing the JSON response.",
+  useWhen: "Debugging slow requests, timeouts, or connection errors.",
+  badges: ["client ↔ server"],
+  quiz: [
+    {
+      question: "What happens before the HTTP request is sent?",
+      options: ["JSON parse", "DNS + TCP", "CORS preflight only", "Webhook delivery"],
+      correctIndex: 1,
+      explanation: "The client resolves the host and opens a TCP connection before bytes hit the wire.",
+    },
+  ],
   create: () =>
     defineViz<Step>({
-      steps: build(),
+      steps: STEPS,
       code: CODE,
       explanation:
         "An HTTP call is more than fetch(). The client resolves the hostname (DNS), opens a TCP connection, sends a request line + headers, waits while the server processes, then reads the status, headers, and body from the response.\n\nMost of this is handled by the browser/runtime — but knowing the lifecycle helps you debug timeouts, TLS errors, and malformed responses.",

@@ -19,6 +19,7 @@ function build(): Step[] {
       status: 200,
       statusLabel: "OK",
       resBody: '{ "id": 1, "name": "Alice" }',
+      chapter: "200 OK",
       caption: "200 OK — request succeeded; response body contains the resource.",
     },
     {
@@ -28,6 +29,7 @@ function build(): Step[] {
       statusLabel: "Created",
       reqBody: '{ "name": "Bob" }',
       resBody: '{ "id": 2, "name": "Bob" }',
+      chapter: "201 Created",
       caption: "201 Created — new resource was created (POST success).",
     },
     {
@@ -37,6 +39,7 @@ function build(): Step[] {
       statusLabel: "Bad Request",
       reqBody: '{ name: Bob }',
       resBody: '{ "error": "Invalid JSON" }',
+      chapter: "400 Bad Request",
       caption: "400 Bad Request — client sent malformed or invalid input.",
     },
     {
@@ -45,6 +48,7 @@ function build(): Step[] {
       status: 401,
       statusLabel: "Unauthorized",
       resBody: '{ "error": "Missing token" }',
+      chapter: "401 Unauthorized",
       caption: "401 Unauthorized — authentication required but not provided.",
     },
     {
@@ -53,6 +57,7 @@ function build(): Step[] {
       status: 404,
       statusLabel: "Not Found",
       resBody: '{ "error": "User not found" }',
+      chapter: "404 Not Found",
       caption: "404 Not Found — resource does not exist at that URL.",
     },
     {
@@ -61,6 +66,7 @@ function build(): Step[] {
       status: 429,
       statusLabel: "Too Many Requests",
       resBody: '{ "error": "Rate limit exceeded" }',
+      chapter: "429 Too Many Requests",
       caption: "429 Too Many Requests — client hit a rate limit; retry after backoff.",
     },
     {
@@ -69,6 +75,7 @@ function build(): Step[] {
       status: 500,
       statusLabel: "Internal Server Error",
       resBody: '{ "error": "Something went wrong" }',
+      chapter: "500 Internal Server Error",
       caption: "500 Internal Server Error — unexpected failure on the server side.",
     },
   ];

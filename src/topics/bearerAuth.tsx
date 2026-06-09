@@ -26,6 +26,7 @@ function build(): Step[] {
       hasToken: false,
       tokenStored: false,
       authHeader: false,
+      chapter: "Login",
       caption: "POST /login with email + password credentials.",
     },
     {
@@ -35,6 +36,7 @@ function build(): Step[] {
       hasToken: true,
       tokenStored: false,
       authHeader: false,
+      chapter: "Token issued",
       caption: "Server validates credentials → 200 OK + JWT token in body.",
     },
     {
@@ -47,6 +49,7 @@ function build(): Step[] {
       tokenStored: false,
       authHeader: false,
       profileBody: '{ "error": "Missing Authorization header" }',
+      chapter: "Missing Authorization",
       caption: "GET /profile without Authorization header → 401.",
     },
     {
@@ -56,6 +59,7 @@ function build(): Step[] {
       hasToken: true,
       tokenStored: true,
       authHeader: false,
+      chapter: "Store token",
       caption: "Client stores the token (memory, sessionStorage, etc.).",
     },
     {
@@ -68,6 +72,7 @@ function build(): Step[] {
       tokenStored: true,
       authHeader: true,
       profileBody: PROFILE,
+      chapter: "Authenticated request",
       caption: "GET /profile with Authorization: Bearer <token> → 200 + profile.",
     },
     {
@@ -80,6 +85,7 @@ function build(): Step[] {
       tokenStored: true,
       authHeader: true,
       profileBody: '{ "error": "Token expired" }',
+      chapter: "Expired token",
       caption: "Expired or invalid token → 401 again. Re-login or refresh.",
     },
   ];

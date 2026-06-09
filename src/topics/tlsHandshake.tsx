@@ -25,6 +25,7 @@ function build(): Step[] {
       showTls: false,
       showHttp: false,
       encrypted: false,
+      chapter: "TCP connection",
       caption: "TCP connection established (from HTTP lifecycle). TLS runs on top of TCP.",
     },
     {
@@ -37,6 +38,7 @@ function build(): Step[] {
       tlsLabel: "ClientHello",
       tlsDetail: "TLS 1.3 · cipher suites · SNI: api.example.com",
       encrypted: false,
+      chapter: "ClientHello",
       caption: "Client opens TLS: proposes version, ciphers, and the server name (SNI).",
     },
     {
@@ -49,6 +51,7 @@ function build(): Step[] {
       tlsLabel: "ServerHello + Certificate",
       tlsDetail: "picked cipher · cert for *.example.com · CA-signed chain",
       encrypted: false,
+      chapter: "ServerHello & certificate",
       caption: "Server picks a cipher suite and sends its X.509 certificate chain.",
     },
     {
@@ -61,6 +64,7 @@ function build(): Step[] {
       tlsLabel: "Verify certificate",
       tlsDetail: "check hostname · trust store · expiry · revocation",
       encrypted: false,
+      chapter: "Verify certificate",
       caption: "Client verifies the cert matches the hostname and chains to a trusted CA.",
     },
     {
@@ -73,6 +77,7 @@ function build(): Step[] {
       tlsLabel: "Key exchange + Finished",
       tlsDetail: "ECDHE shared secret → session keys · both sides send Finished",
       encrypted: false,
+      chapter: "Key exchange",
       caption: "Ephemeral key exchange derives symmetric session keys. Handshake completes.",
     },
     {
@@ -82,6 +87,7 @@ function build(): Step[] {
       showTls: false,
       showHttp: false,
       encrypted: true,
+      chapter: "Encrypted tunnel",
       caption: "Encrypted tunnel ready — all further bytes are ciphertext on the wire.",
     },
     {
@@ -91,6 +97,7 @@ function build(): Step[] {
       showTls: false,
       showHttp: true,
       encrypted: true,
+      chapter: "HTTPS request",
       caption: "HTTP request/response flows inside the encrypted TLS channel (HTTPS).",
     },
   ];
