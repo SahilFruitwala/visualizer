@@ -1,0 +1,5 @@
+{
+  "name": "visualizer",
+  "compatibility_date": "2025-06-09",
+  "pages_build_output_dir": "./dist"
+}
