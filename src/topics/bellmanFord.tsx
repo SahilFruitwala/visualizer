@@ -32,7 +32,23 @@ function build(start: string) {
       }
     }
   }
-  snap({}, `Shortest distances from ${start} finalized (no negative cycle). ✓`);
+  snap({}, `Pass ${BF_NODES.length}: one more scan to detect negative cycles.`);
+  let hasNegativeCycle = false;
+  for (const { u, v, w } of BF_EDGES) {
+    const key = `${u}-${v}`;
+    if (dist[u] !== INF && dist[u] + w < dist[v]) {
+      hasNegativeCycle = true;
+      snap({ [key]: "chosen" }, `Relax ${u}→${v}: still improves ${v} → negative cycle!`);
+    } else {
+      snap({ [key]: "candidate" }, `Edge ${u}→${v}: no further improvement.`);
+    }
+  }
+  snap(
+    {},
+    hasNegativeCycle
+      ? "Negative cycle detected — shortest paths are undefined. ✗"
+      : `Shortest distances from ${start} finalized (no negative cycle). ✓`,
+  );
   return steps;
 }
 

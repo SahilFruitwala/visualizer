@@ -20,8 +20,9 @@ function build() {
   snap(-1, "In-order DFS: traverse Left → Node → Right. Produces sorted order for a BST.");
   const inorder = (i: number) => {
     if (i >= TREE.length || TREE[i] == null) return;
-    snap(i, `Go left from ${TREE[i]}.`);
-    inorder(2 * i + 1);
+    const left = 2 * i + 1;
+    if (left < TREE.length && TREE[left] != null) snap(i, `Go left from ${TREE[i]}.`);
+    inorder(left);
     visited.push(i);
     output.push(TREE[i]);
     snap(i, `Visit ${TREE[i]} → output.`);

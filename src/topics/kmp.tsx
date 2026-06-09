@@ -30,7 +30,7 @@ function build() {
       i++;
     } else if (len > 0) {
       len = lps[len - 1];
-      snap({ phase: "lps", pj: i, status: "mismatch", caption: `Fall back using lps[${i > 0 ? "len-1" : 0}] → len = ${len}.` });
+      snap({ phase: "lps", pj: i, status: "mismatch", caption: `Fall back using lps[${len - 1}] → len = ${len}.` });
     } else {
       lps[i] = 0;
       snap({ phase: "lps", pj: i, status: "mismatch", caption: `No match → lps[${i}] = 0.` });

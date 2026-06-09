@@ -35,6 +35,7 @@ function build(input: number[]) {
       k++;
     }
   }
+  for (let i = 0; i < arr.length; i++) arr[i] = out[i]!;
   snap({ caption: "Sorted without any comparisons. ✓" });
   return steps;
 }
@@ -59,7 +60,7 @@ export const countingSort: Topic = {
       steps: build(input),
       code: CODE,
       explanation:
-        "Counting Sort works when values fall in a small known range. It counts occurrences of each value, then walks the count array to emit the sorted output. No comparisons needed.\n\nTime: O(n + k) · Space: O(k) · Stable: yes (k = value range)",
+        "Counting Sort works when values fall in a small known range. It counts occurrences of each value, then walks the count array to emit the sorted output. No comparisons needed. This demo uses the simple tally variant; a prefix-sum + backward pass is needed for stability.\n\nTime: O(n + k) · Space: O(k) · Stable: no (this variant) · k = value range",
       renderStep: (s) => (
         <div style={{ display: "flex", flexDirection: "column", gap: 22, alignItems: "center" }}>
           <Row gap={6}>

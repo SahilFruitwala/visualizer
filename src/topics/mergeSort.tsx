@@ -32,7 +32,7 @@ function build(input: number[]) {
     const right = arr.slice(mid + 1, hi + 1);
     let i = 0, j = 0, k = lo;
     while (i < left.length && j < right.length) {
-      snap({ lo, hi, a: lo + i, b: mid + 1 + j, caption: `Merge: compare ${left[i]} and ${right[j]}.` });
+      snap({ lo, hi, a: -1, b: -1, caption: `Merge: compare ${left[i]} and ${right[j]}.` });
       if (left[i] <= right[j]) arr[k] = left[i++];
       else arr[k] = right[j++];
       snap({ lo, hi, write: k, caption: `Write ${arr[k]} into index ${k}.` });

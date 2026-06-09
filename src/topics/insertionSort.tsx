@@ -4,7 +4,8 @@ import { Bar, Row } from "../components/primitives";
 
 interface Step extends StepBase {
   arr: number[];
-  key: number; // index holding the element being inserted
+  key: number; // index where the key will land
+  keyVal: number; // value being inserted (-1 if none)
   compare: number; // index being compared against
   sortedTo: number; // a[0..sortedTo) is sorted-so-far
 }
@@ -13,20 +14,20 @@ function build(input: number[]) {
   const arr = [...input];
   const n = arr.length;
   const steps: Step[] = [];
-  steps.push({ arr: [...arr], key: -1, compare: -1, sortedTo: 1, caption: "Grow a sorted prefix by inserting each next element into place." });
+  steps.push({ arr: [...arr], key: -1, keyVal: -1, compare: -1, sortedTo: 1, caption: "Grow a sorted prefix by inserting each next element into place." });
   for (let i = 1; i < n; i++) {
     const val = arr[i];
-    steps.push({ arr: [...arr], key: i, compare: -1, sortedTo: i, caption: `Take a[${i}]=${val} and insert it into the sorted prefix.` });
+    steps.push({ arr: [...arr], key: i, keyVal: val, compare: -1, sortedTo: i, caption: `Take a[${i}]=${val} and insert it into the sorted prefix.` });
     let j = i - 1;
     while (j >= 0 && arr[j] > val) {
-      steps.push({ arr: [...arr], key: j + 1, compare: j, sortedTo: i, caption: `a[${j}]=${arr[j]} > ${val} → shift it right.` });
+      steps.push({ arr: [...arr], key: j + 1, keyVal: val, compare: j, sortedTo: i, caption: `a[${j}]=${arr[j]} > ${val} → shift it right.` });
       arr[j + 1] = arr[j];
       j--;
     }
     arr[j + 1] = val;
-    steps.push({ arr: [...arr], key: j + 1, compare: -1, sortedTo: i + 1, caption: `Place ${val} at index ${j + 1}. ✓` });
+    steps.push({ arr: [...arr], key: j + 1, keyVal: val, compare: -1, sortedTo: i + 1, caption: `Place ${val} at index ${j + 1}. ✓` });
   }
-  steps.push({ arr: [...arr], key: -1, compare: -1, sortedTo: n, caption: "Array fully sorted. ✓" });
+  steps.push({ arr: [...arr], key: -1, keyVal: -1, compare: -1, sortedTo: n, caption: "Array fully sorted. ✓" });
   return steps;
 }
 
@@ -68,7 +69,8 @@ export const insertionSort: Topic = {
                   : i < s.sortedTo
                     ? "sorted"
                     : "default";
-            return <Bar key={i} value={v} max={max} state={state} />;
+            const value = i === s.key && s.keyVal >= 0 ? s.keyVal : v;
+            return <Bar key={i} value={value} max={max} state={state} />;
           })}
         </Row>
       ),

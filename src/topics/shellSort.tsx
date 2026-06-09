@@ -29,6 +29,7 @@ function build(input: number[]) {
         j -= gap;
       }
       arr[j] = temp;
+      snap(gap, j, -1, `Place ${temp} at index ${j}. ✓`);
     }
   }
   snap(0, -1, -1, "Array fully sorted. ✓");

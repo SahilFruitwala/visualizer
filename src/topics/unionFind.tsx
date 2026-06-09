@@ -30,7 +30,8 @@ function build() {
     if (rank[ra] < rank[rb]) { parent[ra] = rb; }
     else if (rank[ra] > rank[rb]) { parent[rb] = ra; }
     else { parent[rb] = ra; rank[ra]++; }
-    snap([a, b], [ra, rb], `Attach the smaller tree under the larger root.`);
+    const root = find(a);
+    snap([a, b], [root], `Attached under root ${root} (path compressed).`);
   };
 
   union(0, 1);

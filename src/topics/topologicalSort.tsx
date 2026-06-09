@@ -33,7 +33,11 @@ function build() {
     }
     snap(`Remove ${u}'s edges; newly free nodes join the queue.`, u);
   }
-  snap(`Valid order: ${order.join(" → ")} ✓`);
+  if (order.length === DAG_NODES.length) {
+    snap(`Valid order: ${order.join(" → ")} ✓`);
+  } else {
+    snap(`Cycle detected — only ${order.length}/${DAG_NODES.length} nodes ordered. ✗`);
+  }
   return steps;
 }
 
