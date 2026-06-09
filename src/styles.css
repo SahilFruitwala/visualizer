@@ -65,7 +65,9 @@ body { background: var(--bg); color: var(--text); }
 .app {
   display: grid;
   grid-template-columns: 264px 1fr;
+  grid-template-rows: 1fr;
   height: 100vh;
+  height: 100dvh;
   overflow: hidden;
 }
 
@@ -148,8 +150,10 @@ body { background: var(--bg); color: var(--text); }
 
 /* ---- stage column ---- */
 .stage-wrap {
-  height: 100vh;
+  min-height: 0;
+  height: 100%;
   overflow-y: auto;
+  overflow-x: hidden;
   padding: 24px 32px 40px;
   display: flex;
   flex-direction: column;
@@ -168,6 +172,7 @@ body { background: var(--bg); color: var(--text); }
 /* ---- the dark visualization stage ---- */
 .stage {
   position: relative;
+  overflow: hidden;
   background: radial-gradient(circle at 50% 28%, var(--stage-top) 0%, var(--stage-bottom) 78%);
   border: 1px solid var(--stage-border);
   border-radius: 18px;
@@ -182,12 +187,17 @@ body { background: var(--bg); color: var(--text); }
   left: 22px;
   right: 22px;
   top: 28px;
+  height: 0;
   visibility: hidden;
   pointer-events: none;
   z-index: -1;
-  overflow: visible;
+  overflow: hidden;
 }
 .stage-measure-step {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
   width: 100%;
   display: flex;
   justify-content: center;
@@ -195,12 +205,11 @@ body { background: var(--bg); color: var(--text); }
 .stage-canvas {
   width: 100%;
   flex-shrink: 0;
-  overflow: auto;
+  overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 4px 2px;
-  transition: height 280ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 .stage-canvas-inner {
   width: 100%;
@@ -209,13 +218,34 @@ body { background: var(--bg); color: var(--text); }
   justify-content: center;
   min-height: min-content;
 }
+.stage-caption-measure {
+  position: absolute;
+  left: 22px;
+  right: 22px;
+  bottom: 22px;
+  height: 0;
+  visibility: hidden;
+  pointer-events: none;
+  z-index: -1;
+  overflow: hidden;
+}
+.stage-caption-measure-step {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+}
 .caption-block {
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: flex-start;
   gap: 8px;
   max-width: 92%;
   align-self: center;
+  flex-shrink: 0;
 }
 .caption {
   flex: 0 0 auto;
