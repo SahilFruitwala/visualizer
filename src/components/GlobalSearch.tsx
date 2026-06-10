@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
+import { useFavorites } from "../engine/favorites";
 import { TOPICS } from "../topics";
 import { sectionForTopic } from "../sections";
 
@@ -14,6 +15,8 @@ export function GlobalSearch({
   const [query, setQuery] = useState("");
   const [active, setActive] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
+  const modalRef = useRef<HTMLDivElement>(null);
+  const favorites = useFavorites();
 
   const results = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -39,6 +42,35 @@ export function GlobalSearch({
   useEffect(() => {
     setActive(0);
   }, [query]);
+
+  useEffect(() => {
+    if (!open || !modalRef.current) return;
+
+    const modal = modalRef.current;
+    const focusable = modal.querySelectorAll<HTMLElement>(
+      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+    );
+    if (focusable.length === 0) return;
+
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+
+    const onTab = (e: KeyboardEvent) => {
+      if (e.key !== "Tab") return;
+      if (e.shiftKey) {
+        if (document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        }
+      } else if (document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    };
+
+    modal.addEventListener("keydown", onTab);
+    return () => modal.removeEventListener("keydown", onTab);
+  }, [open, results]);
 
   useEffect(() => {
     if (!open) return;
@@ -70,7 +102,7 @@ export function GlobalSearch({
 
   return (
     <div className="search-overlay" role="dialog" aria-modal="true" aria-label="Search topics" onClick={onClose}>
-      <div className="search-modal" onClick={(e) => e.stopPropagation()}>
+      <div ref={modalRef} className="search-modal" onClick={(e) => e.stopPropagation()}>
         <div className="search-input-wrap">
           <span className="search-icon" aria-hidden>
             ⌕
@@ -112,6 +144,11 @@ export function GlobalSearch({
                       {section?.shortLabel} · {t.category}
                     </span>
                   </span>
+                  {favorites.includes(t.id) && (
+                    <span className="search-result-fav" aria-label="Favorite" title="Favorite">
+                      ★
+                    </span>
+                  )}
                 </button>
               </li>
             );

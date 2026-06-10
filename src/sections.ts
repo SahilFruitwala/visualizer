@@ -33,6 +33,7 @@ export const SECTIONS: Section[] = [
       "Dynamic Programming",
       "Backtracking",
       "Techniques",
+      "Greedy",
       "Strings",
     ],
   },

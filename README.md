@@ -15,7 +15,7 @@ npm run dev      # open the printed localhost URL
 npm run build    # type-check + production build into dist/
 ```
 
-## Topics (89)
+## Topics (100)
 
 Navigation is split into four sections — **DS**, **Algo**, **BE**, **FE** — each with its own subcategories.
 
@@ -25,25 +25,38 @@ Navigation is split into four sections — **DS**, **Algo**, **BE**, **FE** — 
 | | Hashing | Hash Table · Bloom Filter · LRU Cache |
 | | Trees | BST · AVL · Trie · Heap / Priority Queue |
 | | Advanced | Segment Tree · Fenwick Tree · Union-Find · Skip List |
-| **Algo** | Sorting | Bubble · Selection · Insertion · Shell · Merge · Quick · Heap · Counting · Radix |
+| **Algo** | Sorting | Bubble · Selection · Insertion · Shell · Merge · Quick · Heap · Counting · Radix · Bucket |
 | | Searching | Linear · Binary |
 | | Tree Algorithms | Tree Traversal (DFS) · Pre/In/Post-order |
 | | Graph Algorithms | BFS · DFS · Dijkstra · Bellman-Ford · Topological Sort · Kruskal · Prim · A\* · Floyd-Warshall · Tarjan's SCC |
-| | Dynamic Programming | Fibonacci · Climbing Stairs · Kadane · Coin Change · Knapsack · LCS · Edit Distance · Bitmask DP |
+| | Dynamic Programming | Fibonacci · Climbing Stairs · LIS · Kadane · Coin Change · Knapsack · LCS · Edit Distance · Bitmask DP |
 | | Backtracking | N-Queens · Subsets · Permutations |
-| | Techniques | Two Pointers · Sliding Window · Prefix Sums · Monotonic Stack · Binary Search on Answer · Meet in the Middle |
+| | Techniques | Two Pointers · Sliding Window · Prefix Sums · Monotonic Stack · Binary Search on Answer · Meet in the Middle · Recursion & Call Stack |
+| | Greedy | Activity Selection |
 | | Strings | KMP · Rabin-Karp · Z-Algorithm |
-| **BE** | Protocol | HTTP Lifecycle · HTTP Caching · TLS Handshake |
+| **BE** | Protocol | HTTP Lifecycle · DNS Resolution · TCP Handshake · HTTP Caching · TLS Handshake |
 | | REST & Design | REST & HTTP Verbs · Status Codes · API Types · Versioning · GraphQL vs REST · gRPC & Protobuf |
-| | Auth & Security | CORS · Bearer Auth · JWT Structure · OAuth 2.0 (PKCE) |
-| | Operations | Pagination · Rate Limiting · Webhooks · WebSockets & SSE · Idempotency & Retries |
-| **FE** | Runtime | Critical Rendering Path · JavaScript Event Loop · SSR Hydration |
+| | Auth & Security | CORS · CSRF Protection · Bearer Auth · JWT Structure · OAuth 2.0 (PKCE) |
+| | Operations | Pagination · Rate Limiting · Load Balancing · Webhooks · WebSockets & SSE · Idempotency & Retries |
+| **FE** | Runtime | Critical Rendering Path · Browser Storage · Event Loop · Web Workers · SSR Hydration |
 | | Rendering | Virtual DOM · Component Re-renders · Memoization |
 | | Navigation | Client-Side Routing |
-| | Layout & CSS | Box Model & Flexbox |
+| | Layout & CSS | Box Model & Flexbox · CSS Grid |
 | | Performance | Debounce & Throttle · List Virtualization · Client Data Fetching · Optimistic UI |
 
 Legacy `/api` URLs redirect to `/backend`.
+
+## Learning features
+
+- **Paths** (`/paths`) — curated sequences with progress tracking
+- **Compare** (`/compare`) — side-by-side topic animations with presets
+- **Quizzes** — 2+ questions per topic
+- **Prerequisites & related topics** — cross-linked learning graph
+- **Favorites** — star topics to study later
+- **Resume** — picks up where you left off per topic
+- **Share links** — `?step=N` deep links
+- **Keyboard shortcuts** — press `?` for help
+- **PWA** — installable with offline caching
 
 ## Shared visual language
 
@@ -67,21 +80,18 @@ src/
   theme.ts                 # colors + fonts (the visual language)
   engine/
     types.ts               # Step / Viz / Topic contracts + defineViz()
+    topicMeta.ts           # quizzes, prerequisites, badges for all topics
+    enrichTopic.ts         # merges metadata into topic catalogue
     usePlayer.ts           # play / pause / step / speed / scrub (rAF-driven)
-    util.ts                # shuffle, randomArray
+    progress.ts            # path & topic completion tracking
+    favorites.ts           # starred topics
+    paths.ts               # learning path definitions
   components/
-    primitives.tsx         # Cell, Bar, Arrow, PointerTag, Row
-    Grid.tsx               # 2D table for DP visualizations
-    GraphView.tsx          # unweighted graph renderer (BFS/DFS)
-    WeightedGraphView.tsx  # weighted/directed graph (Dijkstra/MST/topo)
-    ApiFlow.tsx            # HTTP message panels, status badges, client/server flow
-    FrontendView.tsx       # event loop, routing, flexbox, debounce viz
-    BackendView.tsx        # caching layers, JWT, protobuf, bloom filter
-    Controls.tsx           # transport bar
-    Sidebar.tsx            # categorized topic nav
+    ComparePage.tsx        # side-by-side topic comparison
+    ComplexityPanel.tsx    # badges + animation progress
+    ...
   topics/
     index.ts               # the catalogue (register new topics here)
-    bubbleSort.tsx ... listVirtualization.tsx
   App.tsx                  # stage + code/explanation panels
 ```
 
@@ -90,8 +100,5 @@ src/
 1. Create `src/topics/myTopic.tsx` exporting a `Topic`.
 2. In `create()`, precompute `steps` (each extends `StepBase` with a `caption`),
    then return `defineViz({ steps, renderStep, code, explanation })`.
-3. Register it in `src/topics/index.ts`. It slots into the sidebar under its
-   `category` automatically.
-
-Because each topic owns its own `Step` type and `renderStep`, visualizations stay
-fully type-safe while sharing one player, one control bar, and one layout.
+3. Register it in `src/topics/index.ts`. Add metadata in `src/engine/topicMeta.ts`.
+4. It slots into the sidebar under its `category` automatically.

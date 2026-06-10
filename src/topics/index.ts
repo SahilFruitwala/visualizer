@@ -1,4 +1,5 @@
 import type { Topic } from "../engine/types";
+import { enrichTopic } from "../engine/enrichTopic";
 
 import { bubbleSort } from "./bubbleSort";
 import { selectionSort } from "./selectionSort";
@@ -9,6 +10,7 @@ import { heapSort } from "./heapSort";
 import { shellSort } from "./shellSort";
 import { countingSort } from "./countingSort";
 import { radixSort } from "./radixSort";
+import { bucketSort } from "./bucketSort";
 import { linearSearch } from "./linearSearch";
 import { binarySearch } from "./binarySearch";
 import { stack } from "./stack";
@@ -38,6 +40,7 @@ import { kmp } from "./kmp";
 import { rabinKarp } from "./rabinKarp";
 import { fibonacci } from "./fibonacci";
 import { climbingStairs } from "./climbingStairs";
+import { longestIncreasingSubsequence } from "./longestIncreasingSubsequence";
 import { coinChange } from "./coinChange";
 import { knapsack } from "./knapsack";
 import { lcs } from "./lcs";
@@ -47,6 +50,7 @@ import { nQueens } from "./nQueens";
 import { subsets } from "./subsets";
 import { permutations } from "./permutations";
 import { twoPointers } from "./twoPointers";
+import { greedyActivity } from "./greedyActivity";
 import { slidingWindow } from "./slidingWindow";
 import { prefixSum } from "./prefixSum";
 import { monotonicStack } from "./monotonicStack";
@@ -59,13 +63,19 @@ import { oauth2 } from "./oauth2";
 import { pagination } from "./pagination";
 import { rateLimiting } from "./rateLimiting";
 import { cors } from "./cors";
+import { csrfProtection } from "./csrfProtection";
 import { apiVersioning } from "./apiVersioning";
 import { webhooks } from "./webhooks";
 import { tlsHandshake } from "./tlsHandshake";
+import { tcpHandshake } from "./tcpHandshake";
+import { dnsResolution } from "./dnsResolution";
+import { loadBalancing } from "./loadBalancing";
 import { websocketsSse } from "./websocketsSse";
 import { apiTypes } from "./apiTypes";
 import { eventLoop } from "./eventLoop";
 import { criticalRenderingPath } from "./criticalRenderingPath";
+import { browserStorage } from "./browserStorage";
+import { webWorkers } from "./webWorkers";
 import { virtualDom } from "./virtualDom";
 import { clientRouting } from "./clientRouting";
 import { listVirtualization } from "./listVirtualization";
@@ -75,6 +85,7 @@ import { hydration } from "./hydration";
 import { clientDataFetching } from "./clientDataFetching";
 import { memoization } from "./memoization";
 import { flexboxBoxModel } from "./flexboxBoxModel";
+import { cssGrid } from "./cssGrid";
 import { optimisticUI } from "./optimisticUI";
 import { httpCaching } from "./httpCaching";
 import { idempotencyRetries } from "./idempotencyRetries";
@@ -85,12 +96,13 @@ import { bloomFilter } from "./bloomFilter";
 import { skipList } from "./skipList";
 import { tarjanScc } from "./tarjanScc";
 import { meetInMiddle } from "./meetInMiddle";
+import { recursionCallStack } from "./recursionCallStack";
 import { bitmaskDp } from "./bitmaskDp";
 import { zAlgorithm } from "./zAlgorithm";
 import { treeTraversalOrders } from "./treeTraversalOrders";
 
 // The full catalogue. Order within a category is preserved in the sidebar.
-export const TOPICS: Topic[] = [
+const RAW_TOPICS: Topic[] = [
   // Linear
   stack,
   queue,
@@ -120,6 +132,7 @@ export const TOPICS: Topic[] = [
   heapSort,
   countingSort,
   radixSort,
+  bucketSort,
   // Searching
   linearSearch,
   binarySearch,
@@ -140,6 +153,7 @@ export const TOPICS: Topic[] = [
   // Dynamic Programming
   fibonacci,
   climbingStairs,
+  longestIncreasingSubsequence,
   kadane,
   coinChange,
   knapsack,
@@ -157,12 +171,17 @@ export const TOPICS: Topic[] = [
   monotonicStack,
   binarySearchOnAnswer,
   meetInMiddle,
+  recursionCallStack,
+  // Greedy
+  greedyActivity,
   // Strings
   kmp,
   rabinKarp,
   zAlgorithm,
   // Protocol
   httpLifecycle,
+  dnsResolution,
+  tcpHandshake,
   httpCaching,
   tlsHandshake,
   // REST & Design
@@ -174,18 +193,22 @@ export const TOPICS: Topic[] = [
   grpcProtobuf,
   // Auth & Security
   cors,
+  csrfProtection,
   bearerAuth,
   oauth2,
   jwtStructure,
   // Operations
   pagination,
   rateLimiting,
+  loadBalancing,
   webhooks,
   websocketsSse,
   idempotencyRetries,
   // Runtime
   criticalRenderingPath,
+  browserStorage,
   eventLoop,
+  webWorkers,
   hydration,
   // Rendering
   virtualDom,
@@ -195,12 +218,15 @@ export const TOPICS: Topic[] = [
   clientRouting,
   // Layout & CSS
   flexboxBoxModel,
+  cssGrid,
   // Performance
   debounceThrottle,
   listVirtualization,
   clientDataFetching,
   optimisticUI,
 ];
+
+export const TOPICS: Topic[] = RAW_TOPICS.map(enrichTopic);
 
 export const CATEGORIES = [
   "Linear",
@@ -214,6 +240,7 @@ export const CATEGORIES = [
   "Dynamic Programming",
   "Backtracking",
   "Techniques",
+  "Greedy",
   "Strings",
   "Protocol",
   "REST & Design",
@@ -222,6 +249,7 @@ export const CATEGORIES = [
   "Runtime",
   "Rendering",
   "Navigation",
+  "Layout & CSS",
   "Performance",
 ] as const;
 

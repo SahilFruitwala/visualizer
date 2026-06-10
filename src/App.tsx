@@ -13,15 +13,21 @@ import { ChapterPanel } from "./components/ChapterPanel";
 import { ColorLegend } from "./components/ColorLegend";
 import { Controls } from "./components/Controls";
 import { CodeBlock } from "./components/CodeBlock";
+import { ComparePage } from "./components/ComparePage";
+import { ComplexityPanel } from "./components/ComplexityPanel";
 import { PathsPage } from "./components/PathsPage";
 import { QuizPanel } from "./components/QuizPanel";
 import { Stage } from "./components/Stage";
+import { FavoriteButton } from "./components/FavoriteButton";
+import { KeyboardHelp } from "./components/KeyboardHelp";
 import { PrereqPanel } from "./components/PrereqPanel";
+import { RelatedPanel } from "./components/RelatedPanel";
 import { TopicMeta } from "./components/TopicNav";
 import { TopicPager } from "./components/TopicPager";
 import { ThemeProvider, ThemeToggle } from "./components/ThemeToggle";
 import { deriveChapters } from "./engine/chapters";
 import { prefersReducedMotion } from "./engine/reducedMotion";
+import { saveTopicProgress } from "./engine/progress";
 import { getResumeStep, saveResumeStep } from "./engine/resume";
 import { tagTopicChapters } from "./engine/topicChapters";
 import { usePlayerKeyboard } from "./engine/useKeyboard";
@@ -132,6 +138,20 @@ function PathsRoute() {
   );
 }
 
+function CompareRoute() {
+  const [searchParams] = useSearchParams();
+  const { selectTopic } = useAppNav();
+  return (
+    <AppShell sectionId={resolveSectionId("/compare")} view="compare">
+      <ComparePage
+        initialA={searchParams.get("a") ?? undefined}
+        initialB={searchParams.get("b") ?? undefined}
+        onSelectTopic={selectTopic}
+      />
+    </AppShell>
+  );
+}
+
 export default function App() {
   return (
     <ThemeProvider>
@@ -149,6 +169,7 @@ export default function App() {
           <Route path="/frontend" element={<SectionRedirect sectionId="frontend" />} />
           <Route path="/frontend/:topicId" element={<TopicRoute sectionId="frontend" />} />
           <Route path="/paths" element={<PathsRoute />} />
+          <Route path="/compare" element={<CompareRoute />} />
           <Route path="*" element={<SectionRedirect sectionId="ds" />} />
         </Routes>
       </BrowserRouter>
@@ -166,6 +187,7 @@ function TopicView({
   const [searchParams, setSearchParams] = useSearchParams();
   const [nonce, setNonce] = useState(0);
   const [focusMode, setFocusMode] = useState(false);
+  const [helpOpen, setHelpOpen] = useState(false);
   const [shareNote, setShareNote] = useState<string | null>(null);
   const reducedMotion = prefersReducedMotion();
 
@@ -201,12 +223,51 @@ function TopicView({
   usePlayerKeyboard(player, !focusMode);
 
   useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== "?" || focusMode) return;
+      const tag = (e.target as HTMLElement)?.tagName;
+      if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT") return;
+      e.preventDefault();
+      setHelpOpen((v) => !v);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [focusMode]);
+
+  useEffect(() => {
+    document.title = `${topic.title} — Dev Visualizer`;
+
+    const setMeta = (selector: string, attr: string, value: string) => {
+      let el = document.querySelector(selector);
+      if (!el) {
+        el = document.createElement("meta");
+        if (selector.includes("property=")) {
+          el.setAttribute("property", selector.match(/property="([^"]+)"/)?.[1] ?? "");
+        } else {
+          el.setAttribute("name", selector.match(/name="([^"]+)"/)?.[1] ?? "");
+        }
+        document.head.appendChild(el);
+      }
+      el.setAttribute(attr, value);
+    };
+
+    setMeta('meta[name="description"]', "content", topic.blurb);
+    setMeta('meta[property="og:title"]', "content", topic.title);
+    setMeta('meta[property="og:description"]', "content", topic.blurb);
+
+    return () => {
+      document.title = "Dev Visualizer — Learn DSA & APIs";
+    };
+  }, [topic]);
+
+  useEffect(() => {
     saveResumeStep(topic.id, player.index);
+    saveTopicProgress(topic.id, player.index, viz.steps.length);
     if (searchParams.get("step") === String(player.index)) return;
     const next = new URLSearchParams(searchParams);
     next.set("step", String(player.index));
     setSearchParams(next, { replace: true });
-  }, [player.index, topic.id, searchParams, setSearchParams]);
+  }, [player.index, topic.id, viz.steps.length, searchParams, setSearchParams]);
 
   useEffect(() => {
     if (!shareNote) return;
@@ -234,6 +295,7 @@ function TopicView({
             <TopicMeta topic={topic} />
           </div>
           <div className="topic-head-actions">
+            <FavoriteButton topicId={topic.id} />
             <ThemeToggle />
           </div>
         </header>
@@ -252,6 +314,10 @@ function TopicView({
       </div>
 
       {!focusMode && <ColorLegend />}
+
+      {!focusMode && (
+        <ComplexityPanel topic={topic} stepIndex={player.index} totalSteps={viz.steps.length} />
+      )}
 
       <Stage
         steps={viz.steps}
@@ -278,6 +344,8 @@ function TopicView({
 
           <PrereqPanel topic={topic} onSelect={onSelect} />
 
+          <RelatedPanel topic={topic} onSelect={onSelect} />
+
           <section className="info">
             <div className="panel">
               <div className="panel-title">How it works</div>
@@ -294,6 +362,8 @@ function TopicView({
           )}
         </>
       )}
+
+      <KeyboardHelp open={helpOpen} onClose={() => setHelpOpen(false)} />
     </main>
   );
 }

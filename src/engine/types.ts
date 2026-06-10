@@ -46,6 +46,7 @@ export type Category =
   | "Dynamic Programming"
   | "Backtracking"
   | "Techniques"
+  | "Greedy"
   | "Strings"
   // Backend section
   | "Protocol"

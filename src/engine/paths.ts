@@ -34,6 +34,8 @@ export const LEARNING_PATHS: LearningPath[] = [
     id: "backend-basics",
     title: "Backend essentials",
     topicIds: [
+      "dns-resolution",
+      "tcp-handshake",
       "http-lifecycle",
       "http-caching",
       "tls-handshake",
@@ -74,6 +76,63 @@ export const LEARNING_PATHS: LearningPath[] = [
     id: "async-mental-model",
     title: "Async mental model",
     topicIds: ["queue", "event-loop", "websockets-sse", "webhooks", "debounce-throttle"],
+  },
+  {
+    id: "dp-foundations",
+    title: "Dynamic programming",
+    topicIds: [
+      "recursion-call-stack",
+      "fibonacci",
+      "climbing-stairs",
+      "kadane",
+      "coin-change",
+      "knapsack",
+      "lcs",
+      "longest-increasing-subsequence",
+      "edit-distance",
+    ],
+  },
+  {
+    id: "string-algorithms",
+    title: "String algorithms",
+    topicIds: ["kmp", "rabin-karp", "z-algorithm"],
+  },
+  {
+    id: "system-design",
+    title: "System design essentials",
+    topicIds: [
+      "dns-resolution",
+      "tcp-handshake",
+      "tls-handshake",
+      "load-balancing",
+      "rate-limiting",
+      "http-caching",
+      "idempotency-retries",
+      "webhooks",
+      "websockets-sse",
+    ],
+  },
+  {
+    id: "full-stack-auth",
+    title: "Full-stack authentication",
+    topicIds: [
+      "cors",
+      "csrf-protection",
+      "bearer-auth",
+      "jwt-structure",
+      "oauth2",
+      "browser-storage",
+    ],
+  },
+  {
+    id: "css-layout",
+    title: "CSS layout",
+    topicIds: ["flexbox-box-model", "css-grid"],
+  },
+  {
+    id: "network-stack",
+    title: "Network stack",
+    topicIds: ["dns-resolution", "tcp-handshake", "tls-handshake", "http-lifecycle", "http-caching"],
   },
 ];
 

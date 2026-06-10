@@ -1,3 +1,4 @@
+import { getPathProgress } from "../engine/progress";
 import { LEARNING_PATHS } from "../engine/paths";
 import { TOPICS } from "../topics";
 import { sectionForTopic } from "../sections";
@@ -21,11 +22,24 @@ export function PathsPage({ onSelect }: { onSelect: (topicId: string) => void })
       <div className="paths-grid">
         {LEARNING_PATHS.map((path) => {
           const firstTopicId = path.topicIds[0];
+          const progress = getPathProgress(path.id);
 
           return (
             <article key={path.id} className="path-card">
               <h2 className="path-card-title">{path.title}</h2>
-              <p className="path-card-meta">{path.topicIds.length} topics</p>
+              <p className="path-card-meta">
+                {progress.completed}/{progress.total} completed · {path.topicIds.length} topics
+              </p>
+              <div
+                className="path-progress"
+                role="progressbar"
+                aria-valuenow={progress.percent}
+                aria-valuemin={0}
+                aria-valuemax={100}
+                aria-label={`${progress.percent}% complete`}
+              >
+                <div className="path-progress-bar" style={{ width: `${progress.percent}%` }} />
+              </div>
 
               <ol className="path-topic-list">
                 {path.topicIds.map((id, i) => {

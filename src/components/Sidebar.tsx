@@ -175,6 +175,14 @@ export function Sidebar({
         >
           Paths
         </button>
+        <button
+          type="button"
+          className="sidebar-footer-btn"
+          data-active={view === "compare"}
+          onClick={() => onNavigate("/compare")}
+        >
+          Compare
+        </button>
         <ThemeToggle className="theme-toggle sidebar-theme-toggle" />
       </footer>
     </aside>

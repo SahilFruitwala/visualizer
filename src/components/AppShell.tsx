@@ -12,7 +12,7 @@ import {
 } from "../sections";
 import { ThemeToggle } from "./ThemeToggle";
 
-export type AppView = "topics" | "paths";
+export type AppView = "topics" | "paths" | "compare";
 
 export function useAppNav() {
   const navigate = useNavigate();
@@ -171,5 +171,6 @@ export function resolveSectionId(pathname: string): SectionId {
 
 export function resolveView(pathname: string): AppView {
   if (pathname === "/paths") return "paths";
+  if (pathname === "/compare") return "compare";
   return "topics";
 }

@@ -179,6 +179,7 @@ export function Controls({
         <span>Space {learnMode ? "next" : "play"}</span>
         <span>R restart</span>
         <span>⌘K search</span>
+        <span>? help</span>
       </div>
     </div>
   );
