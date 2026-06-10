@@ -102,3 +102,8 @@ src/
    then return `defineViz({ steps, renderStep, code, explanation })`.
 3. Register it in `src/topics/index.ts`. Add metadata in `src/engine/topicMeta.ts`.
 4. It slots into the sidebar under its `category` automatically.
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for a full guide — including how to fix content or add a topic
+**entirely from the browser** (no clone needed) via GitHub's web editor.
