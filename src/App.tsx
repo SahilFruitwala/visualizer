@@ -43,6 +43,8 @@ import {
   topicsForSection,
   type SectionId,
 } from "./sections";
+import { SITE_NAME } from "./seo/config";
+import { usePageMeta } from "./seo/usePageMeta";
 
 function SectionRedirect({ sectionId }: { sectionId: SectionId }) {
   const section = sectionById(sectionId)!;
@@ -131,6 +133,12 @@ function TopicRoute({ sectionId }: { sectionId: SectionId }) {
 
 function PathsRoute() {
   const { selectTopic } = useAppNav();
+  usePageMeta({
+    title: `Learning paths — ${SITE_NAME}`,
+    description:
+      "Curated learning sequences for data structures, algorithms, backend, and frontend — with progress tracking.",
+    path: "/paths",
+  });
   return (
     <AppShell sectionId={resolveSectionId("/paths")} view="paths">
       <PathsPage onSelect={selectTopic} />
@@ -141,6 +149,12 @@ function PathsRoute() {
 function CompareRoute() {
   const [searchParams] = useSearchParams();
   const { selectTopic } = useAppNav();
+  usePageMeta({
+    title: `Compare topics — ${SITE_NAME}`,
+    description:
+      "Side-by-side interactive comparisons of algorithms, data structures, and API patterns.",
+    path: "/compare",
+  });
   return (
     <AppShell sectionId={resolveSectionId("/compare")} view="compare">
       <ComparePage
@@ -234,31 +248,12 @@ function TopicView({
     return () => window.removeEventListener("keydown", onKey);
   }, [focusMode]);
 
-  useEffect(() => {
-    document.title = `${topic.title} — Dev Visualizer`;
-
-    const setMeta = (selector: string, attr: string, value: string) => {
-      let el = document.querySelector(selector);
-      if (!el) {
-        el = document.createElement("meta");
-        if (selector.includes("property=")) {
-          el.setAttribute("property", selector.match(/property="([^"]+)"/)?.[1] ?? "");
-        } else {
-          el.setAttribute("name", selector.match(/name="([^"]+)"/)?.[1] ?? "");
-        }
-        document.head.appendChild(el);
-      }
-      el.setAttribute(attr, value);
-    };
-
-    setMeta('meta[name="description"]', "content", topic.blurb);
-    setMeta('meta[property="og:title"]', "content", topic.title);
-    setMeta('meta[property="og:description"]', "content", topic.blurb);
-
-    return () => {
-      document.title = "Dev Visualizer — Learn DSA & APIs";
-    };
-  }, [topic]);
+  const owner = sectionForTopic(topic.id);
+  usePageMeta({
+    title: `${topic.title} — ${SITE_NAME}`,
+    description: topic.blurb,
+    path: owner ? `${owner.path}/${topic.id}` : `/algo/${topic.id}`,
+  });
 
   useEffect(() => {
     saveResumeStep(topic.id, player.index);
