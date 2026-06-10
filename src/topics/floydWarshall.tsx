@@ -63,7 +63,7 @@ function build() {
         }
       }
     }
-    snap({ k, caption: `Finished using ${LABELS[k]} as intermediate. Row ${LABELS[k]} locked in.` });
+    snap({ k, caption: `Finished allowing ${LABELS[k]} as an intermediate node.` });
   }
 
   snap({ chapter: "Summary", caption: "All-pairs shortest distances computed. ✓" });

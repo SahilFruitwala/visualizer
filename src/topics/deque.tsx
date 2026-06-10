@@ -27,7 +27,7 @@ function build() {
     else if (o.op === "popFront") { const v = dq.shift(); steps.push({ dq: [...dq], touch: "front", removed: true, caption: `popFront() → remove ${v} from the left.` }); }
     else { const v = dq.pop(); steps.push({ dq: [...dq], touch: "back", removed: true, caption: `popBack() → remove ${v} from the right.` }); }
   }
-  steps.push({ dq: [...dq], touch: null, removed: false, caption: "Both ends support O(1) insert and remove." });
+  steps.push({ dq: [...dq], touch: null, removed: false, caption: "Both ends support O(1) insert and remove with a linked list or circular buffer." });
   return steps;
 }
 
@@ -37,7 +37,8 @@ const CODE = `class Deque {            // double-ended queue
   pushBack(x)  { this.items.push(x); }
   popFront()   { return this.items.shift(); }
   popBack()    { return this.items.pop(); }
-}`;
+}
+// Production deques use linked lists or circular buffers for O(1) front ops.`;
 
 export const deque: Topic = {
   id: "deque",
@@ -49,7 +50,7 @@ export const deque: Topic = {
       steps: build(),
       code: CODE,
       explanation:
-        "A deque (double-ended queue) generalizes stacks and queues: you can push and pop at both the front and the back in O(1). It backs sliding-window-maximum and many BFS variants.\n\npushFront / pushBack / popFront / popBack: O(1)",
+        "A deque (double-ended queue) generalizes stacks and queues: you can push and pop at both the front and the back in O(1) with a linked list or circular buffer. It backs sliding-window-maximum and many BFS variants.\n\npushFront / pushBack / popFront / popBack: O(1) with the right backing storage",
       renderStep: (s) =>
         s.dq.length === 0 ? (
           <div style={{ color: "#8a96c0", fontFamily: "monospace" }}>empty deque</div>

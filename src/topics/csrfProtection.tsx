@@ -167,7 +167,8 @@ app.post("/transfer", (req, res) => {
   // … process transfer
 });
 
-// Always combine with HTTPS + CORS for API-only apps`;
+// Always combine with HTTPS; for SPAs, require a custom CSRF header
+// or use bearer tokens instead of cookie sessions.`;
 
 const CSRF_STEPS = withCodeLines(build(), (s) => {
   if (s.scenario === "legit") return [0, 1];

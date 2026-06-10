@@ -188,13 +188,8 @@ export const oauth2: Topic = {
                 <HttpMessage
                   direction="request"
                   method="GET"
-                  path="/authorize"
-                  headers={[
-                    { name: "client_id", value: "my-app" },
-                    { name: "code_challenge", value: CHALLENGE.slice(0, 16) + "…" },
-                    { name: "redirect_uri", value: "https://app/callback" },
-                  ]}
-                  highlight={["code_challenge"]}
+                  path={`/authorize?client_id=my-app&code_challenge=${CHALLENGE.slice(0, 12)}…&redirect_uri=https://app/callback`}
+                  highlight={["line"]}
                 />
                 <HttpMessage
                   direction="response"

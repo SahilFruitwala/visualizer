@@ -50,6 +50,7 @@ function build(): Step[] {
     chapter: "Least connections",
     caption: "Least-connections picks the server with fewest active connections.",
   });
+  servers[1].load = 1;
 
   const leastIdx = servers.reduce((min, s, i, arr) => (s.load < arr[min].load ? i : min), 0);
   servers[leastIdx].load++;

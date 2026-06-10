@@ -76,7 +76,10 @@ const build = (): Step[] => [
 ];
 
 const CODE = `// Cookies — sent automatically, small (~4 KB each)
-document.cookie = "sid=abc; Secure; HttpOnly; SameSite=Strict";
+document.cookie = "theme=dark; Secure; SameSite=Lax";
+
+// HttpOnly auth cookies must be set by the server:
+Set-Cookie: sid=abc; Secure; HttpOnly; SameSite=Strict
 
 // sessionStorage — per tab, cleared on close
 sessionStorage.setItem("draft", json);

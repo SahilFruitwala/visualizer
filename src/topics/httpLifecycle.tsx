@@ -2,7 +2,7 @@ import { ApiFlow, HttpMessage } from "../components/ApiFlow";
 import { defineViz, type StepBase, type Topic } from "../engine/types";
 import { withCodeLines } from "../engine/codeLines";
 
-type Phase = "build" | "dns" | "tcp" | "request" | "process" | "response" | "parse";
+type Phase = "build" | "dns" | "tcp" | "tls" | "request" | "process" | "response" | "parse";
 
 interface Step extends StepBase {
   phase: Phase;
@@ -44,6 +44,16 @@ function build(): Step[] {
       highlight: [],
       chapter: "TCP connect",
       caption: "TCP three-way handshake establishes a connection.",
+    },
+    {
+      phase: "tls",
+      activeSide: "both",
+      direction: "both",
+      showRequest: false,
+      showResponse: false,
+      highlight: [],
+      chapter: "TLS handshake",
+      caption: "For HTTPS, TLS negotiates encryption before HTTP bytes are sent.",
     },
     {
       phase: "request",
@@ -134,7 +144,7 @@ export const httpLifecycle: Topic = {
       steps: STEPS,
       code: CODE,
       explanation:
-        "An HTTP call is more than fetch(). The client resolves the hostname (DNS), opens a TCP connection, sends a request line + headers, waits while the server processes, then reads the status, headers, and body from the response.\n\nMost of this is handled by the browser/runtime — but knowing the lifecycle helps you debug timeouts, TLS errors, and malformed responses.",
+        "An HTTP call is more than fetch(). The client resolves the hostname (DNS), opens a TCP connection, negotiates TLS for HTTPS, sends a request line + headers, waits while the server processes, then reads the status, headers, and body from the response.\n\nMost of this is handled by the browser/runtime — but knowing the lifecycle helps you debug timeouts, TLS errors, and malformed responses.",
       renderStep: (s) => (
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 24 }}>
           <ApiFlow

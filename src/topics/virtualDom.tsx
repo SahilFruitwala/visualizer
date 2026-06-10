@@ -105,7 +105,7 @@ function renderTree(states: Record<string, NodeState>, side: "old" | "new", focu
           <TreeNode label="Item" state={s("Item")} compact />
           <TreeNode label="Item" state={s("Item")} compact />
           <TreeNode label="Item" state={s("Item")} compact />
-          {side === "new" && states.Item === "added" && (
+          {side === "new" && (states.Item === "added" || states.count === "changed") && (
             <>
               <TreeNode label="Item" state="added" compact />
               <TreeNode label="Item" state="added" compact />

@@ -11,7 +11,7 @@ const REST_REQ = "GET /users/1\nGET /users/1/posts\nGET /posts/5/comments";
 const GQL_REQ = 'POST /graphql\n{ user(id:1) { name posts { title comments { text } } } }';
 
 const build = (): Step[] => [
-  { phase: "rest", highlight: ["request"], chapter: "REST", caption: "REST: 3 round-trips to assemble user + posts + comments (N+1 / overfetch risk)." },
+  { phase: "rest", highlight: ["request"], chapter: "REST", caption: "REST: 3 round-trips to assemble user + posts + comments (chatty API / overfetch risk)." },
   { phase: "graphql", highlight: ["request", "response"], caption: "GraphQL: one request, client picks exact nested shape — no overfetch." },
   { phase: "compare", highlight: [], caption: "REST shines for simple CRUD + HTTP caching. GraphQL shines for flexible mobile clients. ✓" },
 ];

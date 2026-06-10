@@ -16,10 +16,33 @@ function build(arr: number[], target: number): Step[] {
   const mid = Math.floor(arr.length / 2);
   const left = arr.slice(0, mid);
   const right = arr.slice(mid);
-  steps.push({ left, right, li: 0, ri: right.length - 1, sum: 0, target, found: false, chapter: "Split", caption: `Meet-in-middle: split array, enumerate halves, find pair summing to ${target}.` });
-  steps.push({ left, right, li: 0, ri: right.length - 1, sum: left[0] + right[right.length - 1], target, found: false, caption: "Sort right half, two-pointer from left start + right end." });
-  const li = 1, ri = 0, sum = left[1] + right[0];
-  steps.push({ left, right, li, ri, sum, target, found: sum === target, caption: sum === target ? `left[${li}]+right[${ri}]=${target} found! ✓` : `sum=${sum} — adjust pointers.` });
+
+  const allSums = (nums: number[]) => {
+    const sums: number[] = [];
+    for (let mask = 0; mask < 1 << nums.length; mask++) {
+      let sum = 0;
+      for (let i = 0; i < nums.length; i++) if (mask & (1 << i)) sum += nums[i];
+      sums.push(sum);
+    }
+    return sums;
+  };
+
+  const leftSums = allSums(left).sort((a, b) => a - b);
+  const rightSums = allSums(right).sort((a, b) => a - b);
+
+  steps.push({ left, right, li: -1, ri: -1, sum: 0, target, found: false, chapter: "Split", caption: `Meet-in-middle: split array, enumerate subset sums, find a total of ${target}.` });
+  steps.push({ left: leftSums, right: rightSums, li: -1, ri: -1, sum: 0, target, found: false, caption: "Enumerate and sort subset sums for each half." });
+
+  for (let li = 0; li < leftSums.length; li++) {
+    const need = target - leftSums[li];
+    const ri = rightSums.indexOf(need);
+    if (ri >= 0) {
+      steps.push({ left: leftSums, right: rightSums, li, ri, sum: leftSums[li] + rightSums[ri], target, found: true, caption: `leftSum ${leftSums[li]} + rightSum ${rightSums[ri]} = ${target}. Found! ✓` });
+      return steps;
+    }
+    steps.push({ left: leftSums, right: rightSums, li, ri: -1, sum: leftSums[li] + need, target, found: false, caption: `Try leftSum ${leftSums[li]}; need rightSum ${need}.` });
+  }
+
   return steps;
 }
 
@@ -27,7 +50,8 @@ const CODE = `function meetInMiddle(a, target) {
   const mid = a.length >> 1;
   const sumsL = allSums(a.slice(0, mid));
   const sumsR = allSums(a.slice(mid));
-  // binary search complementary sums in opposite half
+  sumsR.sort((a, b) => a - b);
+  // binary search target - leftSum in the opposite half
 }`;
 
 export const meetInMiddle: Topic = {

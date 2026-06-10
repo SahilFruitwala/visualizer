@@ -17,16 +17,13 @@ function buildFib(n: number): { steps: Step[]; result: number } {
   const steps: Step[] = [];
   let result = 0;
 
-  function walk(k: number, depth: number): number {
-    const frames: Frame[] = [];
-    for (let d = depth; d >= 0; d--) {
-      const val = k - (depth - d);
-      frames.push({
-        fn: `fib(${val})`,
-        n: val,
-        waiting: d < depth ? `fib(${val - 1}) + fib(${val - 2})` : undefined,
-      });
-    }
+  function walk(k: number, stack: number[] = []): number {
+    const callStack = [...stack, k];
+    const frames: Frame[] = callStack.map((val, i) => ({
+      fn: `fib(${val})`,
+      n: val,
+      waiting: i < callStack.length - 1 && val > 1 ? `fib(${val - 1}) + fib(${val - 2})` : undefined,
+    }));
 
     steps.push({
       frames: [...frames],
@@ -49,8 +46,8 @@ function buildFib(n: number): { steps: Step[]; result: number } {
       return k;
     }
 
-    const a = walk(k - 1, depth + 1);
-    const b = walk(k - 2, depth + 1);
+    const a = walk(k - 1, callStack);
+    const b = walk(k - 2, callStack);
     const sum = a + b;
 
     steps.push({
@@ -62,7 +59,7 @@ function buildFib(n: number): { steps: Step[]; result: number } {
     return sum;
   }
 
-  result = walk(n, 0);
+  result = walk(n);
   steps.push({
     frames: [],
     phase: "done",

@@ -24,8 +24,10 @@ function build(input: number[]) {
     for (let k = 0; k < n - 1 - pass; k++) {
       steps.push({ arr: [...arr], comparing: [k, k + 1], swapped: false, sortedFrom: n - pass, caption: `Compare a[${k}]=${arr[k]} and a[${k + 1}]=${arr[k + 1]}.` });
       if (arr[k] > arr[k + 1]) {
+        const left = arr[k];
+        const right = arr[k + 1];
         [arr[k], arr[k + 1]] = [arr[k + 1], arr[k]];
-        steps.push({ arr: [...arr], comparing: [k, k + 1], swapped: true, sortedFrom: n - pass, caption: `${arr[k + 1]} > ${arr[k]} → swap them.` });
+        steps.push({ arr: [...arr], comparing: [k, k + 1], swapped: true, sortedFrom: n - pass, caption: `${left} > ${right} → swap them.` });
       }
     }
     steps.push({ arr: [...arr], comparing: null, swapped: false, sortedFrom: n - pass - 1, caption: `Largest unsorted value bubbled to position ${n - pass - 1}. ✓` });
