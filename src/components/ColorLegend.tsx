@@ -1,22 +1,22 @@
-import { C } from "../theme";
+import { C, type Palette } from "../theme";
 
-const ITEMS = [
-  { color: C.active, label: "Active / processing" },
-  { color: C.compare, label: "Comparing / leaving" },
-  { color: C.sorted, label: "Done / found / sorted" },
-  { color: C.pointer, label: "Pointer / frontier" },
-  { color: C.highlight, label: "Visited / highlighted" },
-] as const;
+const LEGEND: { key: keyof Palette; label: string }[] = [
+  { key: "active", label: "Active / processing" },
+  { key: "compare", label: "Comparing / leaving" },
+  { key: "sorted", label: "Done / found / sorted" },
+  { key: "pointer", label: "Pointer / frontier" },
+  { key: "highlight", label: "Visited / highlighted" },
+];
 
 export function ColorLegend() {
   return (
     <details className="color-legend-panel">
       <summary className="color-legend-summary">Color key</summary>
       <div className="color-legend" aria-label="Visualization color key">
-        {ITEMS.map((item) => (
-          <span key={item.label} className="legend-item">
-            <span className="legend-swatch" style={{ background: item.color }} />
-            {item.label}
+        {LEGEND.map(({ key, label }) => (
+          <span key={label} className="legend-item">
+            <span className="legend-swatch" style={{ background: C[key] }} />
+            {label}
           </span>
         ))}
       </div>

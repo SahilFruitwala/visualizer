@@ -1,6 +1,6 @@
 import { ApiFlow, HttpMessage } from "../components/ApiFlow";
 import { defineViz, type StepBase, type Topic } from "../engine/types";
-import { C, FONT_MONO } from "../theme";
+import { C, FONT_MONO, mixProp } from "../theme";
 
 interface Step extends StepBase {
   phase: string;
@@ -39,7 +39,7 @@ export const optimisticUI: Topic = {
     renderStep: (s) => (
       <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 16 }}>
         <ApiFlow phase={s.phase} activeSide="both" direction="right" />
-        <div style={{ padding: "14px 24px", borderRadius: 10, background: s.rolledBack ? `${C.compare}18` : `${C.sorted}18`, border: `2px solid ${s.rolledBack ? C.compareBorder : C.sortedBorder}`, fontFamily: FONT_MONO, fontSize: 18, fontWeight: 700, color: C.text }}>{s.uiState}</div>
+        <div style={{ padding: "14px 24px", borderRadius: 10, background: s.rolledBack ? mixProp("compare", 9) : mixProp("sorted", 9), border: `2px solid ${s.rolledBack ? C.compareBorder : C.sortedBorder}`, fontFamily: FONT_MONO, fontSize: 18, fontWeight: 700, color: C.text }}>{s.uiState}</div>
         {s.apiStatus && <HttpMessage direction="response" status={s.apiStatus} statusLabel={s.apiStatus < 300 ? "Created" : "Error"} />}
       </div>
     ),

@@ -1,6 +1,6 @@
 import { ApiFlow, ConnectionLine, HttpMessage } from "../components/ApiFlow";
 import { defineViz, type StepBase, type Topic } from "../engine/types";
-import { C, FONT_MONO, FONT_SANS } from "../theme";
+import { C, FONT_MONO, FONT_SANS, mixProp } from "../theme";
 
 type Mode = "polling" | "sse-open" | "sse-push" | "ws-upgrade" | "ws-bidir";
 
@@ -222,7 +222,7 @@ export const websocketsSse: Topic = {
               <div style={{ display: "flex", gap: 16, flexWrap: "wrap", justifyContent: "center" }}>
                 <div
                   style={{
-                    background: `${C.pointer}18`,
+                    background: mixProp("pointer", 9),
                     border: `1px solid ${C.pointerBorder}`,
                     borderRadius: 10,
                     padding: "10px 14px",
@@ -236,7 +236,7 @@ export const websocketsSse: Topic = {
                 </div>
                 <div
                   style={{
-                    background: `${C.sorted}18`,
+                    background: mixProp("sorted", 9),
                     border: `1px solid ${C.sortedBorder}`,
                     borderRadius: 10,
                     padding: "10px 14px",

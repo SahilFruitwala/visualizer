@@ -1,6 +1,6 @@
 import { defineViz, type StepBase, type Topic } from "../engine/types";
 import { Arrow } from "../components/primitives";
-import { C, FONT_MONO } from "../theme";
+import { C, FONT_MONO, mixColor } from "../theme";
 
 interface Step extends StepBase {
   nodes: number[];
@@ -73,7 +73,7 @@ export const linkedList: Topic = {
                   <div style={{ width: 60, height: 60, borderRadius: "10px 0 0 10px", background: fill, border: `2px solid ${C.surfaceBorder}`, borderRight: "none", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: FONT_MONO, fontWeight: 700, fontSize: 22, color: dark ? C.text : C.ink, transition: "background 200ms" }}>
                     {v}
                   </div>
-                  <div style={{ width: 26, height: 60, borderRadius: "0 10px 10px 0", background: `${fill}aa`, border: `2px solid ${C.surfaceBorder}`, display: "flex", alignItems: "center", justifyContent: "center", color: dark ? C.textMuted : C.ink }}>
+                  <div style={{ width: 26, height: 60, borderRadius: "0 10px 10px 0", background: mixColor(fill, 67), border: `2px solid ${C.surfaceBorder}`, display: "flex", alignItems: "center", justifyContent: "center", color: dark ? C.textMuted : C.ink }}>
                     •
                   </div>
                 </div>

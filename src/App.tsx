@@ -19,7 +19,7 @@ import { Stage } from "./components/Stage";
 import { PrereqPanel } from "./components/PrereqPanel";
 import { TopicMeta } from "./components/TopicNav";
 import { TopicPager } from "./components/TopicPager";
-import { ThemeToggle } from "./components/ThemeToggle";
+import { ThemeProvider, ThemeToggle } from "./components/ThemeToggle";
 import { deriveChapters } from "./engine/chapters";
 import { prefersReducedMotion } from "./engine/reducedMotion";
 import { getResumeStep, saveResumeStep } from "./engine/resume";
@@ -134,23 +134,25 @@ function PathsRoute() {
 
 export default function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<SectionRedirect sectionId="ds" />} />
-        <Route path="/ds" element={<SectionRedirect sectionId="ds" />} />
-        <Route path="/ds/:topicId" element={<TopicRoute sectionId="ds" />} />
-        <Route path="/algo" element={<SectionRedirect sectionId="algo" />} />
-        <Route path="/algo/:topicId" element={<TopicRoute sectionId="algo" />} />
-        <Route path="/api" element={<SectionRedirect sectionId="backend" />} />
-        <Route path="/api/:topicId" element={<TopicRoute sectionId="backend" />} />
-        <Route path="/backend" element={<SectionRedirect sectionId="backend" />} />
-        <Route path="/backend/:topicId" element={<TopicRoute sectionId="backend" />} />
-        <Route path="/frontend" element={<SectionRedirect sectionId="frontend" />} />
-        <Route path="/frontend/:topicId" element={<TopicRoute sectionId="frontend" />} />
-        <Route path="/paths" element={<PathsRoute />} />
-        <Route path="*" element={<SectionRedirect sectionId="ds" />} />
-      </Routes>
-    </BrowserRouter>
+    <ThemeProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<SectionRedirect sectionId="ds" />} />
+          <Route path="/ds" element={<SectionRedirect sectionId="ds" />} />
+          <Route path="/ds/:topicId" element={<TopicRoute sectionId="ds" />} />
+          <Route path="/algo" element={<SectionRedirect sectionId="algo" />} />
+          <Route path="/algo/:topicId" element={<TopicRoute sectionId="algo" />} />
+          <Route path="/api" element={<SectionRedirect sectionId="backend" />} />
+          <Route path="/api/:topicId" element={<TopicRoute sectionId="backend" />} />
+          <Route path="/backend" element={<SectionRedirect sectionId="backend" />} />
+          <Route path="/backend/:topicId" element={<TopicRoute sectionId="backend" />} />
+          <Route path="/frontend" element={<SectionRedirect sectionId="frontend" />} />
+          <Route path="/frontend/:topicId" element={<TopicRoute sectionId="frontend" />} />
+          <Route path="/paths" element={<PathsRoute />} />
+          <Route path="*" element={<SectionRedirect sectionId="ds" />} />
+        </Routes>
+      </BrowserRouter>
+    </ThemeProvider>
   );
 }
 

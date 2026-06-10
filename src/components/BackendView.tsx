@@ -1,5 +1,5 @@
 import type { CSSProperties, ReactNode } from "react";
-import { C, FONT_MONO, FONT_SANS } from "../theme";
+import { C, FONT_MONO, FONT_SANS, mixProp } from "../theme";
 
 const CHIP: CSSProperties = {
   display: "block",
@@ -30,7 +30,7 @@ export function CacheLayerStack({
               style={{
                 padding: "12px 16px",
                 borderRadius: 10,
-                background: active ? (l.hit ? `${C.sorted}22` : `${C.pointer}18`) : C.surface,
+                background: active ? (l.hit ? mixProp("sorted", 13) : mixProp("pointer", 9)) : C.surface,
                 border: `2px solid ${active ? (l.hit ? C.sortedBorder : C.pointerBorder) : C.surfaceBorder}`,
                 transition: "all 220ms",
                 ...CHIP,
@@ -66,7 +66,7 @@ export function JwtDiagram({
       style={{
         padding: "10px 14px",
         borderRadius: 10,
-        background: highlight === key ? `${C.pointer}18` : C.surface,
+        background: highlight === key ? mixProp("pointer", 9) : C.surface,
         border: `2px solid ${highlight === key ? C.pointerBorder : C.surfaceBorder}`,
         fontFamily: FONT_MONO,
         fontSize: 12,
@@ -108,7 +108,7 @@ export function RetryTimeline({
               padding: "12px 14px",
               borderRadius: 10,
               minWidth: 120,
-              background: a.status >= 500 ? `${C.compare}18` : a.status >= 200 && a.status < 300 ? `${C.sorted}18` : `${C.active}18`,
+              background: a.status >= 500 ? mixProp("compare", 9) : a.status >= 200 && a.status < 300 ? mixProp("sorted", 9) : mixProp("active", 9),
               border: `2px solid ${a.status >= 500 ? C.compareBorder : a.status < 300 ? C.sortedBorder : C.activeBorder}`,
               fontFamily: FONT_MONO,
               fontSize: 12,
@@ -141,7 +141,7 @@ export function ProtobufFrame({
       <div style={{ background: C.surface, border: `1px solid ${C.surfaceBorder}`, borderRadius: 12, padding: 14, minWidth: 260, maxWidth: 360 }}>
         <div style={{ fontFamily: FONT_SANS, fontSize: 11, color: C.textMuted, fontWeight: 700, marginBottom: 8 }}>PROTOBUF MESSAGE</div>
         {fields.map((f) => (
-          <div key={f.name} style={{ padding: "6px 8px", borderRadius: 6, marginBottom: 4, background: f.highlight ? `${C.active}22` : "transparent", fontFamily: FONT_MONO, fontSize: 12, color: C.text }}>
+          <div key={f.name} style={{ padding: "6px 8px", borderRadius: 6, marginBottom: 4, background: f.highlight ? mixProp("active", 13) : "transparent", fontFamily: FONT_MONO, fontSize: 12, color: C.text }}>
             {f.name}: <span style={{ color: C.sorted }}>{f.value}</span>
           </div>
         ))}

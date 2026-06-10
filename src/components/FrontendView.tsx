@@ -1,5 +1,5 @@
 import type { CSSProperties, ReactNode } from "react";
-import { C, FONT_MONO, FONT_SANS } from "../theme";
+import { C, FONT_MONO, FONT_SANS, mixColor, mixProp } from "../theme";
 
 /** Keeps code labels inside bordered chips at any viewport width. */
 const CODE_CHIP: CSSProperties = {
@@ -55,7 +55,7 @@ export function PipelineRow({
         {stages.map((stage, i) => {
           const active = i === activeIndex;
           const done = i < activeIndex;
-          const bg = active ? `${C.pointer}22` : done ? `${C.sorted}18` : C.surface;
+          const bg = active ? mixProp("pointer", 13) : done ? mixProp("sorted", 9) : C.surface;
           const border = active ? C.pointerBorder : done ? C.sortedBorder : C.surfaceBorder;
           return (
             <div key={stage.id} style={{ display: "flex", alignItems: "center", gap: 6 }}>
@@ -177,7 +177,7 @@ export function PatchChip({ op, target, detail }: { op: "update" | "insert" | "r
         gap: 4,
         padding: "10px 14px",
         borderRadius: 10,
-        background: `${bg}22`,
+        background: mixColor(bg, 13),
         border: `2px solid ${border}`,
         fontFamily: FONT_MONO,
         fontSize: 13,
@@ -215,7 +215,7 @@ export function EventLoopDiagram({
   const zoneStyle = (zone: typeof activeZone): CSSProperties => ({
     padding: "14px 16px",
     borderRadius: 12,
-    background: activeZone === zone ? `${C.pointer}18` : C.surface,
+    background: activeZone === zone ? mixProp("pointer", 9) : C.surface,
     border: `2px solid ${activeZone === zone ? C.pointerBorder : C.surfaceBorder}`,
     minWidth: 0,
     transition: "background 220ms, border-color 220ms",
@@ -237,7 +237,7 @@ export function EventLoopDiagram({
               style={{
                 padding: "8px 10px",
                 borderRadius: 8,
-                background: isTop ? `${kindColor}33` : C.cellMuted,
+                background: isTop ? mixColor(kindColor, 20) : C.cellMuted,
                 border: `2px solid ${isTop ? (kindColor === C.default ? C.defaultBorder : kindColor) : C.cellMutedBorder}`,
                 fontFamily: FONT_MONO,
                 fontSize: 12,
@@ -310,7 +310,7 @@ export function EventLoopDiagram({
           style={{
             padding: "12px 20px",
             borderRadius: 10,
-            background: `${C.sorted}22`,
+            background: mixProp("sorted", 13),
             border: `2px solid ${C.sortedBorder}`,
             fontFamily: FONT_MONO,
             fontSize: 14,
@@ -383,7 +383,7 @@ export function RouteDiagram({
             style={{
               padding: "10px 14px",
               borderRadius: 10,
-              background: r.active || r.path === matchedRoute ? `${C.pointer}22` : C.surface,
+              background: r.active || r.path === matchedRoute ? mixProp("pointer", 13) : C.surface,
               border: `2px solid ${r.active || r.path === matchedRoute ? C.pointerBorder : C.surfaceBorder}`,
               fontFamily: FONT_MONO,
               fontSize: 13,
@@ -402,7 +402,7 @@ export function RouteDiagram({
         style={{
           padding: "16px 20px",
           borderRadius: 12,
-          background: `${C.sorted}18`,
+          background: mixProp("sorted", 9),
           border: `2px solid ${C.sortedBorder}`,
           minWidth: 260,
           minHeight: 100,
@@ -499,7 +499,7 @@ export function VirtualListView({
                       display: "flex",
                       alignItems: "center",
                       padding: "0 12px",
-                      background: inViewport ? `${C.active}22` : `${C.pointer}12`,
+                      background: inViewport ? mixProp("active", 13) : mixProp("pointer", 7),
                       borderBottom: `1px solid ${C.cellMutedBorder}`,
                       fontFamily: FONT_MONO,
                       fontSize: 13,
@@ -593,7 +593,7 @@ export function DomSnippet({
               style={{
                 padding: "2px 6px",
                 borderRadius: 4,
-                background: active ? `${C.pointer}22` : isNew ? `${C.sorted}18` : "transparent",
+                background: active ? mixProp("pointer", 13) : isNew ? mixProp("sorted", 9) : "transparent",
                 color: active ? C.pointer : isNew ? C.sorted : C.text,
                 transition: "background 220ms",
                 ...CODE_CHIP,
@@ -631,7 +631,7 @@ export function DebounceTimeline({
             style={{
               padding: "8px 12px",
               borderRadius: 8,
-              background: e.dropped ? C.rejected : `${C.pointer}22`,
+              background: e.dropped ? C.rejected : mixProp("pointer", 13),
               border: `2px solid ${e.dropped ? C.compareBorder : C.pointerBorder}`,
               fontFamily: FONT_MONO,
               fontSize: 12,
@@ -647,7 +647,7 @@ export function DebounceTimeline({
         style={{
           padding: "12px 20px",
           borderRadius: 10,
-          background: fired ? `${C.sorted}22` : C.cellMuted,
+          background: fired ? mixProp("sorted", 13) : C.cellMuted,
           border: `2px solid ${fired ? C.sortedBorder : C.cellMutedBorder}`,
           fontFamily: FONT_MONO,
           fontWeight: 700,
@@ -681,7 +681,7 @@ export function RerenderTree({
             style={{
               padding: "10px 16px",
               borderRadius: 10,
-              background: `${colors[n.state]}33`,
+              background: mixColor(colors[n.state], 20),
               border: `2px solid ${borders[n.state]}`,
               fontFamily: FONT_MONO,
               fontSize: 13,
@@ -724,9 +724,9 @@ export function BoxModelDiagram({
       {phase && (
         <div style={{ fontFamily: FONT_MONO, fontSize: 12, letterSpacing: 1.5, textTransform: "uppercase", color: C.active, fontWeight: 700 }}>{phase}</div>
       )}
-      {layer("margin", margin, `${C.highlight}18`, C.highlightBorder,
-        layer("border", border, `${C.active}18`, C.activeBorder,
-          layer("padding", padding, `${C.pointer}18`, C.pointerBorder,
+      {layer("margin", margin, mixProp("highlight", 9), C.highlightBorder,
+        layer("border", border, mixProp("active", 9), C.activeBorder,
+          layer("padding", padding, mixProp("pointer", 9), C.pointerBorder,
             <div style={{ padding: 16, background: C.sorted, borderRadius: 4, fontFamily: FONT_MONO, fontWeight: 700, color: C.ink, textAlign: "center" }}>{content}</div>
           )
         )

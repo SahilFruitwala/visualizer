@@ -1,6 +1,6 @@
 import { ApiFlow, HttpMessage, TlsMessage } from "../components/ApiFlow";
 import { defineViz, type StepBase, type Topic } from "../engine/types";
-import { C, FONT_MONO, FONT_SANS } from "../theme";
+import { C, FONT_MONO, FONT_SANS, mixProp } from "../theme";
 
 type Phase = "tcp" | "client-hello" | "server-hello" | "verify" | "key-exchange" | "encrypted" | "http";
 
@@ -144,7 +144,7 @@ export const tlsHandshake: Topic = {
                 gap: 8,
                 padding: "8px 16px",
                 borderRadius: 8,
-                background: `${C.sorted}22`,
+                background: mixProp("sorted", 13),
                 border: `2px solid ${C.sortedBorder}`,
                 fontFamily: FONT_SANS,
                 fontSize: 14,

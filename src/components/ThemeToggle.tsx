@@ -1,5 +1,5 @@
-import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
-import { setActiveTheme, type Theme } from "../theme";
+import { createContext, useContext, useState, type ReactNode } from "react";
+import { applyTheme, type Theme } from "../theme";
 
 interface ThemeContextValue {
   theme: Theme;
@@ -8,20 +8,26 @@ interface ThemeContextValue {
 
 const ThemeContext = createContext<ThemeContextValue | null>(null);
 
-function useThemeState(): ThemeContextValue {
-  const [theme, setTheme] = useState<Theme>(
-    () => (localStorage.getItem("dsa-theme") as Theme) || "dark",
-  );
+function readStoredTheme(): Theme {
+  return (localStorage.getItem("dsa-theme") as Theme) || "dark";
+}
 
-  useEffect(() => {
-    document.documentElement.dataset.theme = theme;
-    setActiveTheme(theme);
-    localStorage.setItem("dsa-theme", theme);
-  }, [theme]);
+function useThemeState(): ThemeContextValue {
+  const [theme, setTheme] = useState<Theme>(() => {
+    const stored = readStoredTheme();
+    applyTheme(stored);
+    return stored;
+  });
 
   return {
     theme,
-    toggleTheme: () => setTheme((t) => (t === "dark" ? "light" : "dark")),
+    toggleTheme: () => {
+      setTheme((current) => {
+        const next: Theme = current === "dark" ? "light" : "dark";
+        applyTheme(next);
+        return next;
+      });
+    },
   };
 }
 
@@ -30,9 +36,9 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
 }
 
-function useThemeContext() {
+export function useTheme() {
   const ctx = useContext(ThemeContext);
-  if (!ctx) throw new Error("ThemeToggle must be used within ThemeProvider");
+  if (!ctx) throw new Error("useTheme must be used within ThemeProvider");
   return ctx;
 }
 
@@ -53,7 +59,7 @@ function ThemeIcon({ theme }: { theme: Theme }) {
 }
 
 export function ThemeToggle({ className }: { className?: string }) {
-  const { theme, toggleTheme } = useThemeContext();
+  const { theme, toggleTheme } = useTheme();
   return (
     <button
       type="button"

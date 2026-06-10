@@ -1,7 +1,7 @@
 import { ApiFlow, HttpMessage } from "../components/ApiFlow";
 import { defineViz, type StepBase, type Topic } from "../engine/types";
 import { withCodeLines } from "../engine/codeLines";
-import { C, FONT_SANS } from "../theme";
+import { C, FONT_SANS, mixProp } from "../theme";
 
 type Scenario = "same-origin" | "simple" | "blocked" | "preflight" | "options" | "actual";
 
@@ -204,7 +204,7 @@ export const cors: Topic = {
               style={{
                 padding: "8px 14px",
                 borderRadius: 8,
-                background: `${C.compare}22`,
+                background: mixProp("compare", 13),
                 border: `2px solid ${C.compareBorder}`,
                 fontFamily: FONT_SANS,
                 fontSize: 13,

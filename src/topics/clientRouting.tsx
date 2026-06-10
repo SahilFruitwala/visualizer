@@ -1,7 +1,7 @@
 import { RouteDiagram } from "../components/FrontendView";
 import { defineViz, type StepBase, type Topic } from "../engine/types";
 import { withCodeLines } from "../engine/codeLines";
-import { C, FONT_MONO, FONT_SANS } from "../theme";
+import { C, FONT_MONO, FONT_SANS, mixProp } from "../theme";
 
 interface Step extends StepBase {
   url: string;
@@ -175,7 +175,7 @@ export const clientRouting: Topic = {
               style={{
                 padding: "8px 14px",
                 borderRadius: 8,
-                background: `${C.active}22`,
+                background: mixProp("active", 13),
                 border: `2px solid ${C.activeBorder}`,
                 fontFamily: FONT_MONO,
                 fontSize: 13,
@@ -207,7 +207,7 @@ export const clientRouting: Topic = {
                     style={{
                       padding: "6px 10px",
                       borderRadius: 6,
-                      background: i === s.historyStack!.length - 1 ? `${C.sorted}22` : C.cellMuted,
+                      background: i === s.historyStack!.length - 1 ? mixProp("sorted", 13) : C.cellMuted,
                       border: `1px solid ${i === s.historyStack!.length - 1 ? C.sortedBorder : C.cellMutedBorder}`,
                       fontFamily: FONT_MONO,
                       fontSize: 12,

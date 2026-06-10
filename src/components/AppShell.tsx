@@ -10,7 +10,7 @@ import {
   sectionForTopic,
   type SectionId,
 } from "../sections";
-import { ThemeProvider, ThemeToggle } from "./ThemeToggle";
+import { ThemeToggle } from "./ThemeToggle";
 
 export type AppView = "topics" | "paths";
 
@@ -105,8 +105,7 @@ export function AppShell({
   );
 
   return (
-    <ThemeProvider>
-      <div className="app">
+    <div className="app">
         {sidebar}
 
         {drawerOpen && (
@@ -159,7 +158,6 @@ export function AppShell({
           onSelect={handleSelectTopic}
         />
       </div>
-    </ThemeProvider>
   );
 }
 

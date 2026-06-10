@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { C, FONT_MONO } from "../theme";
+import { C, FONT_MONO, mixColor } from "../theme";
 
 export type State =
   | "default"
@@ -53,7 +53,7 @@ export function Cell({
           fontSize: size * 0.34,
           fontWeight: 700,
           color: dark ? C.text : C.ink,
-          boxShadow: dark ? "none" : `0 0 22px ${border}55`,
+          boxShadow: dark ? "none" : `0 0 22px ${mixColor(border, 33)}`,
           transition: "background 220ms ease, border-color 220ms ease, box-shadow 220ms ease, transform 220ms ease",
         }}
       >
@@ -117,8 +117,8 @@ export function PointerTag({ label, color = C.pointer }: { label: string; color?
         fontSize: 15,
         fontWeight: 700,
         color,
-        background: `${color}22`,
-        border: `1px solid ${color}66`,
+        background: mixColor(color, 13),
+        border: `1px solid ${mixColor(color, 40)}`,
         borderRadius: 8,
         padding: "2px 8px",
         whiteSpace: "nowrap",

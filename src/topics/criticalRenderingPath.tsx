@@ -1,6 +1,6 @@
 import { DomSnippet, PipelineRow } from "../components/FrontendView";
 import { defineViz, type StepBase, type Topic } from "../engine/types";
-import { C, FONT_MONO, FONT_SANS } from "../theme";
+import { C, FONT_MONO, FONT_SANS, mixProp } from "../theme";
 
 const STAGES = [
   { id: "html", label: "HTML" },
@@ -188,7 +188,7 @@ export const criticalRenderingPath: Topic = {
                     height: s.layoutBox?.h ?? 80,
                     borderRadius: 8,
                     border: `2px solid ${C.sortedBorder}`,
-                    background: `${C.sorted}12`,
+                    background: mixProp("sorted", 7),
                     padding: 12,
                     transition: "width 280ms, height 280ms",
                     position: "relative",

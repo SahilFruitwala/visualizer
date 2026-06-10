@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { C, FONT_MONO, FONT_SANS } from "../theme";
+import { C, FONT_MONO, FONT_SANS, mixProp } from "../theme";
 
 export type StatusClass = "2xx" | "4xx" | "5xx" | "pending";
 
@@ -104,7 +104,7 @@ export function HttpMessage({
             marginBottom: 10,
             padding: "6px 10px",
             borderRadius: 6,
-            background: hl("line") ? `${C.pointer}22` : "transparent",
+            background: hl("line") ? mixProp("pointer", 13) : "transparent",
             border: hl("line") ? `1px solid ${C.pointer}66` : "1px solid transparent",
           }}
         >
@@ -128,7 +128,7 @@ export function HttpMessage({
                 padding: "3px 8px",
                 borderRadius: 4,
                 marginBottom: 2,
-                background: hl(h.name) ? `${C.pointer}22` : "transparent",
+                background: hl(h.name) ? mixProp("pointer", 13) : "transparent",
                 border: hl(h.name) ? `1px solid ${C.pointer}44` : "1px solid transparent",
               }}
             >
@@ -145,7 +145,7 @@ export function HttpMessage({
             margin: 0,
             padding: "8px 10px",
             borderRadius: 6,
-            background: hl("body") ? `${C.sorted}18` : C.cellMuted,
+            background: hl("body") ? mixProp("sorted", 9) : C.cellMuted,
             border: `1px solid ${hl("body") ? C.sortedBorder : C.cellMutedBorder}`,
             color: C.text,
             fontSize: 12,
@@ -182,7 +182,7 @@ export function ApiFlow({
   const boxStyle = (active: boolean) => ({
     padding: "16px 20px",
     borderRadius: 12,
-    background: active ? `${C.pointer}18` : C.surface,
+    background: active ? mixProp("pointer", 9) : C.surface,
     border: `2px solid ${active ? C.pointerBorder : C.surfaceBorder}`,
     fontFamily: FONT_SANS,
     fontWeight: 700,
@@ -328,7 +328,7 @@ export function TokenChip({ token, highlight }: { token: string; highlight?: boo
         display: "inline-block",
         padding: "4px 10px",
         borderRadius: 6,
-        background: highlight ? `${C.pointer}22` : C.cellMuted,
+        background: highlight ? mixProp("pointer", 13) : C.cellMuted,
         border: `1px solid ${highlight ? C.pointerBorder : C.cellMutedBorder}`,
         fontFamily: FONT_MONO,
         fontSize: 12,
@@ -408,7 +408,7 @@ export function ParadigmCard({
   return (
     <div
       style={{
-        background: active ? `${C.pointer}12` : C.surface,
+        background: active ? mixProp("pointer", 7) : C.surface,
         border: `2px solid ${active ? C.pointerBorder : C.surfaceBorder}`,
         borderRadius: 12,
         padding: "14px 16px",
@@ -438,7 +438,7 @@ export function ParadigmCard({
           margin: "0 0 10px",
           padding: "8px 10px",
           borderRadius: 6,
-          background: hl("request") ? `${C.pointer}18` : C.cellMuted,
+          background: hl("request") ? mixProp("pointer", 9) : C.cellMuted,
           border: `1px solid ${hl("request") ? C.pointerBorder : C.cellMutedBorder}`,
           fontSize: 12,
           color: C.text,
@@ -465,7 +465,7 @@ export function ParadigmCard({
           margin: 0,
           padding: "8px 10px",
           borderRadius: 6,
-          background: hl("response") ? `${C.sorted}18` : C.cellMuted,
+          background: hl("response") ? mixProp("sorted", 9) : C.cellMuted,
           border: `1px solid ${hl("response") ? C.sortedBorder : C.cellMutedBorder}`,
           fontSize: 12,
           color: C.text,
@@ -494,7 +494,7 @@ export function TlsMessage({
   return (
     <div
       style={{
-        background: highlight ? `${C.pointer}18` : C.surface,
+        background: highlight ? mixProp("pointer", 9) : C.surface,
         border: `1px solid ${highlight ? C.pointerBorder : C.surfaceBorder}`,
         borderRadius: 10,
         padding: "10px 14px",
@@ -530,7 +530,7 @@ export function EventBadge({ event, highlight }: { event: string; highlight?: bo
         display: "inline-flex",
         padding: "8px 16px",
         borderRadius: 8,
-        background: highlight ? `${C.active}22` : C.cellMuted,
+        background: highlight ? mixProp("active", 13) : C.cellMuted,
         border: `2px solid ${highlight ? C.activeBorder : C.cellMutedBorder}`,
         fontFamily: FONT_MONO,
         fontSize: 14,

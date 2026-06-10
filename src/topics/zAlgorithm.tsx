@@ -1,5 +1,5 @@
 import { defineViz, type StepBase, type Topic } from "../engine/types";
-import { C, FONT_MONO } from "../theme";
+import { C, FONT_MONO, mixProp } from "../theme";
 
 const S = "aabcaabxaaz";
 interface Step extends StepBase {
@@ -54,7 +54,7 @@ export const zAlgorithm: Topic = {
         <div style={{ fontFamily: FONT_MONO, fontSize: 16, letterSpacing: 2, color: C.text }}>{S.split("").map((c, i) => <span key={i} style={{ color: i === s.highlight ? C.active : C.text }}>{c}</span>)}</div>
         <div style={{ display: "flex", gap: 4 }}>
           {s.z.map((v, i) => (
-            <div key={i} style={{ width: 28, textAlign: "center", padding: "4px 0", borderRadius: 4, background: i === s.highlight ? `${C.active}33` : "transparent", fontFamily: FONT_MONO, fontSize: 12, color: i === s.highlight ? C.active : C.textMuted }}>{v}</div>
+            <div key={i} style={{ width: 28, textAlign: "center", padding: "4px 0", borderRadius: 4, background: i === s.highlight ? mixProp("active", 20) : "transparent", fontFamily: FONT_MONO, fontSize: 12, color: i === s.highlight ? C.active : C.textMuted }}>{v}</div>
           ))}
         </div>
       </div>

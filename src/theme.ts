@@ -94,19 +94,55 @@ const LIGHT: Palette = {
 let activeTheme: Theme =
   (typeof localStorage !== "undefined" && (localStorage.getItem("dsa-theme") as Theme)) || "dark";
 
-export function setActiveTheme(theme: Theme) {
+function paletteKeyToCssVar(key: string): string {
+  return `--viz-${key.replace(/([A-Z])/g, "-$1").toLowerCase()}`;
+}
+
+function cssVar(prop: keyof Palette): string {
+  return `var(${paletteKeyToCssVar(prop)})`;
+}
+
+/** Apply theme to DOM, module palette, CSS variables, and storage. */
+export function applyTheme(theme: Theme) {
   activeTheme = theme;
+  if (typeof document !== "undefined") {
+    const root = document.documentElement;
+    root.dataset.theme = theme;
+    const palette = getPalette(theme);
+    for (const key of Object.keys(palette) as (keyof Palette)[]) {
+      root.style.setProperty(paletteKeyToCssVar(key), palette[key]);
+    }
+  }
+  if (typeof localStorage !== "undefined") {
+    localStorage.setItem("dsa-theme", theme);
+  }
+}
+
+/** @deprecated Prefer applyTheme — kept for callers that only need the module variable. */
+export function setActiveTheme(theme: Theme) {
+  applyTheme(theme);
 }
 
 export function getPalette(theme: Theme = activeTheme): Palette {
   return theme === "light" ? LIGHT : DARK;
 }
 
-// Semantic palette. State colors are reused across every visualization so the
-// viewer learns the language once: amber = looking, red = comparing,
+/** Semi-transparent tint of a palette token (updates with theme via CSS variables). */
+export function mixProp(prop: keyof Palette, percent: number): string {
+  return `color-mix(in srgb, ${cssVar(prop)} ${percent}%, transparent)`;
+}
+
+/** Semi-transparent tint of any theme color string (including `C.*` tokens). */
+export function mixColor(color: string, percent: number): string {
+  return `color-mix(in srgb, ${color} ${percent}%, transparent)`;
+}
+
+// Semantic palette. Values are CSS variables so theme toggles repaint without
+// waiting for React re-renders. State colors are reused across every visualization
+// so the viewer learns the language once: amber = looking, red = comparing,
 // green = done/found, blue = pointer.
-export const C: Palette = new Proxy(DARK, {
+export const C: Palette = new Proxy({} as Palette, {
   get(_target, prop: string) {
-    return getPalette()[prop as keyof Palette];
+    return cssVar(prop as keyof Palette);
   },
 }) as Palette;

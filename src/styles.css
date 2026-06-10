@@ -1313,7 +1313,13 @@ body { background: var(--bg); color: var(--text); }
 }
 
 /* ---- focus mode & toast ---- */
-.focus-mode .controls-bar { margin-top: auto; }
+.stage-wrap.focus-mode > .stage {
+  margin-top: auto;
+  margin-bottom: auto;
+}
+.focus-mode .controls-bar {
+  flex-shrink: 0;
+}
 .toast {
   position: fixed;
   bottom: 24px;
