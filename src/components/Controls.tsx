@@ -1,3 +1,4 @@
+import { useCallback, useRef } from "react";
 import type { Chapter } from "../engine/chapters";
 import { chapterAt } from "../engine/chapters";
 import type { Player } from "../engine/usePlayer";
@@ -26,6 +27,49 @@ export function Controls({
   const prevChapter = chaps && chIdx > 0 ? chaps[chIdx - 1] : null;
   const nextChapter = chaps && chIdx >= 0 && chIdx < chaps.length - 1 ? chaps[chIdx + 1] : null;
   const max = Math.max(0, length - 1);
+  const scrubRaf = useRef<number | null>(null);
+  const scrubPending = useRef<number | null>(null);
+  const scrubbing = useRef(false);
+
+  const cancelScrub = useCallback(() => {
+    if (scrubRaf.current != null) {
+      cancelAnimationFrame(scrubRaf.current);
+      scrubRaf.current = null;
+    }
+    scrubPending.current = null;
+  }, []);
+
+  const flushScrub = useCallback(
+    (value: number) => {
+      cancelScrub();
+      player.seek(value);
+    },
+    [cancelScrub, player],
+  );
+
+  const seekTo = useCallback(
+    (step: number) => {
+      cancelScrub();
+      scrubbing.current = false;
+      player.seek(step);
+    },
+    [cancelScrub, player],
+  );
+
+  const queueScrub = useCallback(
+    (value: number) => {
+      scrubPending.current = value;
+      if (scrubRaf.current != null) return;
+      scrubRaf.current = requestAnimationFrame(() => {
+        scrubRaf.current = null;
+        const next = scrubPending.current;
+        if (next == null) return;
+        scrubPending.current = null;
+        player.seek(next);
+      });
+    },
+    [player],
+  );
 
   return (
     <div className="controls-root">
@@ -36,7 +80,7 @@ export function Controls({
               type="button"
               className="chapter-jump"
               disabled={!prevChapter}
-              onClick={() => prevChapter && player.seek(prevChapter.step)}
+              onClick={() => prevChapter && seekTo(prevChapter.step)}
               title={prevChapter?.title ?? "Previous chapter"}
               aria-label="Previous chapter"
             >
@@ -50,7 +94,7 @@ export function Controls({
               type="button"
               className="chapter-jump"
               disabled={!nextChapter}
-              onClick={() => nextChapter && player.seek(nextChapter.step)}
+              onClick={() => nextChapter && seekTo(nextChapter.step)}
               title={nextChapter?.title ?? "Next chapter"}
               aria-label="Next chapter"
             >
@@ -71,7 +115,7 @@ export function Controls({
                   data-active={ch.step === current?.step}
                   data-past={ch.step < index}
                   title={`${i + 1}. ${ch.title}`}
-                  onClick={() => player.seek(ch.step)}
+                  onClick={() => seekTo(ch.step)}
                   tabIndex={-1}
                 />
               ))}
@@ -82,7 +126,20 @@ export function Controls({
             min={0}
             max={max}
             value={index}
-            onChange={(e) => player.seek(Number(e.target.value))}
+            onChange={(e) => queueScrub(Number(e.target.value))}
+            onPointerDown={() => {
+              scrubbing.current = true;
+            }}
+            onPointerUp={(e) => {
+              if (!scrubbing.current) return;
+              scrubbing.current = false;
+              flushScrub(Number(e.currentTarget.value));
+            }}
+            onPointerCancel={() => {
+              scrubbing.current = false;
+              cancelScrub();
+            }}
+            onKeyUp={(e) => flushScrub(Number(e.currentTarget.value))}
             className="scrubber"
             aria-label="Scrub timeline"
             aria-valuetext={`Step ${index + 1} of ${length}`}

@@ -1,5 +1,55 @@
-import { useCallback, useLayoutEffect, useRef, useState, type ReactNode } from "react";
+import {
+  memo,
+  useCallback,
+  useLayoutEffect,
+  useRef,
+  useState,
+  type ReactNode,
+  type RefObject,
+} from "react";
 import type { StepBase } from "../engine/types";
+
+/** Hidden layer — only remeasures when the step list changes, not on every scrub. */
+const StageMeasureLayer = memo(function StageMeasureLayer({
+  steps,
+  renderStep,
+  measureRef,
+}: {
+  steps: StepBase[];
+  renderStep: (step: StepBase, index: number) => ReactNode;
+  measureRef: RefObject<HTMLDivElement | null>;
+}) {
+  return (
+    <div className="stage-measure" ref={measureRef} aria-hidden>
+      {steps.map((s, i) => (
+        <div key={i} className="stage-measure-step">
+          {renderStep(s, i)}
+        </div>
+      ))}
+    </div>
+  );
+});
+
+const StageCaptionMeasureLayer = memo(function StageCaptionMeasureLayer({
+  steps,
+  measureRef,
+}: {
+  steps: StepBase[];
+  measureRef: RefObject<HTMLDivElement | null>;
+}) {
+  return (
+    <div className="stage-caption-measure" ref={measureRef} aria-hidden>
+      {steps.map((s, i) => (
+        <div key={i} className="stage-caption-measure-step">
+          <div className="caption-block">
+            <div className="caption">{s.caption}</div>
+            {s.insight && <div className="step-insight">{s.insight}</div>}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+});
 
 export function Stage({
   steps,
@@ -53,26 +103,11 @@ export function Stage({
 
   return (
     <section className="stage">
-      <div className="stage-measure" ref={measureRef} aria-hidden>
-        {steps.map((s, i) => (
-          <div key={i} className="stage-measure-step">
-            {renderStep(s, i)}
-          </div>
-        ))}
-      </div>
+      <StageMeasureLayer steps={steps} renderStep={renderStep} measureRef={measureRef} />
       <div className="stage-canvas" style={{ height: canvasHeight }}>
         <div className="stage-canvas-inner">{renderStep(steps[index], index)}</div>
       </div>
-      <div className="stage-caption-measure" ref={captionMeasureRef} aria-hidden>
-        {steps.map((s, i) => (
-          <div key={i} className="stage-caption-measure-step">
-            <div className="caption-block">
-              <div className="caption">{s.caption}</div>
-              {s.insight && <div className="step-insight">{s.insight}</div>}
-            </div>
-          </div>
-        ))}
-      </div>
+      <StageCaptionMeasureLayer steps={steps} measureRef={captionMeasureRef} />
       <div
         className="caption-block"
         style={captionBlockHeight ? { height: captionBlockHeight } : undefined}

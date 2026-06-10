@@ -263,11 +263,21 @@ function TopicView({
   useEffect(() => {
     saveResumeStep(topic.id, player.index);
     saveTopicProgress(topic.id, player.index, viz.steps.length);
-    if (searchParams.get("step") === String(player.index)) return;
-    const next = new URLSearchParams(searchParams);
-    next.set("step", String(player.index));
-    setSearchParams(next, { replace: true });
-  }, [player.index, topic.id, viz.steps.length, searchParams, setSearchParams]);
+  }, [player.index, topic.id, viz.steps.length]);
+
+  // Keep the URL in sync when paused or scrubbing — skip during auto-play to avoid router churn.
+  useEffect(() => {
+    if (player.playing) return;
+    setSearchParams(
+      (prev) => {
+        if (prev.get("step") === String(player.index)) return prev;
+        const next = new URLSearchParams(prev);
+        next.set("step", String(player.index));
+        return next;
+      },
+      { replace: true },
+    );
+  }, [player.index, player.playing, setSearchParams]);
 
   useEffect(() => {
     if (!shareNote) return;

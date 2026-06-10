@@ -50,6 +50,7 @@ export function usePlayer(length: number, opts: PlayerOptions = {}): Player {
   const acc = useRef(0);
   const last = useRef<number | null>(null);
   const raf = useRef<number | null>(null);
+  const prevInitialIndex = useRef(initialIndex);
 
   const setLearnMode = useCallback((v: boolean) => {
     setLearnModeState(v);
@@ -68,12 +69,18 @@ export function usePlayer(length: number, opts: PlayerOptions = {}): Player {
     setIndex((i) => Math.max(0, Math.min(i, Math.max(0, length - 1))));
   }, [length]);
 
-  // Sync URL / resume position — but not while auto-playing (URL echoes each step).
+  // Sync URL / resume position — only when the URL actually changes (back/forward, shared link).
+  // Do not re-sync when playback pauses; a stale URL would undo chapter seeks mid-animation.
   useEffect(() => {
     if (playing) return;
+    if (prevInitialIndex.current === initialIndex) return;
+    prevInitialIndex.current = initialIndex;
     const i = Math.max(0, Math.min(initialIndex, Math.max(0, length - 1)));
-    setIndex(i);
-    acc.current = 0;
+    setIndex((cur) => {
+      if (cur === i) return cur;
+      acc.current = 0;
+      return i;
+    });
   }, [initialIndex, length, playing]);
 
   useEffect(() => {
@@ -139,6 +146,7 @@ export function usePlayer(length: number, opts: PlayerOptions = {}): Player {
   const seek = useCallback(
     (i: number) => {
       setPlaying(false);
+      acc.current = 0;
       setIndex(Math.max(0, Math.min(i, length - 1)));
     },
     [length],
