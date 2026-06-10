@@ -53,7 +53,7 @@ export const coinChange: Topic = {
       steps: build(coins, target),
       code: CODE,
       explanation:
-        `Coins ${[1, 3, 4].join(", ")}. dp[a] = fewest coins to total a. For each coin we improve every amount by reusing dp[a − coin] + 1. The greedy approach fails here (9 = 3+3+3 beats 4+4+1), but DP always finds the optimum.\n\nTime: O(amount × coins) · Space: O(amount)`,
+        `Coins ${[1, 3, 4].join(", ")}. dp[a] = fewest coins to total a. For each coin we improve every amount by reusing dp[a − coin] + 1. Greedy can fail with these coins (for amount 6 it picks 4+1+1 = 3 coins, but 3+3 = 2 is optimal), so DP is needed to always find the optimum.\n\nTime: O(amount × coins) · Space: O(amount)`,
       renderStep: (s) => (
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 14 }}>
           {s.coin >= 0 && <div style={{ fontFamily: FONT_MONO, color: C.active }}>active coin: {s.coin}</div>}

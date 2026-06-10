@@ -29,8 +29,9 @@ function build() {
       snap({ phase: "lps", pj: i, status: "match", caption: `pat[${i}]='${PAT[i]}' matches prefix → lps[${i}] = ${len}.` });
       i++;
     } else if (len > 0) {
-      len = lps[len - 1];
-      snap({ phase: "lps", pj: i, status: "mismatch", caption: `Fall back using lps[${len - 1}] → len = ${len}.` });
+      const prev = len - 1;
+      len = lps[prev];
+      snap({ phase: "lps", pj: i, status: "mismatch", caption: `Fall back using lps[${prev}] → len = ${len}.` });
     } else {
       lps[i] = 0;
       snap({ phase: "lps", pj: i, status: "mismatch", caption: `No match → lps[${i}] = 0.` });

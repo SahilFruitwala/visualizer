@@ -41,8 +41,12 @@ const CODE = `function tarjan(u) {
   index[u] = low[u] = ++time;
   stack.push(u); onStack[u] = true;
   for (const v of adj[u]) {
-    if (index[v] === undefined) tarjan(v);
-    if (onStack[v]) low[u] = min(low[u], low[v]);
+    if (index[v] === undefined) {        // tree edge
+      tarjan(v);
+      low[u] = min(low[u], low[v]);
+    } else if (onStack[v]) {             // back edge
+      low[u] = min(low[u], index[v]);
+    }
   }
   if (low[u] === index[u]) pop SCC from stack;
 }`;

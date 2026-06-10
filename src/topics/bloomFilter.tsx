@@ -23,7 +23,7 @@ function build(): Step[] {
     snap(`insert("${key}") → set bits ${hashes.join(", ")}.`, { queries: [{ key, hashes, maybe: true }] });
   }
   snap('query("alice") → both bits 1 → MAYBE present (no false negatives).', { phase: "Query", queries: [{ key: "alice", hashes: [h1("alice"), h2("alice")], maybe: true }] });
-  snap('query("carol") → bit 0 is 0 → DEFINITELY absent. ✓', { queries: [{ key: "carol", hashes: [h1("carol"), h2("carol")], maybe: false }], insight: "False positives possible; false negatives never." });
+  snap('query("carol") → a hashed bit is still 0 → DEFINITELY absent. ✓', { queries: [{ key: "carol", hashes: [h1("carol"), h2("carol")], maybe: false }], insight: "False positives possible; false negatives never." });
   return steps;
 }
 

@@ -15,7 +15,7 @@ interface Step extends StepBase {
 const build = (): Step[] => [
   { phase: "Content box", mode: "box", padding: 8, border: 4, margin: 12, chapter: "Box model", caption: "Every element is a box: content → padding → border → margin (outside-in)." },
   { phase: "Padding grows", mode: "box", padding: 20, border: 4, margin: 12, caption: "padding adds space inside the border — background fills padding area." },
-  { phase: "Margin collapses", mode: "box", padding: 8, border: 4, margin: 24, caption: "margin is outside the border — creates gap between siblings." },
+  { phase: "Margin spacing", mode: "box", padding: 8, border: 4, margin: 24, caption: "margin is outside the border — creates gap between siblings (vertical margins can collapse)." },
   { phase: "Flex container", mode: "flex", padding: 8, border: 4, margin: 0, justify: "space-between", items: [{ label: "A" }, { label: "B" }, { label: "C" }], chapter: "Flexbox", caption: "display:flex — children laid out on main axis (row by default)." },
   { phase: "flex-grow", mode: "flex", padding: 8, border: 4, margin: 0, justify: "flex-start", items: [{ label: "A" }, { label: "B", grow: true }, { label: "C" }], caption: "flex-grow:1 on B — B absorbs leftover space. ✓" },
 ];

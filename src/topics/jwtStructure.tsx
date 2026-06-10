@@ -8,7 +8,7 @@ interface Step extends StepBase {
 
 const HDR = '{"alg":"RS256","typ":"JWT"}';
 const PAY = '{"sub":"user_42","exp":1735689600,"role":"admin"}';
-const SIG = "HMACSHA256(base64(header)+'.'+base64(payload), secret)";
+const SIG = "RSASHA256(base64(header)+'.'+base64(payload), privateKey)";
 
 const build = (): Step[] => [
   { phase: "Encode header", highlight: "header", chapter: "Structure", caption: "Header: algorithm + type — base64url encoded." },
