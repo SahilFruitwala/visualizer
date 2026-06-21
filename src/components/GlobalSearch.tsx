@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useEffectEvent, useMemo, useRef, useState } from "react";
 import { useFavorites } from "../engine/favorites";
 import { TOPICS } from "../topics";
 import { sectionForTopic } from "../sections";
@@ -72,12 +72,15 @@ export function GlobalSearch({
     return () => modal.removeEventListener("keydown", onTab);
   }, [open, results]);
 
+  const onCloseEvent = useEffectEvent(onClose);
+  const onSelectEvent = useEffectEvent(onSelect);
+
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         e.preventDefault();
-        onClose();
+        onCloseEvent();
         return;
       }
       if (e.key === "ArrowDown") {
@@ -90,13 +93,13 @@ export function GlobalSearch({
       }
       if (e.key === "Enter" && results[active]) {
         e.preventDefault();
-        onSelect(results[active].id);
-        onClose();
+        onSelectEvent(results[active].id);
+        onCloseEvent();
       }
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [open, results, active, onClose, onSelect]);
+  }, [open, results, active]);
 
   if (!open) return null;
 

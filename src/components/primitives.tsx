@@ -1,5 +1,49 @@
-import type { ReactNode } from "react";
+import type { CSSProperties, ReactNode } from "react";
 import { C, FONT_MONO, mixColor } from "../theme";
+
+const cellInnerStatic: CSSProperties = {
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  fontFamily: FONT_MONO,
+  fontWeight: 700,
+  transition: "background 220ms ease, border-color 220ms ease, box-shadow 220ms ease, transform 220ms ease",
+};
+
+const barOuterStatic: CSSProperties = {
+  position: "relative",
+  display: "flex",
+  alignItems: "flex-end",
+  justifyContent: "center",
+};
+
+const barInnerStatic: CSSProperties = {
+  borderRadius: 8,
+  position: "absolute",
+  bottom: 0,
+  left: 0,
+  right: 0,
+  transformOrigin: "bottom",
+};
+
+const barLabelStatic: CSSProperties = {
+  position: "relative",
+  zIndex: 1,
+  paddingBottom: 6,
+  fontFamily: FONT_MONO,
+  fontSize: 15,
+  fontWeight: 700,
+  color: C.text,
+};
+
+const pointerTagStatic: CSSProperties = {
+  fontFamily: FONT_MONO,
+  fontSize: 15,
+  fontWeight: 700,
+  borderRadius: 8,
+  padding: "2px 8px",
+  whiteSpace: "nowrap",
+};
 
 export type State =
   | "default"
@@ -41,20 +85,15 @@ export function Cell({
     <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 8 }}>
       <div
         style={{
+          ...cellInnerStatic,
           width: size,
           height: size,
           borderRadius: size * 0.18,
           background: bg,
           border: `3px solid ${border}`,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          fontFamily: FONT_MONO,
           fontSize: size * 0.34,
-          fontWeight: 700,
           color: dark ? C.text : C.ink,
           boxShadow: dark ? "none" : `0 0 22px ${mixColor(border, 33)}`,
-          transition: "background 220ms ease, border-color 220ms ease, box-shadow 220ms ease, transform 220ms ease",
         }}
       >
         {value}
@@ -81,28 +120,21 @@ export function Bar({
   maxHeight?: number;
 }) {
   const [bg, border] = fill(state);
-  const h = Math.max(24, (value / max) * maxHeight);
+  const scale = Math.max(24 / maxHeight, value / max);
   return (
     <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 8 }}>
-      <div
-        style={{
-          width,
-          height: h,
-          borderRadius: 8,
-          background: bg,
-          border: `2px solid ${border}`,
-          display: "flex",
-          alignItems: "flex-end",
-          justifyContent: "center",
-          paddingBottom: 6,
-          fontFamily: FONT_MONO,
-          fontSize: 15,
-          fontWeight: 700,
-          color: C.text,
-          transition: "height 260ms cubic-bezier(0.22,1,0.36,1), background 220ms ease, border-color 220ms ease",
-        }}
-      >
-        {value}
+      <div style={{ ...barOuterStatic, width, height: maxHeight }}>
+        <div
+          style={{
+            ...barInnerStatic,
+            height: maxHeight,
+            background: bg,
+            border: `2px solid ${border}`,
+            transform: `scaleY(${scale})`,
+            transition: "transform 260ms cubic-bezier(0.22,1,0.36,1), background 220ms ease, border-color 220ms ease",
+          }}
+        />
+        <span style={barLabelStatic}>{value}</span>
       </div>
     </div>
   );
@@ -113,15 +145,10 @@ export function PointerTag({ label, color = C.pointer }: { label: string; color?
   return (
     <div
       style={{
-        fontFamily: FONT_MONO,
-        fontSize: 15,
-        fontWeight: 700,
+        ...pointerTagStatic,
         color,
         background: mixColor(color, 13),
         border: `1px solid ${mixColor(color, 40)}`,
-        borderRadius: 8,
-        padding: "2px 8px",
-        whiteSpace: "nowrap",
       }}
     >
       {label}

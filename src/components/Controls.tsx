@@ -1,4 +1,4 @@
-import { useCallback, useRef } from "react";
+import { useCallback, useRef, useState } from "react";
 import type { Chapter } from "../engine/chapters";
 import { chapterAt } from "../engine/chapters";
 import type { Player } from "../engine/usePlayer";
@@ -30,6 +30,8 @@ export function Controls({
   const scrubRaf = useRef<number | null>(null);
   const scrubPending = useRef<number | null>(null);
   const scrubbing = useRef(false);
+  const [dragging, setDragging] = useState(false);
+  const pct = max > 0 ? (index / max) * 100 : 0;
 
   const cancelScrub = useCallback(() => {
     if (scrubRaf.current != null) {
@@ -103,7 +105,9 @@ export function Controls({
           </div>
         )}
 
-        <div className="scrubber-track">
+        <div className="scrubber-track" data-dragging={dragging}>
+          <div className="scrubber-fill" style={{ width: `${pct}%` }} aria-hidden />
+          <div className="scrubber-knob" style={{ left: `${pct}%` }} aria-hidden />
           {chaps && max > 0 && (
             <div className="scrubber-markers" aria-hidden>
               {chaps.map((ch, i) => (
@@ -129,14 +133,17 @@ export function Controls({
             onChange={(e) => queueScrub(Number(e.target.value))}
             onPointerDown={() => {
               scrubbing.current = true;
+              setDragging(true);
             }}
             onPointerUp={(e) => {
+              setDragging(false);
               if (!scrubbing.current) return;
               scrubbing.current = false;
               flushScrub(Number(e.currentTarget.value));
             }}
             onPointerCancel={() => {
               scrubbing.current = false;
+              setDragging(false);
               cancelScrub();
             }}
             onKeyUp={(e) => flushScrub(Number(e.currentTarget.value))}

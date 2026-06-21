@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useEffectEvent, useRef } from "react";
 
 const SHORTCUTS = [
   { keys: "Space", action: "Play / pause (or next step in learn mode)" },
@@ -12,18 +12,20 @@ const SHORTCUTS = [
 export function KeyboardHelp({ open, onClose }: { open: boolean; onClose: () => void }) {
   const modalRef = useRef<HTMLDivElement>(null);
 
+  const onCloseEvent = useEffectEvent(onClose);
+
   useEffect(() => {
     if (!open) return;
 
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         e.preventDefault();
-        onClose();
+        onCloseEvent();
       }
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [open, onClose]);
+  }, [open]);
 
   useEffect(() => {
     if (!open || !modalRef.current) return;

@@ -53,6 +53,8 @@ export type Category =
   | "REST & Design"
   | "Auth & Security"
   | "Operations"
+  // Database section
+  | "Database"
   // Frontend section
   | "Runtime"
   | "Rendering"

@@ -11,6 +11,8 @@ export interface Player {
   index: number;
   length: number;
   playing: boolean;
+  /** True while a smooth (animated) seek is in flight. */
+  seeking: boolean;
   speed: number;
   learnMode: boolean;
   setSpeed: (s: number) => void;
@@ -22,6 +24,8 @@ export interface Player {
   prev: () => void;
   reset: () => void;
   seek: (i: number) => void;
+  /** Animate from the current step to `i`, scrubbing through the steps in between. */
+  seekSmooth: (i: number) => void;
   atEnd: boolean;
 }
 
@@ -44,13 +48,28 @@ export function usePlayer(length: number, opts: PlayerOptions = {}): Player {
     Math.max(0, Math.min(initialIndex, Math.max(0, length - 1))),
   );
   const [playing, setPlaying] = useState(false);
+  const [seeking, setSeeking] = useState(false);
   const [speed, setSpeed] = useState(initialSpeed);
   const [learnMode, setLearnModeState] = useState(initialLearn);
 
   const acc = useRef(0);
   const last = useRef<number | null>(null);
   const raf = useRef<number | null>(null);
+  const seekRaf = useRef<number | null>(null);
+  const indexRef = useRef(index);
   const prevInitialIndex = useRef(initialIndex);
+
+  useEffect(() => {
+    indexRef.current = index;
+  }, [index]);
+
+  const cancelSmooth = useCallback(() => {
+    if (seekRaf.current != null) {
+      cancelAnimationFrame(seekRaf.current);
+      seekRaf.current = null;
+      setSeeking(false);
+    }
+  }, []);
 
   const setLearnMode = useCallback((v: boolean) => {
     setLearnModeState(v);
@@ -72,7 +91,7 @@ export function usePlayer(length: number, opts: PlayerOptions = {}): Player {
   // Sync URL / resume position — only when the URL actually changes (back/forward, shared link).
   // Do not re-sync when playback pauses; a stale URL would undo chapter seeks mid-animation.
   useEffect(() => {
-    if (playing) return;
+    if (playing || seeking) return;
     if (prevInitialIndex.current === initialIndex) return;
     prevInitialIndex.current = initialIndex;
     const i = Math.max(0, Math.min(initialIndex, Math.max(0, length - 1)));
@@ -81,7 +100,7 @@ export function usePlayer(length: number, opts: PlayerOptions = {}): Player {
       acc.current = 0;
       return i;
     });
-  }, [initialIndex, length, playing]);
+  }, [initialIndex, length, playing, seeking]);
 
   useEffect(() => {
     if (!playing || learnMode) {
@@ -111,11 +130,13 @@ export function usePlayer(length: number, opts: PlayerOptions = {}): Player {
   }, [playing, speed, length, learnMode]);
 
   const next = useCallback(() => {
+    cancelSmooth();
     setPlaying(false);
     setIndex((i) => Math.min(i + 1, length - 1));
-  }, [length]);
+  }, [length, cancelSmooth]);
 
   const play = useCallback(() => {
+    cancelSmooth();
     if (learnMode) {
       setPlaying(false);
       setIndex((i) => {
@@ -130,32 +151,72 @@ export function usePlayer(length: number, opts: PlayerOptions = {}): Player {
     setIndex((i) => (i >= length - 1 ? 0 : i));
     acc.current = 0;
     setPlaying(true);
-  }, [length, learnMode]);
+  }, [length, learnMode, cancelSmooth]);
 
   const pause = useCallback(() => setPlaying(false), []);
   const toggle = useCallback(() => (playing ? pause() : play()), [playing, play, pause]);
   const prev = useCallback(() => {
+    cancelSmooth();
     setPlaying(false);
     setIndex((i) => Math.max(i - 1, 0));
-  }, []);
+  }, [cancelSmooth]);
   const reset = useCallback(() => {
+    cancelSmooth();
     setPlaying(false);
     acc.current = 0;
     setIndex(0);
-  }, []);
+  }, [cancelSmooth]);
   const seek = useCallback(
     (i: number) => {
+      cancelSmooth();
       setPlaying(false);
       acc.current = 0;
       setIndex(Math.max(0, Math.min(i, length - 1)));
     },
-    [length],
+    [length, cancelSmooth],
   );
+
+  // Eased scrub from the current step to the target — used for chapter jumps so
+  // they read as a quick fast-forward/rewind instead of a hard cut. Duration is
+  // fixed (~ms below) regardless of distance, so far jumps don't crawl.
+  const seekSmooth = useCallback(
+    (target: number) => {
+      cancelSmooth();
+      setPlaying(false);
+      acc.current = 0;
+      const clamped = Math.max(0, Math.min(Math.round(target), length - 1));
+      const start = indexRef.current;
+      if (clamped === start) return;
+      const distance = Math.abs(clamped - start);
+      // Scale duration with distance but keep it snappy and capped.
+      const duration = Math.min(520, 140 + distance * 45);
+      const t0 = performance.now();
+      const easeOutCubic = (p: number) => 1 - Math.pow(1 - p, 3);
+      setSeeking(true);
+      const loop = (now: number) => {
+        const p = Math.min(1, (now - t0) / duration);
+        const i = Math.round(start + (clamped - start) * easeOutCubic(p));
+        setIndex(i);
+        if (p < 1) {
+          seekRaf.current = requestAnimationFrame(loop);
+        } else {
+          seekRaf.current = null;
+          setSeeking(false);
+          setIndex(clamped);
+        }
+      };
+      seekRaf.current = requestAnimationFrame(loop);
+    },
+    [length, cancelSmooth],
+  );
+
+  useEffect(() => cancelSmooth, [cancelSmooth]);
 
   return {
     index,
     length,
     playing,
+    seeking,
     speed,
     learnMode,
     setSpeed,
@@ -167,6 +228,7 @@ export function usePlayer(length: number, opts: PlayerOptions = {}): Player {
     prev,
     reset,
     seek,
+    seekSmooth,
     atEnd: index >= length - 1,
   };
 }

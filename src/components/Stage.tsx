@@ -2,6 +2,7 @@ import {
   memo,
   useCallback,
   useLayoutEffect,
+  useMemo,
   useRef,
   useState,
   type ReactNode,
@@ -66,6 +67,16 @@ export function Stage({
 }) {
   const measureRef = useRef<HTMLDivElement>(null);
   const captionMeasureRef = useRef<HTMLDivElement>(null);
+
+  // The index of the step that started the current chapter. When this changes
+  // we remount the canvas so it eases in (see .viz-pop-in), making chapter
+  // boundaries feel like a clean transition rather than a hard cut.
+  const chapterKey = useMemo(() => {
+    for (let i = index; i >= 0; i--) {
+      if (steps[i]?.chapter) return i;
+    }
+    return 0;
+  }, [steps, index]);
   const [canvasHeight, setCanvasHeight] = useState(280);
   const [captionBlockHeight, setCaptionBlockHeight] = useState<number | undefined>();
 
@@ -105,7 +116,9 @@ export function Stage({
     <section className="stage">
       <StageMeasureLayer steps={steps} renderStep={renderStep} measureRef={measureRef} />
       <div className="stage-canvas" style={{ height: canvasHeight }}>
-        <div className="stage-canvas-inner">{renderStep(steps[index], index)}</div>
+        <div key={chapterKey} className="stage-canvas-inner viz-pop-in">
+          {renderStep(steps[index], index)}
+        </div>
       </div>
       <StageCaptionMeasureLayer steps={steps} measureRef={captionMeasureRef} />
       <div

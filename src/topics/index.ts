@@ -100,6 +100,9 @@ import { recursionCallStack } from "./recursionCallStack";
 import { bitmaskDp } from "./bitmaskDp";
 import { zAlgorithm } from "./zAlgorithm";
 import { treeTraversalOrders } from "./treeTraversalOrders";
+import { dbIndex } from "./dbIndex";
+import { dbJoin } from "./dbJoin";
+import { dbCursorOffset } from "./dbCursorOffset";
 
 // The full catalogue. Order within a category is preserved in the sidebar.
 const RAW_TOPICS: Topic[] = [
@@ -204,6 +207,10 @@ const RAW_TOPICS: Topic[] = [
   webhooks,
   websocketsSse,
   idempotencyRetries,
+  // Database
+  dbIndex,
+  dbJoin,
+  dbCursorOffset,
   // Runtime
   criticalRenderingPath,
   browserStorage,
@@ -246,6 +253,7 @@ export const CATEGORIES = [
   "REST & Design",
   "Auth & Security",
   "Operations",
+  "Database",
   "Runtime",
   "Rendering",
   "Navigation",

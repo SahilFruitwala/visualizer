@@ -165,6 +165,7 @@ export function resolveSectionId(pathname: string): SectionId {
   if (pathname.startsWith("/frontend")) return "frontend";
   if (pathname.startsWith("/algo")) return "algo";
   if (pathname.startsWith("/backend") || pathname.startsWith("/api")) return "backend";
+  if (pathname.startsWith("/database")) return "database";
   if (pathname.startsWith("/ds")) return "ds";
   return lastSectionId();
 }

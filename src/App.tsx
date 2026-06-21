@@ -180,6 +180,8 @@ export default function App() {
           <Route path="/api/:topicId" element={<TopicRoute sectionId="backend" />} />
           <Route path="/backend" element={<SectionRedirect sectionId="backend" />} />
           <Route path="/backend/:topicId" element={<TopicRoute sectionId="backend" />} />
+          <Route path="/database" element={<SectionRedirect sectionId="database" />} />
+          <Route path="/database/:topicId" element={<TopicRoute sectionId="database" />} />
           <Route path="/frontend" element={<SectionRedirect sectionId="frontend" />} />
           <Route path="/frontend/:topicId" element={<TopicRoute sectionId="frontend" />} />
           <Route path="/paths" element={<PathsRoute />} />
@@ -262,7 +264,7 @@ function TopicView({
 
   // Keep the URL in sync when paused or scrubbing — skip during auto-play to avoid router churn.
   useEffect(() => {
-    if (player.playing) return;
+    if (player.playing || player.seeking) return;
     setSearchParams(
       (prev) => {
         if (prev.get("step") === String(player.index)) return prev;
@@ -272,7 +274,7 @@ function TopicView({
       },
       { replace: true },
     );
-  }, [player.index, player.playing, setSearchParams]);
+  }, [player.index, player.playing, player.seeking, setSearchParams]);
 
   useEffect(() => {
     if (!shareNote) return;
@@ -345,7 +347,7 @@ function TopicView({
 
       {!focusMode && (
         <>
-          <ChapterPanel chapters={chapters} index={player.index} onSeek={player.seek} />
+          <ChapterPanel chapters={chapters} index={player.index} onSeek={player.seekSmooth} />
 
           <PrereqPanel topic={topic} onSelect={onSelect} />
 

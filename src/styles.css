@@ -403,6 +403,7 @@ body { background: var(--bg); color: var(--text); }
   align-items: center;
   justify-content: center;
   padding: 4px 2px;
+  transition: height 320ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 .stage-canvas-inner {
   width: 100%;
@@ -442,6 +443,7 @@ body { background: var(--bg); color: var(--text); }
   max-width: 92%;
   align-self: center;
   flex-shrink: 0;
+  transition: height 320ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 .caption {
   flex: 0 0 auto;
@@ -562,13 +564,54 @@ body { background: var(--bg); color: var(--text); }
   outline: none;
   cursor: pointer;
 }
+/* Native thumb is kept for interaction/keyboard but made invisible — the
+   gliding visual is drawn by .scrubber-knob so it can animate smoothly. */
 .scrubber::-webkit-slider-thumb {
   -webkit-appearance: none;
   width: 16px;
   height: 16px;
   border-radius: 50%;
+  background: transparent;
+  border: none;
+}
+.scrubber::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: transparent;
+  border: none;
+}
+/* Filled portion of the track (left of the knob). */
+.scrubber-fill {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  height: 6px;
+  border-radius: 6px;
+  background: var(--accent);
+  transform: translateY(-50%);
+  pointer-events: none;
+  z-index: 1;
+  transition: width 150ms linear;
+}
+/* The visible draggable dot — glides between steps like a video scrubber. */
+.scrubber-knob {
+  position: absolute;
+  top: 50%;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
   background: var(--accent);
   border: 2px solid color-mix(in srgb, var(--accent) 40%, white);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 2;
+  transition: left 150ms linear;
+}
+/* While actively dragging, track the pointer with no easing lag. */
+.scrubber-track[data-dragging="true"] .scrubber-fill,
+.scrubber-track[data-dragging="true"] .scrubber-knob {
+  transition: none;
 }
 .scrubber-wrap {
   display: flex;
@@ -793,6 +836,15 @@ body { background: var(--bg); color: var(--text); }
 @keyframes drawer-in {
   from { transform: translateX(-100%); }
   to { transform: translateX(0); }
+}
+
+/* Smooth enter for visualization mode/chapter switches. */
+@keyframes viz-pop-in {
+  from { opacity: 0; transform: translateY(8px) scale(0.985); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+.viz-pop-in {
+  animation: viz-pop-in 360ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 /* ---- info panels ---- */

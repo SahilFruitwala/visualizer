@@ -190,7 +190,7 @@ export const criticalRenderingPath: Topic = {
                     border: `2px solid ${C.sortedBorder}`,
                     background: mixProp("sorted", 7),
                     padding: 12,
-                    transition: "width 280ms, height 280ms",
+                    transition: "opacity 280ms ease",
                     position: "relative",
                     overflow: "hidden",
                   }}
