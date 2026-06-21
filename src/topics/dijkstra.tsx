@@ -63,7 +63,7 @@ export const dijkstra: Topic = {
       steps: build("A"),
       code: CODE,
       explanation:
-        "Dijkstra repeatedly picks the unvisited node with the smallest known distance, finalizes it, and relaxes its edges (updating neighbours if a shorter path is found). Works for non-negative weights.\n\nBlue = tentative · amber = processing · purple = finalized\nTime: O((V + E) log V) with a heap",
+        "Dijkstra repeatedly picks the unvisited node with the smallest known distance, finalizes it, and relaxes its edges (updating neighbours if a shorter path is found). Works for non-negative weights.\n\nBlue = tentative · amber = processing · pink = finalized\nTime: O((V + E) log V) with a heap",
       renderStep: (s) => (
         <WeightedGraphView
           nodes={WNODES}

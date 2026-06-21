@@ -132,7 +132,7 @@ export function Sidebar({
         </div>
 
         <button type="button" className="sidebar-search-btn" onClick={onOpenSearch}>
-          <span>⌕ Search all topics</span>
+          <span>Search all topics</span>
           <kbd>⌘K</kbd>
         </button>
 

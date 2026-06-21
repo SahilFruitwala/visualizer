@@ -104,7 +104,7 @@ export const aStar: Topic = {
       steps: build(),
       code: CODE,
       explanation:
-        "A* is Dijkstra plus a heuristic: it prefers cells whose estimated total cost f = g + h is lowest, so it heads toward the goal instead of expanding blindly. With an admissible heuristic (here Manhattan distance) it still finds the shortest path.\n\nBlue = frontier (open) · purple = expanded (closed) · green = final path",
+        "A* is Dijkstra plus a heuristic: it prefers cells whose estimated total cost f = g + h is lowest, so it heads toward the goal instead of expanding blindly. With an admissible heuristic (here Manhattan distance) it still finds the shortest path.\n\nBlue = frontier (open) · pink = expanded (closed) · green = final path",
       renderStep: (s) => {
         const size = 38;
         const open = new Set(s.open), closed = new Set(s.closed), path = new Set(s.path);

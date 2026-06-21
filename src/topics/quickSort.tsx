@@ -76,7 +76,7 @@ export const quickSort: Topic = {
       steps,
       code: CODE,
       explanation:
-        "Quick Sort chooses a pivot (purple) and partitions the range so smaller values go left, larger go right. The pivot lands at its final index (green), then each side is sorted recursively.\n\nTime: O(n log n) average · O(n²) worst · Space: O(log n) · Stable: no",
+        "Quick Sort chooses a pivot (pink) and partitions the range so smaller values go left, larger go right. The pivot lands at its final index (green), then each side is sorted recursively.\n\nTime: O(n log n) average · O(n²) worst · Space: O(log n) · Stable: no",
       renderStep: (s) => (
         <Row gap={10}>
           {s.arr.map((v, idx) => {

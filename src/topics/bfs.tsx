@@ -88,7 +88,7 @@ export const bfs: Topic = {
       steps: build("A"),
       code: CODE,
       explanation:
-        "BFS uses a queue to visit all nodes at distance 1, then distance 2, and so on. This makes it find shortest paths in unweighted graphs.\n\nBlue = in queue · amber = processing · purple = done\nTime: O(V + E) · Space: O(V)",
+        "BFS uses a queue to visit all nodes at distance 1, then distance 2, and so on. This makes it find shortest paths in unweighted graphs.\n\nBlue = in queue · amber = processing · pink = done\nTime: O(V + E) · Space: O(V)",
       renderStep: (s) => <GraphView state={s.state} structLabel="queue" struct={s.queue} output={s.output} />,
     }),
 };

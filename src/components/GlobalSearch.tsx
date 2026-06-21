@@ -107,9 +107,6 @@ export function GlobalSearch({
     <div className="search-overlay" role="dialog" aria-modal="true" aria-label="Search topics" onClick={onClose}>
       <div ref={modalRef} className="search-modal" onClick={(e) => e.stopPropagation()}>
         <div className="search-input-wrap">
-          <span className="search-icon" aria-hidden>
-            ⌕
-          </span>
           <input
             ref={inputRef}
             type="search"

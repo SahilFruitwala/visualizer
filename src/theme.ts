@@ -58,8 +58,8 @@ const DARK: Palette = {
   sortedBorder: "#86efac",
   pointer: "#60a5fa",
   pointerBorder: "#93c5fd",
-  highlight: "#a78bfa",
-  highlightBorder: "#c4b5fd",
+  highlight: "#f472b6",
+  highlightBorder: "#f9a8d4",
   rejected: "#5a2230",
 };
 
@@ -86,8 +86,8 @@ const LIGHT: Palette = {
   sortedBorder: "#16a34a",
   pointer: "#3b82f6",
   pointerBorder: "#2563eb",
-  highlight: "#8b5cf6",
-  highlightBorder: "#7c3aed",
+  highlight: "#db2777",
+  highlightBorder: "#be185d",
   rejected: "#fca5a5",
 };
 
